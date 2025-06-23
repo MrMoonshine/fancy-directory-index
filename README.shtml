@@ -1,0 +1,16 @@
+</article>
+<script src="/scripts/toast.js"></script>
+<script src="/scripts/overlay.js"></script>
+<script src="/scripts/pagination.js"></script>
+<script src="/directory/file.js"></script>
+<script src="/directory/galery.js"></script>
+<script src="/directory/directory.js"></script>
+<script>
+    var index = new DirectoryIndex();
+    index.createGalery();
+</script>
+</div>
+</div>
+</div>
+</body>
+</html>

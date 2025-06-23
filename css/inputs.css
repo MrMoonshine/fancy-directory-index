@@ -1,0 +1,44 @@
+:root {
+    --input-padding-x: 0.7rem;
+    --input-padding-y: 0.4rem;
+    --input-border-radius: 0.4rem;
+}
+
+.btn-group,
+.input-group {
+    display: flex;
+    height: 2.4rem;
+}
+
+/*
+    Buttons
+*/
+.btn {
+    border: none;
+    border-radius: var(--input-border-radius);
+    /*background-color: var(--color-main);*/
+    background-color: var(--color-main);
+    color: var(--color-text-button);
+    padding: var(--input-padding-y) var(--input-padding-x);
+    cursor: pointer;
+
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+
+    transition: 200ms ease;
+    text-decoration: none;
+}
+
+.btn-outline{
+    color: var(--color-text-button);
+    background-color: transparent;
+    border: 2px solid var(--color-text-button);
+}
+
+.btn-outline:hover,
+input:checked + .btn-outline{
+    background-color: rgba(0, 0, 0, 0.4);
+}

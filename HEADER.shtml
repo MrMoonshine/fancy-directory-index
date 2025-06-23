@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+	<meta charset="utf-8">
+	<meta lang="de_AT">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/main.css">
+	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/gallery.css">
+	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/inputs.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+	<div id="content">
+		<nav class="top">
+			<!--<img alt="Icon" src=".directory" onerror='this.style.display = "none"'/>-->
+			<img alt="Icon" src="/favicon.ico" onerror='this.style.display = "none"' />
+			<h1>Files</h1>
+			<div class="navbar-collapse">
+				<form class="form-inline">
+					<input class="form-control mr-sm-2" type="search" placeholder="Suche">
+				</form>
+				<div class="d-flex gap">
+					<div class="input-group">
+						<input type="radio" id="radio-gallery" name="radio-view" checked="" hidden>
+						<label class="btn btn-outline big" for="radio-gallery">
+							<img alt="Symbols" src="/assets/navicon/cocktail.svg"/>
+						</label>
+						<input type="radio" id="radio-details" name="radio-view" hidden>
+						<label class="btn btn-outline big" for="radio-details">
+							<img alt="Details" src="/assets/navicon/database.svg"/>
+						</label>
+					</div>
+					<a class="btn btn-outline big" href="/">
+						<img alt="Home" src="/favicon.ico"/>
+					</a>
+				</div>
+			</div>
+		</nav>
+		<div class="dashboard">
+			<div class="widget">
+				<img alt="thumbnail" src="/assets/icons/application-video.svg" id="thumbnail-fallback" />
+				<header>
+					<h2>Gallerie</h2>
+				</header>
+				<article id="galery"></article>
+			</div>
+			<div class="widget">
+				<header>
+					<h2>Alle Dateien</h2>
+				</header>
+				<article id="filelist">
+					<p>Sortieren:
+					<div class="btn-group" id="sortingButtons"></div>
+					</p>

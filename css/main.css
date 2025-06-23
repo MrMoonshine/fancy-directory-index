@@ -1,0 +1,182 @@
+:root {
+    /*--color-main: rgb(104, 20, 104);*/
+    --color-main: orange;
+    --color-background-1: #323232;
+    --color-background-2: #222222;
+    --color-background-translucent: rgba(34, 34, 34, .7);
+    --color-text: white;
+    --color-text-button: var(--color-text);
+    --color-text-code: hotpink;
+    
+    --color-ok: #27ae60;
+    --color-warning: orange;
+    --color-critical: #da4453;
+
+    --gap-dashboard: 12px;
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+    :root {
+        --color-background-2: #dfdfdf;
+        --color-background-1: #cfcfcf;
+        --color-background-translucent: rgba(223,223,223,.7);
+        --bgnone: white;
+        --color-text: black;
+        --color-text-code: purple;
+    }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-background-1: #323232;
+        --color-background-2: #222222;
+        --color-background-translucent: rgba(34, 34, 34, .7);
+        --bgnone: black;
+        --color-text: white;
+        --color-text-code: hotpink;
+    }
+}
+
+body{
+    color: var(--color-text);
+    background-color: var(--color-background-2);
+
+    margin: 0;
+    padding: 0;
+
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    font-size: x-large;
+    text-align: center;
+    color: var(--color-text-button);
+}
+
+nav {
+    height: 56px;
+    padding: 4px;
+    background-color: var(--color-main);
+    box-shadow: 2px 2px 8px black;
+    
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:start;
+    position: relative;
+}
+
+nav h1{
+    text-align: center;
+    margin: 0;
+    color: var(--color-text-button);
+
+    padding: 0px 0.4rem;
+    margin-top: 0.8rem;
+}
+
+nav div.navbar-collapse{
+    min-width: 60%;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-grow: 3;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+nav ~ button {
+    display: none;
+}
+
+nav ul{
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li{
+    display: inline;
+    padding: 0.25rem 0.5rem;
+}
+
+nav a{
+    text-decoration: none;
+    color: var(--color-text-button);
+    background-color: transparent;
+    padding: 0.3rem;
+    border-radius: 0.3rem;
+}
+
+nav a img{
+    height: 1rem;
+    width: 1rem;
+    object-fit: scale-down;
+}
+
+nav a:hover{
+    color: var(--color-text-button);
+    color: var(--color-main);
+    background-color: var(--color-background-1);
+}
+
+nav a.active{
+    color: var(--color-main);
+    background-color: var(--color-background-2);
+}
+
+nav.side a{
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    border-radius: 0px;
+    height: unset;
+}
+
+nav.side a img{
+    height: 2rem;
+    width: 2rem;
+}
+
+nav.side .text{
+    padding: 0.5rem 0px;
+}
+
+nav form{
+    flex-wrap: nowrap;
+}
+
+nav form input,
+nav form button,
+nav form .btn{
+    margin: 0.5rem 0.2rem;
+}
+
+nav > img{
+    margin: 4px;
+    height: 48px;
+    max-width: 12em;
+}
+
+nav .btn.big{
+    height: 36px;
+    width: 36px;
+    padding: 4px;
+    margin: 4px 0px;
+}
+
+nav .btn.big img{
+    width: 32px;
+    height: 32px;
+}
+
+.gap{
+    gap: var(--gap-dashboard)
+}
+
+.d-none{
+    display: none;
+}
+
+.d-flex{
+    display: flex;
+}
