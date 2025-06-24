@@ -1,6 +1,5 @@
 :root {
-    /*--color-main: rgb(104, 20, 104);*/
-    --color-main: orange;
+    --color-main: rgb(104, 20, 104);
     --color-background-1: #323232;
     --color-background-2: #222222;
     --color-background-translucent: rgba(34, 34, 34, .7);

@@ -47,10 +47,7 @@
 				<article id="galery"></article>
 			</div>
 			<div class="widget">
-				<header>
-					<h2>Alle Dateien</h2>
-				</header>
 				<article id="filelist">
-					<p>Sortieren:
-					<div class="btn-group" id="sortingButtons"></div>
-					</p>
+					<div id="sortingButtons">
+						<div class="placeholder"></div>
+					</div>
