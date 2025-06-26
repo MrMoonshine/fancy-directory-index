@@ -1,3 +1,86 @@
+class Preview{
+    constructor(dom){
+        this.domPreview = dom.querySelector(".preview") ?? dom;
+        this.domInfo = dom.querySelector(".info") ?? dom;
+
+        this.figure = document.createElement("figure");
+        this.figcaption = document.createElement("figcaption");
+
+        this.previews = [];
+        this.previewText = document.createElement("pre");
+        this.previews.push(this.previewText);
+        this.previewImage = new Image();
+        this.previews.push(this.previewImage);
+        this.previewVideo = document.createElement("video");
+        this.previews.push(this.previewVideo);
+        this.previewNone = new Image();
+        this.previews.push(this.previewNone);
+
+        this.previews.forEach((preview) => {
+            this.figure.appendChild(preview);
+        });
+
+        this.figure.appendChild(this.figcaption);
+        this.domPreview.appendChild(this.figure);
+
+        this.mimeicon = new Image();
+        this.mimeicon.classList.add("mimeicon");
+        this.mimeicon.alt = "[IMG]";
+
+        this.actions = document.createElement("div");
+        this.actions.classList.add("actions");
+
+        let actiontitle = Preview.action_create("Actions:");
+        actiontitle.setAttribute("disabled", true)
+        this.actions.appendChild(actiontitle);
+        this.actions.appendChild(Preview.action_create("Download", "/assets/icons/pencil.webp"));
+
+        let mimefigure = document.createElement("figure");
+        this.mimefigcaption = document.createElement("figcaption");
+        mimefigure.appendChild(this.mimeicon);
+        mimefigure.appendChild(this.mimefigcaption);
+        this.domInfo.appendChild(mimefigure);
+        this.domInfo.appendChild(this.actions);
+    }
+    
+    show(file){
+        this.previews.forEach((preview) => {
+            dom_show(preview, false);
+        });
+
+        this.figcaption.innerText = file.getFileName();
+        this.mimefigcaption.innerText = file.getFileName();
+        this.mimeicon.src = file.getMimeIcon();
+
+        switch(file.filetype){
+            case File.Types.IMAGE:
+                dom_show(this.previewImage, true);
+                this.previewImage.src = file.getFileLink();
+                break;
+        }
+    }
+
+    static action_create(text, icon = "", callback = null){
+        let action = document.createElement("button");
+        action.classList.add("action");
+        if(icon.length > 0){
+            action.classList.add("d-flex");
+            let img = new Image();
+            img.src = icon;
+            img.alt = "[IMG]";
+            action.appendChild(img);
+            let textdiv = document.createElement("div");
+            textdiv.innerText = text;
+            action.appendChild(textdiv);
+        }else{
+            action.innerText = text;
+        }
+
+        action.addEventListener("click", callback);
+        return action;
+    }
+}
+
 class File{
     static Types = {
         OTHER: "other",
@@ -8,9 +91,12 @@ class File{
     static THUMBNAIL_DEFAULT = File.getFallbackThumbnail()
     //static EXTENSIONS_VIDEO = [".mp4", ""];
 
-    static overlay = new Overlay();
+    static overlay = document.getElementById("overlay");
+    static overlayCloser = overlay.querySelector("button.close");
+    //static preview = 
     static display = document.createElement("div");
     static btnOpen = document.createElement("a");
+    static preview = new Preview(File.overlay);
     static btnDownload = document.createElement("a");
 
     constructor(table_row) {
@@ -132,7 +218,9 @@ class File{
     }
 
     showPreview() {
-        File.overlay.title.innerHTML = this.filename.innerHTML;
+        File.preview.show(this);
+        dom_show(File.overlay, true);
+        /*File.overlay.title.innerHTML = this.filename.innerHTML;
         File.display.innerHTML = "";    // Clear overlay contents
         switch (this.filetype) {
             case File.Types.IMAGE:
@@ -159,7 +247,7 @@ class File{
         File.btnDownload.href = this.item.href;
         File.btnDownload.download = this.item.href;
 
-        File.overlay.show();
+        File.overlay.show();*/
     }
 
     folderIcon(url) {
@@ -199,6 +287,18 @@ class File{
 
     has_preview() {
         return this.img.alt == "[IMG]" || this.img.alt == "[VIDEO]";
+    }
+
+    getFileName(){
+        return this.filename.innerText;
+    }
+
+    getFileLink(){
+        return this.item.href;
+    }
+
+    getMimeIcon(){
+        return this.img.src;
     }
 
     static fetchFromHTML(table, viewer) {
@@ -258,6 +358,10 @@ class File{
     }
 }
 
+File.overlayCloser.addEventListener("click", () => {
+    dom_show(File.overlay, false);
+});
+
 // Build overlay HTML
 File.display.classList.add("modal-filedisplay")
 File.overlay.appendChild(File.display);
@@ -269,9 +373,9 @@ File.btnOpen.classList.add("btn");
 File.btnDownload.innerHTML = "Download";
 File.btnDownload.classList.add("btn");
 
-let btnflexbox = document.createElement("div");
+/*let btnflexbox = document.createElement("div");
 btnflexbox.appendChild(File.btnOpen);
 btnflexbox.appendChild(File.btnDownload);
 btnflexbox.classList.add("btn-group");
 
-File.overlay.appendToFooter(btnflexbox);
+File.overlay.appendToFooter(btnflexbox);*/

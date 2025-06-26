@@ -9,8 +9,9 @@ try {
 class Polaroid extends PaginationItem {
   // file is of type class File
   constructor(file) {
+    let isDirectory = file.filetype == File.Types.FOLDER;
     // Call PaginationItem constructer with base div
-    super(document.createElement("div"));
+    super(document.createElement(isDirectory ? "a" : "div"));
     this.item.classList.add("polaroid");
     this.loaded = false;
     // init
@@ -83,8 +84,11 @@ class Polaroid extends PaginationItem {
     }
     this.item.appendChild(filenamep);
 
-    // Show file preview on click
     //maximizebutton.addEventListener("click", this.file.showPreview.bind(this.file));
+    if(isDirectory){
+      return;
+    }
+    // Show file preview on click
     this.item.addEventListener("click", this.file.showPreview.bind(this.file));
   }
 
@@ -116,6 +120,15 @@ class Polaroid extends PaginationItem {
         this.item.appendChild(errtestimg);
         errtestimg.src = image;
         errtestimg.classList.add("d-none");
+        this.loaded = true;
+        break;
+      case File.Types.FOLDER:
+        this.item.href = this.file.item.href
+        let iconDir = new Image();
+        iconDir.alt = this.file.img;
+        iconDir.src = this.file.img.src;
+        iconDir.classList.add("icon");
+        this.item.appendChild(iconDir);
         this.loaded = true;
         break;
       default:

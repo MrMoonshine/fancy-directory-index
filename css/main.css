@@ -12,6 +12,8 @@
     --color-critical: #da4453;
 
     --gap-dashboard: 12px;
+
+    --preview-info-width: 20rem;
 }
 
 /* Light mode */
@@ -46,6 +48,12 @@ body{
     padding: 0;
 
     font-family:Arial, Helvetica, sans-serif;
+    overflow-y: hidden;
+}
+
+.widget{
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
 }
 
 h1 {
@@ -168,12 +176,70 @@ nav .btn.big img{
     height: 32px;
 }
 
+div.overlay{
+    position: relative;
+    background-color: var(--color-background-2);
+    height: calc(100vh - 56px);
+}
+
+div.overlay > .grid{
+    display: grid;
+    width: 100vw;
+    grid-template-columns: auto var(--preview-info-width);
+}
+
+div.overlay button.close{
+    position:absolute;
+    top: 0;
+    right: 0;
+
+    background-color: transparent;
+    border: 0px solid transparent;
+    font-size: 2em;
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+div.overlay button.close:hover{
+    color: var(--color-main);
+}
+
+div.overlay .preview{
+    max-width: calc(100vw - var(--preview-info-width));
+}
+
+div.overlay .preview figure{
+    overflow-y: auto;
+}
+
+div.overlay .info{
+    display: block;
+    background-color: var(--color-background-1);
+    height: calc(100vh - 56px);
+}
+
+div.overlay .info img.mimeicon{
+    display: block;
+    height: 6rem;
+    margin: auto;
+}
+
+div.overlay .actions{
+    display: block;
+}
+
+div.overlay .actions button{
+    display: block;
+    width: 100%;
+    padding: 4px;
+}
+
 .gap{
     gap: var(--gap-dashboard)
 }
 
 .d-none{
-    display: none;
+    display: none !important;
 }
 
 .d-flex{

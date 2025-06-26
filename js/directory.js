@@ -1,4 +1,11 @@
 class DirectoryIndex{
+        static paginationOptions = {
+                items_per_page: 20,
+                max_buttons: PAGINATION_MAX_BUTTONS_DEFAULT,
+                page_prompt_text: PAGINATION_NUMBER_PROMPT_DEFAULT,
+                appendToParent: true
+        }
+
         constructor(){
                 // File array
                 this.files = [];
@@ -80,7 +87,7 @@ class DirectoryIndex{
                 // show galery
                 galery.style.display = "block";
                 // Create a pagination
-                let pagination = new Pagination(galery, this.polaroids);
+                let pagination = new Pagination(galery, this.polaroids, DirectoryIndex.paginationOptions);
 
                 //assign search listeners
                 var searches = document.querySelectorAll("input[type='search']");
