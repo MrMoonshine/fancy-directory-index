@@ -25,11 +25,13 @@
 					<div class="input-group">
 						<input value="0" type="radio" id="radio-gallery" name="radio-view" checked="" hidden>
 						<label class="btn btn-outline big" for="radio-gallery">
-							<img alt="Symbols" src="/assets/navicon/cocktail.svg"/>
+							<!--<img alt="Symbols" src="/assets/icons/view-list-icons.svg"/ class="colorize-text">-->
+							<div class="masked-icon" id="masked-icon-gallery"></div>
 						</label>
 						<input value="1" type="radio" id="radio-details" name="radio-view" hidden>
 						<label class="btn btn-outline big" for="radio-details">
-							<img alt="Details" src="/assets/navicon/database.svg"/>
+							<!--<img alt="Details" src="/assets/icons/view-list-details.svg" class="colorize-text"/>-->
+							<div class="masked-icon" id="masked-icon-details"></div>
 						</label>
 					</div>
 					<a class="btn btn-outline big" href="/">

@@ -103,7 +103,7 @@ class Polaroid extends PaginationItem {
         //image = this.file.item.href;
         //image = image.replaceAll("'", "%27"); // Fixes issue with CSS URL when an apostrophe is in use
         //this.item.style.backgroundImage = "url(" + image + ")";
-        this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.item.href)}")`;
+        this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.href)}")`;
         this.loaded = true;
         break;
       case File.Types.VIDEO:

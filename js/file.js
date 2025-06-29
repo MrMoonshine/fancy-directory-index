@@ -13,11 +13,15 @@ class Preview{
         this.previews.push(this.previewImage);
         this.previewVideo = document.createElement("video");
         this.previews.push(this.previewVideo);
+        this.previewVideo.innerText = "Your browser does not support the video tag";
+        this.previewAudio = document.createElement("audio");
+        this.previews.push(this.previewAudio);
         this.previewNone = new Image();
         this.previews.push(this.previewNone);
 
         this.previews.forEach((preview) => {
             this.figure.appendChild(preview);
+            preview.classList.add("filedisplay");
         });
 
         this.figure.appendChild(this.figcaption);
@@ -30,10 +34,15 @@ class Preview{
         this.actions = document.createElement("div");
         this.actions.classList.add("actions");
 
-        let actiontitle = Preview.action_create("Actions:");
-        actiontitle.setAttribute("disabled", true)
+        let actiontitle = Preview.action_create("Actions:", "", "button");
+        actiontitle.setAttribute("disabled", true);
         this.actions.appendChild(actiontitle);
-        this.actions.appendChild(Preview.action_create("Download", "/assets/icons/pencil.webp"));
+
+        this.actionnewtab = Preview.action_create("Open in new tab", "/assets/icons/pencil.webp");
+        this.actionnewtab.setAttribute("target", "_blank");
+        this.actions.appendChild(this.actionnewtab);
+        this.actiondownload = Preview.action_create("Download", "/assets/icons/pencil.webp");
+        this.actions.appendChild(this.actiondownload);
 
         let mimefigure = document.createElement("figure");
         this.mimefigcaption = document.createElement("figcaption");
@@ -52,19 +61,59 @@ class Preview{
         this.mimefigcaption.innerText = file.getFileName();
         this.mimeicon.src = file.getMimeIcon();
 
+        this.actionnewtab.href = file.getFileName();
+        this.actiondownload.href = file.getFileName();
+        this.actiondownload.setAttribute("download", file.getFileName());
+
         switch(file.filetype){
             case File.Types.IMAGE:
                 dom_show(this.previewImage, true);
                 this.previewImage.src = file.getFileLink();
                 break;
+            case File.Types.VIDEO:
+                this.previewVideo.remove();
+                this.previewVideo = document.createElement("video");
+                let src1 = document.createElement("source");
+                src1.src = file.getFileLink();
+                //src.type = "video/mp4";
+                this.previewVideo.controls = true;
+                this.previewVideo.classList.add("filedisplay");
+                this.previewVideo.appendChild(src1);
+                this.figure.prepend(this.previewVideo);
+                break;
+            case File.Types.AUDIO:
+                this.previewAudio.remove();
+                this.previewAudio = document.createElement("audio");
+                let src2 = document.createElement("source");
+                src2.src = file.getFileLink();
+                //src.type = "audio/mp4";
+                this.previewAudio.controls = true;
+                this.previewAudio.classList.add("filedisplay");
+                this.previewAudio.appendChild(src2);
+                this.figure.prepend(this.previewAudio);
+                break;
+            default:
+                dom_show(this.previewText, true);
+                this.previewText.innerText = "WIP";
+                break;
         }
     }
 
-    static action_create(text, icon = "", callback = null){
-        let action = document.createElement("button");
+    stop_video(){
+        this.previewVideo.remove();
+        /*let sources = Array.from(this.previewVideo.getElementsByTagName("source"));
+        sources.forEach(source => {
+            source.remove();
+        });*/
+    }
+
+    static action_create(text, icon = "", tagname = "a", callback = null){
+        let action = document.createElement(tagname);
         action.classList.add("action");
         if(icon.length > 0){
             action.classList.add("d-flex");
+            action.classList.add("justify-content-left");
+            action.classList.add("gap");
             let img = new Image();
             img.src = icon;
             img.alt = "[IMG]";
@@ -76,7 +125,9 @@ class Preview{
             action.innerText = text;
         }
 
-        action.addEventListener("click", callback);
+        if(callback){
+            action.addEventListener("click", callback);
+        }
         return action;
     }
 }
@@ -86,7 +137,10 @@ class File{
         OTHER: "other",
         IMAGE: "image",
         VIDEO: "video",
-        FOLDER: "folder"
+        FOLDER: "folder",
+        AUDIO: "audio",
+        TEXT: "text",
+        PDF: "pdf"
     };
     static THUMBNAIL_DEFAULT = File.getFallbackThumbnail()
     //static EXTENSIONS_VIDEO = [".mp4", ""];
@@ -100,8 +154,18 @@ class File{
     static btnDownload = document.createElement("a");
 
     constructor(table_row) {
-        this.item = document.createElement("a");
-
+        // Get original icon
+        this.img = document.createElement("img");
+        let originalicon = table_row.getElementsByTagName("img");
+        this.filetype = File.Types.OTHER;
+        // Is it a directory?
+        if (originalicon.length > 0) {
+            if (originalicon[0].alt == "[DIR]" || originalicon[0].alt == "[PARENTDIR]") {
+                this.filetype = File.Types.FOLDER;
+            }
+        }
+        // Mian DOM creation
+        this.item = document.createElement(this.filetype == File.Types.FOLDER ? "a" : "button");
         this.item.classList.add("file");
 
         // Start here
@@ -128,30 +192,36 @@ class File{
 
         let links = table_row.getElementsByTagName("a");
         let filelink = links[links.length - 1];
-        this.item.href = filelink.href;
-
-        this.filetype = File.Types.OTHER;
-
-        // Get original icon
-        this.img = document.createElement("img");
-        let originalicon = table_row.getElementsByTagName("img");
-        //console.log(originalicon);
+        this.href = filelink.href;
         /*---------------------------------------------------
             Detecting "Mime"-Type
         ----------------------------------------------------*/
         if (originalicon.length > 0) {
             this.img.src = originalicon[0].src;
+            this.img.alt = originalicon[0].alt;
             //console.log(originalicon[0].alt);
             if (originalicon[0].alt == "[VID]" || originalicon[0].alt == "[VIDEO]") {
                 this.filetype = File.Types.VIDEO;
-            } else if (originalicon[0].alt == "[IMG]" || this.item.href.toUpperCase().endsWith(".WEBP")) {
+            }else if (originalicon[0].alt == "[AUD]" || originalicon[0].alt == "[AUDIO]") {
+                this.filetype = File.Types.AUDIO;
+            }else if (originalicon[0].alt == "[TXT]" || originalicon[0].alt == "[TEXT]") {
+                this.filetype = File.Types.TEXT;
+            }else if (originalicon[0].alt == "[IMG]" || filelink.href.toUpperCase().endsWith(".WEBP")) {
                 this.filetype = File.Types.IMAGE;
-            } else if (originalicon[0].alt == "[DIR]" || originalicon[0].alt == "[PARENTDIR]") {
-                this.filetype = File.Types.FOLDER;
-                this.item.href = this.item.href;
+            }
+            else if (originalicon[0].alt == "[PDF]"){
+                this.filetype = File.Types.PDF;
             }
         } else {
             this.img.src = "";
+        }
+
+        // Set href for dir
+        if(this.filetype == File.Types.FOLDER){
+            this.item.href = filelink.href;
+        }else{
+            // Open Previe
+            this.item.addEventListener("click", () => {this.showPreview()});
         }
 
         // Bottom Link
@@ -294,7 +364,7 @@ class File{
     }
 
     getFileLink(){
-        return this.item.href;
+        return this.href;
     }
 
     getMimeIcon(){
@@ -357,11 +427,10 @@ class File{
         return dom.src;
     }
 }
-
 File.overlayCloser.addEventListener("click", () => {
     dom_show(File.overlay, false);
+    File.preview.stop_video();
 });
-
 // Build overlay HTML
 File.display.classList.add("modal-filedisplay")
 File.overlay.appendChild(File.display);

@@ -3,37 +3,32 @@ img, video{
     max-height: 70vh;
 }
 
-#filedisplay{
+figure .filedisplay{
     /*width: 80vw;*/
     height: 80vh;
 }
 
-#filedisplay .btn-group{
-    position: relative;
-    left: 0;
-    bottom: 0;
-}
-
-#filedisplay img, #filedisplay video{
-    margin: 1em 0px;
-    height: 68vh;
-    max-width: 75vw;
+figure img.filedisplay,
+figure video.filedisplay{
+    display: block;
+    margin: 1em auto;
+    height: 85vh;
+    max-width: calc(100vw - var(--preview-info-width));
     border-radius: 1em;
     object-fit: scale-down;
 }
 
-/*.container{
+figure video.filedisplay{
+    background-color: black;
+}
+
+#filelist{
     display: block;
-    gap: 0.5em;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: 64vh;
-    padding: 1em 0em;
-
-    border: 2px solid var(--color-background-1);
-    margin-top: 1em;
-}*/
+    max-width: 50rem;
+    margin: auto;
+    padding: 0px var(--gap-dashboard);
+    padding-bottom: 2rem;
+}
 
 .file,
 #sortingButtons{
@@ -44,14 +39,20 @@ img, video{
     display: grid;
 
     border-radius: 0.75em;
+    box-sizing: content-box;
     /*height: calc(2rem + 8px);*/
     height: 2rem;
+    width: calc(100% - 2*4px);
     padding: 4px;
 }
 
-a.file{
+a.file,
+button.file{
     text-decoration: none;
+    font-size: 1rem;
     color: var(--color-text) !important;
+    background-color: transparent;
+    border: none;
 }
 
 .file:hover{
@@ -65,7 +66,7 @@ a.file{
     padding-top: 1em;
 }
 
-.folder-link{
+/*.folder-link{
     position: relative;
     border: none !important;
 }
@@ -74,7 +75,7 @@ a.file{
     position: absolute;
     top: 0;
     left: 0;
-}
+}*/
 
 .file img{
     height: 2rem;
@@ -116,9 +117,7 @@ a.file{
 }
 
 .dashboard{
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 0.5em;
+    display: block;
 }
 
 .d-phone-only{

@@ -19,6 +19,7 @@
 /* Light mode */
 @media (prefers-color-scheme: light) {
     :root {
+        --color-main: rgb(159, 87, 161);
         --color-background-2: #dfdfdf;
         --color-background-1: #cfcfcf;
         --color-background-translucent: rgba(223,223,223,.7);
@@ -171,9 +172,10 @@ nav .btn.big{
     margin: 4px 0px;
 }
 
-nav .btn.big img{
-    width: 32px;
-    height: 32px;
+nav .btn.big img,
+nav .btn.big .masked-icon{
+    width: 36px;
+    height: 36px;
 }
 
 div.overlay{
@@ -209,7 +211,21 @@ div.overlay .preview{
 }
 
 div.overlay .preview figure{
+    margin: auto;
+    display: block;
     overflow-y: auto;
+}
+
+div.overlay figure img{
+    display: block;
+    margin: auto;
+    
+    max-width: calc(100% - var(--gap-dashboard));
+    max-height: calc(100% - var(--gap-dashboard));
+}
+
+div.overlay figcaption{
+    text-align: center;
 }
 
 div.overlay .info{
@@ -226,12 +242,58 @@ div.overlay .info img.mimeicon{
 
 div.overlay .actions{
     display: block;
+    padding: 12px;
 }
 
-div.overlay .actions button{
+div.overlay .actions .action:first-child{
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+div.overlay .actions .action:last-child{
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom: 2px solid var(--color-text);
+}
+
+div.overlay .actions .action{
     display: block;
     width: 100%;
-    padding: 4px;
+    padding: 12px 24px;
+    box-sizing: border-box;
+
+    cursor: pointer;
+
+    color: var(--color-text);
+    background-color: var(--color-background-2);
+    border: 2px solid var(--color-text);
+    border-bottom: none;
+
+    text-decoration: none;
+}
+
+div.overlay .actions .action:disabled{
+    text-align: left;
+    font-weight: bold;
+    cursor: unset;
+}
+
+div.overlay .actions .action img{
+    height: 1rem;
+    width: 1rem;
+    object-fit: scale-down;
+}
+
+.masked-icon{
+    background-color: var(--color-text);
+}
+
+#masked-icon-details{
+    mask-image: url("/assets/icons/view-list-details.svg");
+}
+
+#masked-icon-gallery{
+    mask-image: url("/assets/icons/view-list-icons.svg");
 }
 
 .gap{
@@ -243,5 +305,25 @@ div.overlay .actions button{
 }
 
 .d-flex{
-    display: flex;
+    display: flex !important;
+}
+
+.justify-content-start{
+    justify-content: start;
+}
+
+.justify-content-end{
+    justify-content: end;
+}
+
+.justify-content-center{
+    justify-content: center;
+}
+
+.justify-content-between{
+    justify-content: space-between;
+}
+
+.justify-content-around{
+    justify-content: space-around;
 }
