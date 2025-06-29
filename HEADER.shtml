@@ -13,35 +13,39 @@
 
 <body>
 	<div id="content">
-		<nav class="top">
+		<nav class="d-flex flex-nowrap justify-content-between">
 			<!--<img alt="Icon" src=".directory" onerror='this.style.display = "none"'/>-->
-			<img alt="Icon" src="/favicon.ico" onerror='this.style.display = "none"' />
-			<h1>Files</h1>
-			<div class="navbar-collapse">
-				<form class="form-inline">
-					<input class="form-control mr-sm-2" type="search" placeholder="Suche">
-				</form>
-				<div class="d-flex gap">
+			<div class="d-flex">
+				<div class="nav-flex-column">
+					<img class="favicon" alt="Icon" src="/favicon.ico" onerror='this.style.display = "none"' />
+				</div>
+				<div class="nav-flex-column">
+					<div class="dirpath" id="dirpath"></div>
+				</div>
+			</div>
+			<div class="d-flex gap">
+				<div class="nav-flex-column">
+					<input type="search" placeholder="Search...">
+				</div>
+				<div class="nav-flex-column">
 					<div class="input-group">
 						<input value="0" type="radio" id="radio-gallery" name="radio-view" checked="" hidden>
-						<label class="btn btn-outline big" for="radio-gallery">
-							<!--<img alt="Symbols" src="/assets/icons/view-list-icons.svg"/ class="colorize-text">-->
+						<label class="btn btn-outline big append" for="radio-gallery">
 							<div class="masked-icon" id="masked-icon-gallery"></div>
 						</label>
 						<input value="1" type="radio" id="radio-details" name="radio-view" hidden>
-						<label class="btn btn-outline big" for="radio-details">
-							<!--<img alt="Details" src="/assets/icons/view-list-details.svg" class="colorize-text"/>-->
+						<label class="btn btn-outline big prepend" for="radio-details">
 							<div class="masked-icon" id="masked-icon-details"></div>
 						</label>
 					</div>
-					<a class="btn btn-outline big" href="/">
-						<img alt="Home" src="/favicon.ico"/>
-					</a>
 				</div>
+				<!--<a class="btn btn-outline big" href="/">
+					<img alt="Home" src="/favicon.ico" />
+				</a>-->
 			</div>
 		</nav>
 		<div class="overlay d-none" id="overlay">
-			<button class="close">X</button>
+			<button class="close"></button>
 			<div class="grid">
 				<div class="preview"></div>
 				<div class="info"></div>
@@ -49,11 +53,8 @@
 		</div>
 		<div class="dashboard">
 			<div class="widget" id="widget-gallery">
-				<img alt="thumbnail" src="/assets/icons/application-video.svg" id="thumbnail-fallback" />
-				<header>
-					<h2>Gallerie</h2>
-				</header>
-				<article id="galery"></article>
+				<!--<img alt="thumbnail" src="/assets/icons/application-video.svg" id="thumbnail-fallback" />-->
+				<article id="gallery"></article>
 			</div>
 			<div class="widget d-none" id="widget-details">
 				<article id="filelist">

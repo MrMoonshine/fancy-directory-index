@@ -7,7 +7,7 @@
 .btn-group,
 .input-group {
     display: flex;
-    height: 2.4rem;
+    /*height: 2.4rem;*/
 }
 
 /*
@@ -35,10 +35,40 @@
 .btn-outline{
     color: var(--color-text-button);
     background-color: transparent;
-    border: 2px solid var(--color-text-button);
+    border: 1px solid var(--color-text-button);
+}
+
+.btn.append,
+.btn.center{
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-right: none;
+}
+
+.btn.prepend,
+.btn.center{
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-left: none;
 }
 
 .btn-outline:hover,
 input:checked + .btn-outline{
     background-color: rgba(0, 0, 0, 0.4);
+}
+
+nav input[type="search"]{
+    height: 32px;
+    padding: 4px;
+    font-size: 16px;
+    /*box-sizing: content-box;*/
+    background-color: var(--color-background-2);
+    border-radius: var(--input-border-radius);
+    border: 1px solid var(--color-text-button);
+    outline: none;
+    color: var(--color-text-button);
+}
+
+nav input[type="search"]::placeholder{
+    color: grey;
 }

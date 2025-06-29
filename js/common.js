@@ -1,8 +1,11 @@
+const CLASS_HIDDEN = "d-none";
+const CLASS_UNKNOWN = "unknown";
+
 function dom_show(dom, shown) {
     if (shown) {
-        dom.classList.remove("d-none");
+        dom.classList.remove(CLASS_HIDDEN);
     } else {
-        dom.classList.add("d-none");
+        dom.classList.add(CLASS_HIDDEN);
     }
 }
 

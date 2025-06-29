@@ -19,11 +19,10 @@
 /* Light mode */
 @media (prefers-color-scheme: light) {
     :root {
-        --color-main: rgb(159, 87, 161);
         --color-background-2: #dfdfdf;
         --color-background-1: #cfcfcf;
         --color-background-translucent: rgba(223,223,223,.7);
-        --bgnone: white;
+        --color-text-button: white;
         --color-text: black;
         --color-text-code: purple;
     }
@@ -35,7 +34,6 @@
         --color-background-1: #323232;
         --color-background-2: #222222;
         --color-background-translucent: rgba(34, 34, 34, .7);
-        --bgnone: black;
         --color-text: white;
         --color-text-code: hotpink;
     }
@@ -53,8 +51,15 @@ body{
 }
 
 .widget{
+    display: block;
+    margin: auto;
     max-height: calc(100vh - 56px);
+    max-width: 50rem;
     overflow-y: auto;
+}
+
+#widget-gallery{
+    max-width: 64rem;
 }
 
 h1 {
@@ -65,7 +70,7 @@ h1 {
 
 nav {
     height: 56px;
-    padding: 4px;
+    padding: 0px 4px;
     background-color: var(--color-main);
     box-shadow: 2px 2px 8px black;
     
@@ -108,7 +113,6 @@ nav ul li{
 }
 
 nav a{
-    text-decoration: none;
     color: var(--color-text-button);
     background-color: transparent;
     padding: 0.3rem;
@@ -121,34 +125,6 @@ nav a img{
     object-fit: scale-down;
 }
 
-nav a:hover{
-    color: var(--color-text-button);
-    color: var(--color-main);
-    background-color: var(--color-background-1);
-}
-
-nav a.active{
-    color: var(--color-main);
-    background-color: var(--color-background-2);
-}
-
-nav.side a{
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 4px;
-    border-radius: 0px;
-    height: unset;
-}
-
-nav.side a img{
-    height: 2rem;
-    width: 2rem;
-}
-
-nav.side .text{
-    padding: 0.5rem 0px;
-}
-
 nav form{
     flex-wrap: nowrap;
 }
@@ -159,29 +135,53 @@ nav form .btn{
     margin: 0.5rem 0.2rem;
 }
 
-nav > img{
-    margin: 4px;
-    height: 48px;
+nav img.favicon{
+    height: 32px;
     max-width: 12em;
 }
 
+.nav-flex-column{
+    height: 56px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
 nav .btn.big{
-    height: 36px;
-    width: 36px;
+    height: 32px;
+    width: 32px;
     padding: 4px;
-    margin: 4px 0px;
 }
 
 nav .btn.big img,
 nav .btn.big .masked-icon{
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
+}
+
+.dirpath{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    /*margin: calc((56px - 1rem)/2) 0px;*/
+}
+
+.dirpath a{
+    display: flex;
+    padding: 0px;
+    height: 1rem;
+}
+
+.dirpath .slash{
+    color: grey;
 }
 
 div.overlay{
     position: relative;
     background-color: var(--color-background-2);
     height: calc(100vh - 56px);
+    overflow-y: auto;
 }
 
 div.overlay > .grid{
@@ -198,12 +198,17 @@ div.overlay button.close{
     background-color: transparent;
     border: 0px solid transparent;
     font-size: 2em;
-    color: var(--color-text);
+    color: grey;
     cursor: pointer;
 }
 
+div.overlay button.close::after{
+    display: inline-block;
+    content: "\00d7"; /* This will render the 'X' */
+}
+
 div.overlay button.close:hover{
-    color: var(--color-main);
+    color: var(--color-text);
 }
 
 div.overlay .preview{
@@ -272,6 +277,10 @@ div.overlay .actions .action{
     text-decoration: none;
 }
 
+div.overlay .actions .action:not([disabled]):hover{
+    background-color: var(--color-background-1);
+}
+
 div.overlay .actions .action:disabled{
     text-align: left;
     font-weight: bold;
@@ -285,7 +294,7 @@ div.overlay .actions .action img{
 }
 
 .masked-icon{
-    background-color: var(--color-text);
+    background-color: var(--color-text-button);
 }
 
 #masked-icon-details{
@@ -300,7 +309,8 @@ div.overlay .actions .action img{
     gap: var(--gap-dashboard)
 }
 
-.d-none{
+.d-none,
+.d-mobile{
     display: none !important;
 }
 
@@ -326,4 +336,20 @@ div.overlay .actions .action img{
 
 .justify-content-around{
     justify-content: space-around;
+}
+
+.flex-column{
+    flex-direction: column;
+}
+
+.flex-nowrap{
+    flex-wrap: nowrap;
+}
+
+.h-100{
+    height: 100%;
+}
+
+.w-100{
+    width: 100%;
 }

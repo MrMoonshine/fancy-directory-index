@@ -1,10 +1,9 @@
 </article>
 <script src="/fancy-directory-index/js/common.js"></script>
-<script src="/scripts/toast.js"></script>
-<script src="/scripts/overlay.js"></script>
-<script src="/scripts/pagination.js"></script>
+<script src="/fancy-directory-index/js/toast.js"></script>
+<script src="/fancy-directory-index/js/pagination.js"></script>
 <script src="/fancy-directory-index/js/file.js"></script>
-<script src="/fancy-directory-index/js/galery.js"></script>
+<script src="/fancy-directory-index/js/gallery.js"></script>
 <script src="/fancy-directory-index/js/directory.js"></script>
 <script>
     var index = new DirectoryIndex();

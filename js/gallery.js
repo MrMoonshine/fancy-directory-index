@@ -18,9 +18,9 @@ class Polaroid extends PaginationItem {
     this.file = file;
     this.filename = this.file.filename.innerHTML ?? "UNKNOWN";
     // initially, hide element
-    this.item.style.display = "none";
+    this.hide();
 
-    let showbuttons = this.file.filetype == File.Types.IMAGE || this.file.filetype == File.Types.VIDEO;
+    let showbuttons = this.file.filetype != File.Types.FOLDER;//this.file.filetype == File.Types.IMAGE || this.file.filetype == File.Types.VIDEO;
     let fbtop = document.createElement("div");
     fbtop.classList.add("d-flex");
     fbtop.classList.add("buttons");
@@ -58,7 +58,7 @@ class Polaroid extends PaginationItem {
         })
       });
 
-      newtabbutton.href = this.file.item.href;
+      newtabbutton.href = this.file.href;
       newtabbutton.setAttribute("target", "_blank");
       newtabbutton.classList.add("new-tab");
 
@@ -93,6 +93,9 @@ class Polaroid extends PaginationItem {
   }
 
   show() {
+    // show from parent class
+    super.show();
+    
     if(this.loaded){
       return;
     }
@@ -109,17 +112,22 @@ class Polaroid extends PaginationItem {
       case File.Types.VIDEO:
         image = ".thumbnail." + this.filename + ".jpg";
         this.item.style.backgroundImage = `url("${image}")`;
-        this.item.classList.add("video");
+        //this.item.classList.add("video");
 
         let errtestimg = document.createElement("img");
         errtestimg.addEventListener("error", (evt) => {
-          image = File.THUMBNAIL_DEFAULT;
+          if(errtestimg.classList.contains(CLASS_UNKNOWN)){
+            return;
+          }
+          errtestimg.classList.add(CLASS_UNKNOWN);
+          errtestimg.src = this.file.img.src;
+          image = this.file.img.src;
           this.item.style.backgroundImage = `url("${image}")`;
-          //console.log("image is jetzt " + image);
+          console.log("image is jetzt " + image);
         });
         this.item.appendChild(errtestimg);
         errtestimg.src = image;
-        errtestimg.classList.add("d-none");
+        errtestimg.classList.add(CLASS_HIDDEN);
         this.loaded = true;
         break;
       case File.Types.FOLDER:
@@ -141,8 +149,6 @@ class Polaroid extends PaginationItem {
         this.loaded = true;
         break;
     }
-    // show from parent class
-    super.show();
   }
 
   match(term) {

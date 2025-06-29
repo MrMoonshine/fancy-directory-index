@@ -44,12 +44,22 @@ class Preview{
         this.actiondownload = Preview.action_create("Download", "/assets/icons/pencil.webp");
         this.actions.appendChild(this.actiondownload);
 
+        let closeactions = document.createElement("div");
+        closeactions.classList.add("actions");
+        closeactions.classList.add("d-mobile");
+        closeactions.appendChild(Preview.action_create("Close", "", "button", overview_close));
+
+
         let mimefigure = document.createElement("figure");
         this.mimefigcaption = document.createElement("figcaption");
         mimefigure.appendChild(this.mimeicon);
         mimefigure.appendChild(this.mimefigcaption);
         this.domInfo.appendChild(mimefigure);
         this.domInfo.appendChild(this.actions);
+        let hr = document.createElement("hr");
+        hr.classList.add("d-mobile");
+        this.domInfo.appendChild(hr);
+        this.domInfo.appendChild(closeactions);
     }
     
     show(file){
@@ -101,6 +111,7 @@ class Preview{
 
     stop_video(){
         this.previewVideo.remove();
+        this.previewAudio.remove();
         /*let sources = Array.from(this.previewVideo.getElementsByTagName("source"));
         sources.forEach(source => {
             source.remove();
@@ -142,16 +153,14 @@ class File{
         TEXT: "text",
         PDF: "pdf"
     };
-    static THUMBNAIL_DEFAULT = File.getFallbackThumbnail()
-    //static EXTENSIONS_VIDEO = [".mp4", ""];
 
     static overlay = document.getElementById("overlay");
     static overlayCloser = overlay.querySelector("button.close");
     //static preview = 
     static display = document.createElement("div");
-    static btnOpen = document.createElement("a");
+    //static btnOpen = document.createElement("a");
     static preview = new Preview(File.overlay);
-    static btnDownload = document.createElement("a");
+    //static btnDownload = document.createElement("a");
 
     constructor(table_row) {
         // Get original icon
@@ -418,33 +427,25 @@ class File{
         return files;
     }
 
-    static getFallbackThumbnail(){
+    /*static getFallbackThumbnail(){
         let dom = document.getElementById("thumbnail-fallback")
         if(!dom){
             return "";
         }
 
         return dom.src;
-    }
+    }*/
 }
-File.overlayCloser.addEventListener("click", () => {
+
+function overview_close(){
     dom_show(File.overlay, false);
     File.preview.stop_video();
+}
+
+File.overlayCloser.addEventListener("click", overview_close);
+document.addEventListener("keyup", (e) => {
+    if(e.key === "Escape") {
+        overview_close();
+    }
 });
-// Build overlay HTML
-File.display.classList.add("modal-filedisplay")
-File.overlay.appendChild(File.display);
 
-File.btnOpen.innerHTML = "Open in new tab";
-File.btnOpen.target = "_blank";
-File.btnOpen.classList.add("btn");
-
-File.btnDownload.innerHTML = "Download";
-File.btnDownload.classList.add("btn");
-
-/*let btnflexbox = document.createElement("div");
-btnflexbox.appendChild(File.btnOpen);
-btnflexbox.appendChild(File.btnDownload);
-btnflexbox.classList.add("btn-group");
-
-File.overlay.appendToFooter(btnflexbox);*/
