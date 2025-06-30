@@ -14,7 +14,6 @@
 <body>
 	<div id="content">
 		<nav class="d-flex flex-nowrap justify-content-between">
-			<!--<img alt="Icon" src=".directory" onerror='this.style.display = "none"'/>-->
 			<div class="d-flex">
 				<div class="nav-flex-column">
 					<img class="favicon" alt="Icon" src="/favicon.ico" onerror='this.style.display = "none"' />
@@ -39,9 +38,11 @@
 						</label>
 					</div>
 				</div>
-				<!--<a class="btn btn-outline big" href="/">
-					<img alt="Home" src="/favicon.ico" />
-				</a>-->
+				<div class="nav-flex-column">
+					<a href="/fancy-directory-index/settings" class="btn btn-outline big">
+						<img alt="Settings" src="/assets/icons/pencil.webp">
+					</a>
+				</div>
 			</div>
 		</nav>
 		<div class="overlay d-none" id="overlay">

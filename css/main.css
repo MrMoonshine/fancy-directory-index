@@ -80,14 +80,14 @@ nav {
     position: relative;
 }
 
-nav h1{
+/*nav h1{
     text-align: center;
     margin: 0;
     color: var(--color-text-button);
 
     padding: 0px 0.4rem;
     margin-top: 0.8rem;
-}
+}*/
 
 nav div.navbar-collapse{
     min-width: 60%;
