@@ -62,6 +62,7 @@ class DirectoryView {
     modeFromCookie() {
         let mode = cookie_get(DirectoryView.cookiename);
         if(mode.length < 1){
+            this.setMode(0);
             return;
         }
 
@@ -78,5 +79,3 @@ class DirectoryView {
         }
     }
 }
-
-let view = new DirectoryView();

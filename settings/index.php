@@ -25,9 +25,14 @@
 			</div>
 			<div class="d-flex gap">
 				<div class="nav-flex-column">
-					<a class="btn btn-outline big">
-						<img alt="Settings" src="/assets/icons/pencil.webp">
-					</a>
+                    <div class="btn-group">
+                        <button onclick="history.back()" class="btn btn-outline big append">
+                            &#10558;
+                        </button>
+                        <a href="/" class="btn btn-outline big prepend">
+                            <img alt="Home" src="/favicon.ico">
+                        </a>
+                    </div>
 				</div>
 			</div>
 		</nav>
@@ -56,9 +61,61 @@
             var_dump($PAYLOAD);
         ?>
 		<div class="dashboard">
-			<div class="widget">
+            <div class="widget">
                 <header>
                     <h2>Customization</h2>
+                </header>
+				<article>
+                    <form id="themeform">
+                        <table class="options">
+                            <tr>
+                            <th>Default Accent Color</th>  
+                            <td>
+                                <div class="input-group">
+                                    <input type="color" name="color" value="#BC243C">
+                                </div>
+                            </td>  
+                            </tr>
+                            <tr>
+                            <th>Background Image</th>  
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" name="background" value="">
+                                </div>
+                            </td>  
+                            </tr>
+                            <tr>
+                            <th>Gallery Files Horizontal</th>  
+                            <td>
+                                <div class="input-group">
+                                    <input type="range" class="form-range" id="files-horizontal" min="2" max="12" step="1">
+                                    <div class="input-group-prepend">
+                                        oida
+                                    </div>
+                                </div>
+                            </td>  
+                            </tr>
+                            <tr>
+                            <th>Gallery Files Vertical</th>  
+                            <td>
+                                <div class="input-group">
+                                    <input type="range" class="form-range" id="files-horizontal" min="2" max="12" step="1">
+                                    <div class="input-group-prepend">
+                                        oida
+                                    </div>
+                                </div>
+                            </td>  
+                            </tr>
+                        </table>
+                    </form>
+                </article>
+                <footer>
+                    <input form="themeform" type="submit" class="btn" value="Submit">
+                </footer>
+			</div>
+			<div class="widget">
+                <header>
+                    <h2>Server Settings</h2>
                 </header>
 				<article>
                     <form id="customizationform" method="POST">
@@ -107,5 +164,8 @@
 			</div>
         </div>
     </div>
+    <script src="/fancy-directory-index/js/common.js"></script>
+    <script src="/fancy-directory-index/js/toast.js"></script>
+    <script src="/fancy-directory-index/js/settings.js"></script>
 </body>
 </html>

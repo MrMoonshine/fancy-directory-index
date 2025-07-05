@@ -6,6 +6,7 @@
 <script src="/fancy-directory-index/js/gallery.js"></script>
 <script src="/fancy-directory-index/js/directory.js"></script>
 <script>
+    let view = new DirectoryView();
     var index = new DirectoryIndex();
     index.createGalery();
 </script>

@@ -150,6 +150,7 @@ nav .btn.big{
     height: 32px;
     width: 32px;
     padding: 4px;
+    box-sizing: content-box;
 }
 
 nav .btn.big img,
