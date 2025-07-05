@@ -25,6 +25,10 @@ figure video.filedisplay{
     background-color: black;
 }
 
+figure audio.filedisplay{
+    height: unset;
+}
+
 figure figcaption{
     padding: 4px 0px;
 }

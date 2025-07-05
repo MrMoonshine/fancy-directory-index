@@ -1,5 +1,5 @@
-const POLAROID_COPY_IMAGE = "https://alpakagott/assets/icons/copy.webp";
-const POLAROID_NEW_TAB_IMAGE = "https://alpakagott/assets/icons/newtab.svg";
+const POLAROID_COPY_IMAGE = ICON_COPY_LINK;
+const POLAROID_NEW_TAB_IMAGE = ICON_NEW_TAB;
 try {
   var POLAROID_TOAST = new Toast();
 } catch (error) {

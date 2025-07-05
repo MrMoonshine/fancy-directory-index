@@ -41,7 +41,7 @@
 				</div>
 				<div class="nav-flex-column">
 					<a href="/fancy-directory-index/settings" class="btn btn-outline big">
-						<img alt="Settings" src="/assets/icons/pencil.webp">
+						<div class="masked-icon" style="mask-image: url('/fancy-directory-index/assets/configure.svg')"></div>
 					</a>
 				</div>
 			</div>

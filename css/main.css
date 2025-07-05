@@ -180,11 +180,11 @@ nav .btn.big .masked-icon{
 }
 
 #masked-icon-details{
-    mask-image: url("/assets/icons/view-list-details.svg");
+    mask-image: url("/fancy-directory-index/assets/view-list-details.svg");
 }
 
 #masked-icon-gallery{
-    mask-image: url("/assets/icons/view-list-icons.svg");
+    mask-image: url("/fancy-directory-index/assets/view-list-icons.svg");
 }
 
 .gap{

@@ -40,10 +40,10 @@ class Preview {
         actiontitle.setAttribute("disabled", true);
         this.actions.appendChild(actiontitle);
 
-        this.actionnewtab = Preview.action_create("Open in new tab", "/assets/icons/pencil.webp");
+        this.actionnewtab = Preview.action_create("Open in new tab", ICON_NEW_TAB);
         this.actionnewtab.setAttribute("target", "_blank");
         this.actions.appendChild(this.actionnewtab);
-        this.actiondownload = Preview.action_create("Download", "/assets/icons/pencil.webp");
+        this.actiondownload = Preview.action_create("Download", ICON_DOWNLOAD);
         this.actions.appendChild(this.actiondownload);
 
         let closeactions = document.createElement("div");
