@@ -53,12 +53,12 @@
 			</div>
 		</div>
 		<div class="dashboard">
+			<div id="sortingButtons">
+				<div class="placeholder"></div>
+			</div>
 			<div class="widget" id="widget-gallery">
 				<!--<img alt="thumbnail" src="/assets/icons/application-video.svg" id="thumbnail-fallback" />-->
 				<article id="gallery"></article>
 			</div>
 			<div class="widget d-none" id="widget-details">
 				<article id="filelist">
-					<div id="sortingButtons">
-						<div class="placeholder"></div>
-					</div>

@@ -8,22 +8,25 @@ img, video{
 }
 
 figure .filedisplay{
-    height: 80vh;
+    height: 85vh;
 }
 
 figure img.filedisplay,
 figure video.filedisplay,
 figure audio.filedisplay{
     display: block;
-    margin: 1em auto;
-    height: 85vh;
+    margin: 0px auto;
     max-width: calc(100vw - var(--preview-info-width));
-    border-radius: 1em;
+    border-radius: 8px;
     object-fit: scale-down;
 }
 
 figure video.filedisplay{
     background-color: black;
+}
+
+figure figcaption{
+    padding: 4px 0px;
 }
 
 #filelist{
@@ -36,6 +39,12 @@ figure video.filedisplay{
 .file,
 #sortingButtons{
     grid-template-columns: 4em auto 11em 3em;
+}
+
+#sortingButtons,
+.widget{
+    max-width: 50rem;
+    margin: auto;
 }
 
 .file{
@@ -158,7 +167,7 @@ button.file{
     gap: 1em;
 
     padding: var(--gap-dashboard) 0px;
-    height: calc(100vh - 2*var(--gap-dashboard) - 2rem - 2.4rem - 56px);
+    height: calc(100vh - 2*var(--gap-dashboard) - 3rem - 2.4rem - 56px);
     overflow: hidden;
 
     margin-bottom: 1rem;

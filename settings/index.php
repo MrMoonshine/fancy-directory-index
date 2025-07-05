@@ -32,14 +32,28 @@
 			</div>
 		</nav>
         <?php
+            $PAYLOAD = [
+                "status" => 0,
+                "errors" => [],
+                "POST" => $_POST
+            ];
             try {
                 require("db.php");
-                var_dump(DirectoryDB::create_if_not_exists());
+                // Check if a File either exists or has been created successfully on demand
+                $fileFailureHandlingInfo = DirectoryDB::create_if_not_exists();
+                $PAYLOAD['status'] = $fileFailureHandlingInfo['status'];
+                array_merge($PAYLOAD['errors'], $fileFailureHandlingInfo['errors']);
+                // Create DB
                 $ddb = new DirectoryDB(DirectoryDB::DB_FILE);
-                var_dump($ddb->errors);
+                $ddb->setup();
+                //var_dump($ddb->errors);
+                array_merge($PAYLOAD['errors'], $ddb->errors);
             } catch (\Throwable $th) {
-                echo("Exception: ".$th->getMessage());
+                //echo("Exception: ".$th->getMessage());
+                $PAYLOAD['status'] = -1;
+                array_push($PAYLOAD['errors'], $th->getMessage());
             }
+            var_dump($PAYLOAD);
         ?>
 		<div class="dashboard">
 			<div class="widget">
@@ -47,7 +61,7 @@
                     <h2>Customization</h2>
                 </header>
 				<article>
-                    <form method="POST">
+                    <form id="customizationform" method="POST">
                         <table class="options">
                             <tr>
                             <th>Page Icon</th>  
@@ -58,7 +72,7 @@
                             </td>  
                             </tr>
                             <tr>
-                            <th>Accent Color</th>  
+                            <th>Default Accent Color</th>  
                             <td>
                                 <div class="input-group">
                                     <input type="color" name="color" value="#aa8812">
@@ -78,7 +92,7 @@
                     </form>
                 </article>
                 <footer>
-                    <input type="submit" class="btn" value="Submit">
+                    <input form="customizationform" type="submit" class="btn" value="Submit">
                 </footer>
 			</div>
             <div class="widget">
