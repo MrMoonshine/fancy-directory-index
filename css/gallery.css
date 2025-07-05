@@ -253,6 +253,18 @@ button.file{
     width: 80%;
 }
 
+.polaroid .folder-icon{
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 1rem;
+    object-fit: scale-down;
+    width: calc(100% - 2rem);
+    height: calc(100% - 4rem);
+    border: none;
+}
+
+
 nav form {
     flex-grow: 1;
 }

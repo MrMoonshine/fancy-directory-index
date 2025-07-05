@@ -28,8 +28,8 @@ class Polaroid extends PaginationItem {
     let newtabbutton = document.createElement("a");
     let copybutton = document.createElement("button");
     copybutton.classList.add("copy");
-    
-    if(showbuttons){
+
+    if (showbuttons) {
       let cpyimg = new Image();
       cpyimg.src = POLAROID_COPY_IMAGE;
       cpyimg.alt = "copy";
@@ -37,12 +37,12 @@ class Polaroid extends PaginationItem {
 
       copybutton.addEventListener("click", (event) => {
         // prevent overlay event
-        if(event && event.stopPropagation) event.stopPropagation();
-        let copycontent = Polaroid.hrefSanitize(this.file.item.href);
+        if (event && event.stopPropagation) event.stopPropagation();
+        let copycontent = Polaroid.hrefSanitize(this.file.getFileLink());
         // copy to clipboard
         let promise = navigator.clipboard.writeText(copycontent);
         promise.then(() => {
-          try{
+          try {
             POLAROID_TOAST.show(
               "Copied!",
               copycontent,
@@ -50,7 +50,7 @@ class Polaroid extends PaginationItem {
               Toast.BUTTONS_NONE,
               POLAROID_COPY_IMAGE
             );
-          }catch (error){
+          } catch (error) {
             console.log(error);
           }
         }, () => {
@@ -68,7 +68,7 @@ class Polaroid extends PaginationItem {
       newtabbutton.appendChild(ntbimg);
 
       newtabbutton.addEventListener("click", (event) => {
-        if(event && event.stopPropagation) event.stopPropagation();
+        if (event && event.stopPropagation) event.stopPropagation();
       });
     }
 
@@ -76,7 +76,7 @@ class Polaroid extends PaginationItem {
     filenamep.classList.add("filename");
     filenamep.innerHTML = this.filename;
 
-    if(showbuttons){
+    if (showbuttons) {
       fbtop.appendChild(newtabbutton);
       fbtop.appendChild(copybutton);
       //fbtop.appendChild(maximizebutton);
@@ -85,7 +85,11 @@ class Polaroid extends PaginationItem {
     this.item.appendChild(filenamep);
 
     //maximizebutton.addEventListener("click", this.file.showPreview.bind(this.file));
-    if(isDirectory){
+    if (isDirectory) {
+      if(!this.file.img.alt.includes("PARENT")){
+        this.setFolderIcon();
+      }
+
       return;
     }
     // Show file preview on click
@@ -95,8 +99,8 @@ class Polaroid extends PaginationItem {
   show() {
     // show from parent class
     super.show();
-    
-    if(this.loaded){
+
+    if (this.loaded) {
       return;
     }
 
@@ -106,7 +110,7 @@ class Polaroid extends PaginationItem {
         //image = this.file.item.href;
         //image = image.replaceAll("'", "%27"); // Fixes issue with CSS URL when an apostrophe is in use
         //this.item.style.backgroundImage = "url(" + image + ")";
-        this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.href)}")`;
+        this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.getFileLink())}")`;
         this.loaded = true;
         break;
       case File.Types.VIDEO:
@@ -116,7 +120,7 @@ class Polaroid extends PaginationItem {
 
         let errtestimg = document.createElement("img");
         errtestimg.addEventListener("error", (evt) => {
-          if(errtestimg.classList.contains(CLASS_UNKNOWN)){
+          if (errtestimg.classList.contains(CLASS_UNKNOWN)) {
             return;
           }
           errtestimg.classList.add(CLASS_UNKNOWN);
@@ -133,7 +137,7 @@ class Polaroid extends PaginationItem {
       case File.Types.FOLDER:
         this.item.href = this.file.item.href
         let iconDir = new Image();
-        iconDir.alt = this.file.img;
+        iconDir.alt = this.file.img.alt ?? "[DIR]";
         iconDir.src = this.file.img.src;
         iconDir.classList.add("icon");
         this.item.appendChild(iconDir);
@@ -141,7 +145,7 @@ class Polaroid extends PaginationItem {
         break;
       default:
         let icon = new Image();
-        icon.alt = this.file.img;
+        icon.alt = this.file.img.alt ?? "";
         icon.src = this.file.img.src;
         icon.classList.add("icon");
         this.item.appendChild(icon);
@@ -163,7 +167,25 @@ class Polaroid extends PaginationItem {
     return this.item;
   }
 
-  static hrefSanitize(href){
+  setFolderIcon() {
+    try{
+      let file = window.location.pathname + this.file.filename.innerHTML;
+      let img = document.createElement("img");
+      img.addEventListener("error", () => {
+        img.remove();
+      });
+      //img.style.backgroundImage = `url("${file + ".directory"}")`;
+      img.alt = "";
+      img.src = file + ".directory";
+      img.classList.add("folder-icon");
+      this.item.appendChild(img);
+    }catch(err){
+      return;
+    }
+    
+  }
+
+  static hrefSanitize(href) {
     let ret = "";
     ret = href.replaceAll("'", "%27"); // Fixes issue with CSS URL when an apostrophe is in use
     return ret;

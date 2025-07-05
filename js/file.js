@@ -1,5 +1,5 @@
-class Preview{
-    constructor(dom){
+class Preview {
+    constructor(dom) {
         this.domPreview = dom.querySelector(".preview") ?? dom;
         this.domInfo = dom.querySelector(".info") ?? dom;
 
@@ -61,8 +61,8 @@ class Preview{
         this.domInfo.appendChild(hr);
         this.domInfo.appendChild(closeactions);
     }
-    
-    show(file){
+
+    show(file) {
         this.previews.forEach((preview) => {
             dom_show(preview, false);
         });
@@ -75,7 +75,7 @@ class Preview{
         this.actiondownload.href = file.getFileName();
         this.actiondownload.setAttribute("download", file.getFileName());
 
-        switch(file.filetype){
+        switch (file.filetype) {
             case File.Types.IMAGE:
                 dom_show(this.previewImage, true);
                 this.previewImage.src = file.getFileLink();
@@ -109,7 +109,7 @@ class Preview{
         }
     }
 
-    stop_video(){
+    stop_video() {
         this.previewVideo.remove();
         this.previewAudio.remove();
         /*let sources = Array.from(this.previewVideo.getElementsByTagName("source"));
@@ -118,10 +118,10 @@ class Preview{
         });*/
     }
 
-    static action_create(text, icon = "", tagname = "a", callback = null){
+    static action_create(text, icon = "", tagname = "a", callback = null) {
         let action = document.createElement(tagname);
         action.classList.add("action");
-        if(icon.length > 0){
+        if (icon.length > 0) {
             action.classList.add("d-flex");
             action.classList.add("justify-content-left");
             action.classList.add("gap");
@@ -132,18 +132,18 @@ class Preview{
             let textdiv = document.createElement("div");
             textdiv.innerText = text;
             action.appendChild(textdiv);
-        }else{
+        } else {
             action.innerText = text;
         }
 
-        if(callback){
+        if (callback) {
             action.addEventListener("click", callback);
         }
         return action;
     }
 }
 
-class File{
+class File {
     static Types = {
         OTHER: "other",
         IMAGE: "image",
@@ -185,12 +185,12 @@ class File{
             let td_size = tds.pop();
             let td_date = tds.pop();
             let td_filename = tds.pop();
-            let td_image = tds.pop();            
+            let td_image = tds.pop();
 
             this.size.innerText = td_size.innerText;
-            this.date.innerText = td_date.innerText; 
+            this.date.innerText = td_date.innerText;
         } catch (error) {
-            
+
         }
         /*let lasttd = tds[tds.length - 1];
         this.size = document.createElement("div");
@@ -211,14 +211,14 @@ class File{
             //console.log(originalicon[0].alt);
             if (originalicon[0].alt == "[VID]" || originalicon[0].alt == "[VIDEO]") {
                 this.filetype = File.Types.VIDEO;
-            }else if (originalicon[0].alt == "[AUD]" || originalicon[0].alt == "[AUDIO]") {
+            } else if (originalicon[0].alt == "[AUD]" || originalicon[0].alt == "[AUDIO]") {
                 this.filetype = File.Types.AUDIO;
-            }else if (originalicon[0].alt == "[TXT]" || originalicon[0].alt == "[TEXT]") {
+            } else if (originalicon[0].alt == "[TXT]" || originalicon[0].alt == "[TEXT]") {
                 this.filetype = File.Types.TEXT;
-            }else if (originalicon[0].alt == "[IMG]" || filelink.href.toUpperCase().endsWith(".WEBP")) {
+            } else if (originalicon[0].alt == "[IMG]" || filelink.href.toUpperCase().endsWith(".WEBP")) {
                 this.filetype = File.Types.IMAGE;
             }
-            else if (originalicon[0].alt == "[PDF]"){
+            else if (originalicon[0].alt == "[PDF]") {
                 this.filetype = File.Types.PDF;
             }
         } else {
@@ -226,11 +226,11 @@ class File{
         }
 
         // Set href for dir
-        if(this.filetype == File.Types.FOLDER){
+        if (this.filetype == File.Types.FOLDER) {
             this.item.href = filelink.href;
-        }else{
+        } else {
             // Open Previe
-            this.item.addEventListener("click", () => {this.showPreview()});
+            this.item.addEventListener("click", () => { this.showPreview() });
         }
 
         // Bottom Link
@@ -248,14 +248,14 @@ class File{
                 a.classList.add("folder-link");
 
                 // Get folder icon
-                if(originalicon[0].alt == "[DIR]"){
+                /*if (originalicon[0].alt == "[DIR]") {
                     this.setFolderIcon(a);
-                }
+                }*/
                 break;
             default:
                 this.item.appendChild(this.img);
         }
-    
+
         this.item.appendChild(this.filename);
         this.item.appendChild(this.date);
         this.item.appendChild(this.size);
@@ -264,36 +264,6 @@ class File{
         this.img.addEventListener("click", () => {
             this.showPreview();
         });
-    }
-
-    setFolderIcon(link){
-        let url = new URL(window.location);
-        if(url.pathname.startsWith("/gia")){
-            url.pathname = "/gia/directory/testicon.php";
-        }else{
-            url.pathname = "/directory/testicon.php";
-        }
-        
-        let file = window.location.pathname + this.filename.innerHTML;
-        url.searchParams.append("dir", file);
-        //console.log(window.location.pathname + this.filename.innerHTML);
-          
-        const req = new XMLHttpRequest();
-        req.addEventListener("loadend", (data) => {
-            let jdata = JSON.parse(req.responseText);
-            if(jdata.exists == "y"){
-                let img = document.createElement("img");
-                img.alt = "";
-                img.src = file + ".directory";
-                img.classList.add("folder-icon");
-
-                link.appendChild(img);
-                //console.log(link);
-            }
-        });
-        req.open("GET", url);
-        req.send();
-          
     }
 
     showPreview() {
@@ -329,25 +299,6 @@ class File{
         File.overlay.show();*/
     }
 
-    folderIcon(url) {
-        if (this.img.alt != "[DIR]") {
-            return;
-        }
-        let icon = document.createElement("img");
-        icon.alt = "";
-        icon.addEventListener("error", (event) => {}); // surpress warnings. at least firefox...
-        icon.src = url + ".directory";
-        icon.addEventListener("load", (event) => {
-            // All good. Append
-            let parent = this.img.parentElement;
-            parent.classList.add("folder-link");
-            parent.appendChild(icon);
-            icon.classList.add("folder-icon");
-            console.log(parent);
-        });
-        //console.log(icon.width + " and " + icon.naturalWidth);      
-    }
-
     match(search = "") {
         if (search == "") {
             return true;
@@ -356,11 +307,11 @@ class File{
         return this.filename.innerHTML.toUpperCase().includes(search.toUpperCase()) || this.filename.innerHTML == "Parent Directory";
     }
 
-    show(){
+    show() {
         this.item.style.display = "grid";
     }
 
-    hide(){
+    hide() {
         this.item.style.display = "none";
     }
 
@@ -368,15 +319,15 @@ class File{
         return this.img.alt == "[IMG]" || this.img.alt == "[VIDEO]";
     }
 
-    getFileName(){
+    getFileName() {
         return this.filename.innerText;
     }
 
-    getFileLink(){
+    getFileLink() {
         return this.href;
     }
 
-    getMimeIcon(){
+    getMimeIcon() {
         return this.img.src;
     }
 
@@ -400,12 +351,12 @@ class File{
         // Detach sorting links
         let links = tfiles[0].getElementsByTagName("a");
         let button_group = document.getElementById("sortingButtons");
-        if(!button_group){
+        if (!button_group) {
             console.warn("No button group for sorting found! (id: sortingButtons)");
             return files;
         }
 
-        for (let i = 0; i < links.length; i++){
+        for (let i = 0; i < links.length; i++) {
             //console.log(links[i].href);
             let a = document.createElement("a");
             a.classList.add("input-group-append");
@@ -415,9 +366,9 @@ class File{
             a.innerHTML = links[i].innerHTML;
 
             let sorturl = new URL(a.href);
-            if(sorturl.searchParams.get("C").includes("O=A")){
+            if (sorturl.searchParams.get("C").includes("O=A")) {
                 a.classList.add("ascending");
-            }else if(sorturl.searchParams.get("C").includes("O=D")){
+            } else if (sorturl.searchParams.get("C").includes("O=D")) {
                 a.classList.add("descending");
             }
 
@@ -437,14 +388,14 @@ class File{
     }*/
 }
 
-function overview_close(){
+function overview_close() {
     dom_show(File.overlay, false);
     File.preview.stop_video();
 }
 
 File.overlayCloser.addEventListener("click", overview_close);
 document.addEventListener("keyup", (e) => {
-    if(e.key === "Escape") {
+    if (e.key === "Escape") {
         overview_close();
     }
 });

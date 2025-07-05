@@ -1,0 +1,95 @@
+/*--------------*/
+/* Toast  Boxes */
+/*--------------*/
+.toast button:hover{
+    cursor: pointer;
+}
+
+.btn-highlight{
+    background-color: var(--color-main);
+    border: 1px solid var(--color-main);
+    color: var(--color-text-button);
+}
+
+.btn-other{
+    background-color: transparent;
+    color: var(--color-text-button);
+    border: 1px solid var(--color-main);
+}
+
+.btn-other:hover, .btn-highlight:hover{
+    color: var(--color-main);
+    background-color: var(--color-background-2);
+}
+
+.toast .toast-top strong{
+    /* Margin auto on y axis */
+    margin: auto 0;
+}
+
+.toast .toast-close{
+    margin: 0px;
+    padding: 4px;
+    height: 2em;
+
+    background-color: transparent;
+    color: var(--color-text);
+    border: 0px solid;
+}
+
+.toast .toast-close:hover{
+    color: var(--color-main);
+}
+
+#toastarea{
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 100;
+}
+
+.toast{
+    color: var(--color-text);
+    background-color: var(--color-background-2);
+    box-shadow: 0.2rem 0.2rem 1rem black;
+    margin: 0.5rem;
+    /*Border*/
+    border: 2px solid var(--color-main);
+    border-radius: 0.5em;
+    width: 25rem;
+}
+
+.toast .toast-top{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--color-main);
+    padding-left: 1rem;
+}
+
+.toast article{
+    margin: 0px;
+    padding: 0.5rem;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1em;
+}
+
+.toast article p{
+    text-wrap: wrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.toast article img{
+    max-width: 7rem;
+    max-height: 8rem;
+    object-fit: scale-down;
+    border-radius: 0.5em;
+}
+
+.toast .toast-bot{
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0.3rem;
+}
