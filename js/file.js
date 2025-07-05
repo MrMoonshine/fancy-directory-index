@@ -1,5 +1,7 @@
 class Preview {
     constructor(dom) {
+        this.file = null;
+
         this.domPreview = dom.querySelector(".preview") ?? dom;
         this.domInfo = dom.querySelector(".info") ?? dom;
 
@@ -49,7 +51,6 @@ class Preview {
         closeactions.classList.add("d-mobile");
         closeactions.appendChild(Preview.action_create("Close", "", "button", overview_close));
 
-
         let mimefigure = document.createElement("figure");
         this.mimefigcaption = document.createElement("figcaption");
         mimefigure.appendChild(this.mimeicon);
@@ -60,12 +61,45 @@ class Preview {
         hr.classList.add("d-mobile");
         this.domInfo.appendChild(hr);
         this.domInfo.appendChild(closeactions);
+        
+        // Buttons for next & prev item
+        this.prevbutton = document.createElement("button");
+        this.prevbutton.classList.add("prev");
+        this.prevbutton.classList.add("d-desktop");
+        this.prevbutton.innerHTML = "&#8249;";
+        this.prevbutton.addEventListener("click", () => {
+            this.show_prev();
+        });
+        this.domPreview.appendChild(this.prevbutton);
+
+        this.nextbutton = document.createElement("button");
+        this.nextbutton.classList.add("next");
+        this.nextbutton.classList.add("d-desktop");
+        this.nextbutton.innerHTML = "&#8250;";
+        this.nextbutton.addEventListener("click", () => {
+            this.show_next();
+        });
+        this.domPreview.appendChild(this.nextbutton);
+
+        // Image zoom
+        this.previewImage.addEventListener("click", () => {
+            this.image_toggle_height_limit();
+        });
     }
 
     show(file) {
+        if(!file){
+            console.warn("Unable to show null as file!");
+            return;
+        }
+        //console.log(file);
+        this.file = file;
         this.previews.forEach((preview) => {
             dom_show(preview, false);
         });
+        // hide prev & next button in case no prev or next exists
+        dom_show(this.prevbutton, Boolean(this.file.prev));
+        dom_show(this.nextbutton, Boolean(this.file.next));
 
         this.figcaption.innerText = file.getFileName();
         this.mimefigcaption.innerText = file.getFileName();
@@ -109,6 +143,14 @@ class Preview {
         }
     }
 
+    show_prev(){
+        this.show(this.file.prev);
+    }
+
+    show_next(){
+        this.show(this.file.next);
+    }
+
     stop_video() {
         this.previewVideo.remove();
         this.previewAudio.remove();
@@ -116,6 +158,15 @@ class Preview {
         sources.forEach(source => {
             source.remove();
         });*/
+    }
+
+    image_toggle_height_limit(){
+        const CLASS_UNSET = "unset-max-height";
+        if(this.previewImage.classList.contains(CLASS_UNSET)){
+            this.previewImage.classList.remove(CLASS_UNSET);
+        }else{
+            this.previewImage.classList.add(CLASS_UNSET);
+        }
     }
 
     static action_create(text, icon = "", tagname = "a", callback = null) {
@@ -163,6 +214,8 @@ class File {
     //static btnDownload = document.createElement("a");
 
     constructor(table_row) {
+        this.prev = null;
+        this.next = null;
         // Get original icon
         this.img = document.createElement("img");
         let originalicon = table_row.getElementsByTagName("img");
@@ -340,11 +393,23 @@ class File {
         }
 
         let tfiles = table.getElementsByTagName("tr");
+        let prevFileIndex = -1;
         for (let i = 1; i < tfiles.length; i++) {
             // Exclude the horizontal lines
             if (tfiles[i].getElementsByTagName("hr").length == 0) {
-                //this.files.push(new File(tfiles[i], this.viewer));
-                files.push(new File(tfiles[i], viewer))
+                let currentfile = new File(tfiles[i], viewer)
+                files.push(currentfile);
+                let currentIndex = files.length - 1;
+                // Skip in case of DIR
+                if(currentfile.filetype == File.Types.FOLDER){
+                    continue;
+                }
+                // Add prev and next links
+                if(prevFileIndex >= 0){
+                    files[currentIndex].prev = files[prevFileIndex];
+                    files[prevFileIndex].next = files[currentIndex];
+                }
+                prevFileIndex = currentIndex;
             }
         }
 
