@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/main.css">
 	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/settings.css">
 	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/inputs.css">
+    <link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/toast.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -58,7 +59,6 @@
                 $PAYLOAD['status'] = -1;
                 array_push($PAYLOAD['errors'], $th->getMessage());
             }
-            var_dump($PAYLOAD);
         ?>
 		<div class="dashboard">
             <div class="widget">
@@ -72,7 +72,7 @@
                             <th>Default Accent Color</th>  
                             <td>
                                 <div class="input-group">
-                                    <input type="color" name="color" value="#BC243C">
+                                    <input type="color" name="color">
                                 </div>
                             </td>  
                             </tr>
@@ -88,9 +88,8 @@
                             <th>Gallery Files Horizontal</th>  
                             <td>
                                 <div class="input-group">
-                                    <input type="range" class="form-range" id="files-horizontal" min="2" max="12" step="1">
-                                    <div class="input-group-prepend">
-                                        oida
+                                    <input type="range" name="horizontal" class="form-range" id="files-horizontal" min="2" max="12" step="1">
+                                    <div id="files-horizontal-display" class="input-group-prepend">
                                     </div>
                                 </div>
                             </td>  
@@ -99,9 +98,8 @@
                             <th>Gallery Files Vertical</th>  
                             <td>
                                 <div class="input-group">
-                                    <input type="range" class="form-range" id="files-horizontal" min="2" max="12" step="1">
-                                    <div class="input-group-prepend">
-                                        oida
+                                    <input type="range" name="vertical" class="form-range" id="files-vertical" min="2" max="12" step="1">
+                                    <div id="files-vertical-display" class="input-group-prepend">
                                     </div>
                                 </div>
                             </td>  
@@ -132,7 +130,7 @@
                             <th>Default Accent Color</th>  
                             <td>
                                 <div class="input-group">
-                                    <input type="color" name="color" value="#aa8812">
+                                    <input type="color" name="color">
                                 </div>
                             </td>  
                             </tr>
@@ -157,13 +155,48 @@
                     <h2>Aliases</h2>
                 </header>
 				<article>
-                    <form method="POST">
+                    <!--<form method="POST">
                         
-                    </form>
+                    </form>-->
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Alias</th>
+                                <th>Directory</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $ddb->alias_table(); ?>
+                        </tbody>
+                        <tfooter>
+                            <tr>
+                                <td>
+                                    <input name="aliasname" type="text" form="alias-add-form" value="$name" readonly/>
+                                    <form method="POST" id="alias-add-form" class="d-none"></form>
+                                    <input name="mode" form="alias-add-form" value="aliasadd" class="d-none" readonly/>
+                                </td>
+                                <td>
+                                    <input name="directory" type="text" form="alias-add-form" value="$directory" readonly/>
+                                </td>
+                                <td>
+                                    <input type="submit" form="alias-add-form" value="+" class="btn-danger"/>
+                                </td>
+                            </tr>
+                        </tfooter>
+                    </table>
                 </article>
 			</div>
         </div>
     </div>
+    <script type='text/javascript'>
+    <?php
+    $js_array = json_encode($PAYLOAD);
+    echo "var PHP_PAYLOAD = ". $js_array . ";\n";
+    ?>
+    console.log("PHP PAYLOAD:");
+    console.log(PHP_PAYLOAD);
+    </script>
     <script src="/fancy-directory-index/js/common.js"></script>
     <script src="/fancy-directory-index/js/toast.js"></script>
     <script src="/fancy-directory-index/js/settings.js"></script>

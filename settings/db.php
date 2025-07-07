@@ -17,6 +17,38 @@ class DirectoryDB extends SQLite3
         array_push($this->errors, "Oida");        
     }
 
+    public function alias_table(){
+        $SQL = <<<SQL
+            SELECT "id","aliasname","directory" FROM aliases;
+        SQL;
+        
+        $results = $this->query($SQL);
+        while ($row = $results->fetchArray()) {
+            $id = $row["id"];
+            $name = $row["aliasname"];
+            $directory = $row["directory"];
+            $formid = "alias-delete-form-".$id;
+            //var_dump($row);
+            echo <<<HTML
+            <tr>
+                <td>
+                    <input name="aliasname" type="text" form="$formid" value="$name" readonly/>
+                    <form method="POST" id="$formid" class="d-none"></form>
+                    <input name="id" form="$formid" value="$id" class="d-none" readonly/>
+                    <input name="mode" form="$formid" value="aliasdelete" class="d-none" readonly/>
+                    
+                </td>
+                <td>
+                    <input name="directory" type="text" form="$formid" value="$directory" readonly/>
+                </td>
+                <td>
+                    <input type="submit" form="$formid" value="-" class="btn-success"/>
+                </td>
+            </tr>
+            HTML;
+        }
+    }
+
     // Check if the correct tables are in use
     private function tables_exist(){
         $requiredTables = ["options", "directries", "thumbnails"];

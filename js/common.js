@@ -1,3 +1,5 @@
+const THUMBNAIL_ENABLE = true;
+
 const CLASS_HIDDEN = "d-none";
 const CLASS_UNKNOWN = "unknown";
 
@@ -7,6 +9,12 @@ const ICON_NEW_TAB = APACHE_ALIAS + "assets/newtab.svg";
 const ICON_COPY_LINK = APACHE_ALIAS + "assets/edit-copy.svg";
 const ICON_DOWNLOAD = APACHE_ALIAS + "assets/download.svg";
 
+const COOKIE_COLOR = "fdi_color";
+const COOKIE_BACKGROUND = "fdi_background_img";
+const COOKIE_HORIZONTAL = "fdi_tile_horizontal";
+const COOKIE_VERTICAL = "fdi_tile_vertical";
+const COOKIE_GALLERY_MODE = "fdi_viewmode";
+
 function dom_show(dom, shown) {
     if (shown) {
         dom.classList.remove(CLASS_HIDDEN);
@@ -15,32 +23,8 @@ function dom_show(dom, shown) {
     }
 }
 
-function cookie_get(cname) {
-    let name = cname + "=";
-    let decodedCookie = decodeURIComponent(document.cookie);
-    let ca = decodedCookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
-}
-
-function cookie_set(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    let expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;SameSite=Lax";
-}
-
 class DirectoryView {
     #mode = 0;
-    static cookiename = "viewmode"
     constructor() {
         this.radioGallery = document.getElementById("radio-gallery");
         this.radioDetails = document.getElementById("radio-details");
@@ -48,7 +32,8 @@ class DirectoryView {
 
         this.radios.forEach((radio) => {
             radio.addEventListener("change", () => {
-                cookie_set(DirectoryView.cookiename, radio.value, 1);
+                //cookie_set(COOKIE_GALLERY_MODE, radio.value, 1);
+                localStorage.setItem(COOKIE_GALLERY_MODE, radio.value);
                 this.setMode(Number(radio.value));
             });
         });
@@ -60,8 +45,8 @@ class DirectoryView {
     }
 
     modeFromCookie() {
-        let mode = cookie_get(DirectoryView.cookiename);
-        if(mode.length < 1){
+        let mode = localStorage.getItem(COOKIE_GALLERY_MODE);
+        if (!mode || mode.length < 1) {
             this.setMode(0);
             return;
         }
@@ -74,8 +59,18 @@ class DirectoryView {
 
     setMode(mode) {
         this.#mode = mode;
-        for(let i = 0; i < this.widgets.length; i++){
+        let hitcount = 0;
+        for (let i = 0; i < this.widgets.length; i++) {
             dom_show(this.widgets[i], mode == i);
+            if (mode == i) {
+                hitcount += 1;
+            }
         }
+
+        if (hitcount > 0) {
+            return;
+        }
+        // If no match was made default to first view
+        dom_show(this.widgets[0], true);
     }
 }
