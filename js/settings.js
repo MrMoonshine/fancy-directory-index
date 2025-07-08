@@ -94,4 +94,7 @@ class ThemeForm extends Form {
     }
 }
 
-let themeform = new ThemeForm(document.querySelector("#themeform"));
+let themeformdom = document.querySelector("#themeform");
+if(themeformdom){
+    let themeform = new ThemeForm(themeformdom);
+}

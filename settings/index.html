@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+	<meta charset="utf-8">
+	<meta lang="de_AT">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/main.css">
+	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/settings.css">
+	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/inputs.css">
+    <link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/toast.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+	<div id="content">
+		<nav class="d-flex flex-nowrap justify-content-between">
+			<!--<img alt="Icon" src=".directory" onerror='this.style.display = "none"'/>-->
+			<div class="d-flex">
+				<div class="nav-flex-column">
+					<img class="favicon" alt="Icon" src="/favicon.ico" onerror='this.style.display = "none"' />
+				</div>
+				<div class="nav-flex-column">
+					<h1>Fancy-Directory-Index Settings</h1>
+				</div>
+			</div>
+			<div class="d-flex gap">
+				<div class="nav-flex-column">
+                    <div class="btn-group">
+                        <button onclick="history.back()" class="btn btn-outline big append">
+                            &#10558;
+                        </button>
+                        <a href="/" class="btn btn-outline big prepend">
+                            <img alt="Home" src="/favicon.ico">
+                        </a>
+                    </div>
+				</div>
+			</div>
+		</nav>
+		<div class="dashboard">
+            <div class="widget">
+                <header>
+                    <h2>Customization</h2>
+                </header>
+				<article>
+                    <form id="themeform">
+                        <table class="options">
+                            <tr>
+                            <th>Default Accent Color</th>  
+                            <td>
+                                <div class="input-group">
+                                    <input type="color" name="color">
+                                </div>
+                            </td>  
+                            </tr>
+                            <tr>
+                            <th>Background Image</th>  
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" name="background" value="">
+                                </div>
+                            </td>  
+                            </tr>
+                            <tr>
+                            <th>Gallery Files Horizontal</th>  
+                            <td>
+                                <div class="input-group">
+                                    <input type="range" name="horizontal" class="form-range" id="files-horizontal" min="2" max="12" step="1">
+                                    <div id="files-horizontal-display" class="input-group-prepend">
+                                    </div>
+                                </div>
+                            </td>  
+                            </tr>
+                            <tr>
+                            <th>Gallery Files Vertical</th>  
+                            <td>
+                                <div class="input-group">
+                                    <input type="range" name="vertical" class="form-range" id="files-vertical" min="2" max="12" step="1">
+                                    <div id="files-vertical-display" class="input-group-prepend">
+                                    </div>
+                                </div>
+                            </td>  
+                            </tr>
+                        </table>
+                    </form>
+                </article>
+                <footer>
+                    <input form="themeform" type="submit" class="btn" value="Submit">
+                </footer>
+			</div>
+        </div>
+    </div>
+    <script src="/fancy-directory-index/js/common.js"></script>
+    <script src="/fancy-directory-index/js/toast.js"></script>
+    <script src="/fancy-directory-index/js/settings.js"></script>
+</body>
+</html>

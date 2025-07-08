@@ -1,3 +1,18 @@
+const THEME_TILES_X = localStorage.getItem (COOKIE_HORIZONTAL) ?? 5;
+const THEME_TILES_Y = localStorage.getItem (COOKIE_VERTICAL) ?? 4;
+
+function set_theme_from_cookies(){
+        let root = document.documentElement;
+        root.style.setProperty("--color-main", localStorage.getItem(COOKIE_COLOR) ?? "purple");
+        root.style.setProperty("--gallery-tiles-x", THEME_TILES_X);
+        root.style.setProperty("--gallery-tiles-y", THEME_TILES_Y);
+        let bg = localStorage.getItem(COOKIE_BACKGROUND) ?? "none";
+        if(bg.length < 1){
+                bg = "none";
+        }
+        root.style.setProperty("--background-image", bg != "none" ? `url("${bg}")` : bg);
+}
+
 class DirectoryLinks {
         constructor(dom) {
                 this.dom = dom;
@@ -44,7 +59,7 @@ class DirectoryLinks {
 
 class DirectoryIndex {
         static paginationOptions = {
-                items_per_page: 20,
+                items_per_page: THEME_TILES_X * THEME_TILES_Y,
                 max_buttons: 7,
                 page_prompt_text: PAGINATION_NUMBER_PROMPT_DEFAULT,
                 appendToParent: true
@@ -143,6 +158,7 @@ class DirectoryIndex {
         }
 }
 
+set_theme_from_cookies();
 let linklist = new DirectoryLinks(document.querySelector("#dirpath"));
 
 /*document.getElementById("preview-closer").addEventListener("click", File.filedisplayClear);

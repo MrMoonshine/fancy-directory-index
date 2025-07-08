@@ -48,89 +48,59 @@
                 // Check if a File either exists or has been created successfully on demand
                 $fileFailureHandlingInfo = DirectoryDB::create_if_not_exists();
                 $PAYLOAD['status'] = $fileFailureHandlingInfo['status'];
-                array_merge($PAYLOAD['errors'], $fileFailureHandlingInfo['errors']);
+                $PAYLOAD['errors'] = array_merge($PAYLOAD['errors'], $fileFailureHandlingInfo['errors']);
                 // Create DB
                 $ddb = new DirectoryDB(DirectoryDB::DB_FILE);
                 $ddb->setup();
+
+                // Handling of DB stuff
+                echo($_POST["mode"]);
+                switch($_POST["mode"]){
+                    case "options":
+                        $ddb->options_modify();
+                        break;
+                    case "aliasadd":
+                        $ddb->alias_create();
+                        break;
+                    case "aliasdelete":
+                        $ddb->alias_delete();
+                        break;
+                    default:
+                        break;
+                }
+                // Get options
+                $OPTIONS = $ddb->options_get();
                 //var_dump($ddb->errors);
-                array_merge($PAYLOAD['errors'], $ddb->errors);
+                $PAYLOAD['errors'] = array_merge($PAYLOAD['errors'], $ddb->errors);
             } catch (\Throwable $th) {
                 //echo("Exception: ".$th->getMessage());
                 $PAYLOAD['status'] = -1;
-                array_push($PAYLOAD['errors'], $th->getMessage());
+                //array_push($PAYLOAD['errors'], $th->getMessage());
+                array_push($PAYLOAD['errors'], $th->__tostring());
             }
         ?>
 		<div class="dashboard">
-            <div class="widget">
-                <header>
-                    <h2>Customization</h2>
-                </header>
-				<article>
-                    <form id="themeform">
-                        <table class="options">
-                            <tr>
-                            <th>Default Accent Color</th>  
-                            <td>
-                                <div class="input-group">
-                                    <input type="color" name="color">
-                                </div>
-                            </td>  
-                            </tr>
-                            <tr>
-                            <th>Background Image</th>  
-                            <td>
-                                <div class="input-group">
-                                    <input type="text" name="background" value="">
-                                </div>
-                            </td>  
-                            </tr>
-                            <tr>
-                            <th>Gallery Files Horizontal</th>  
-                            <td>
-                                <div class="input-group">
-                                    <input type="range" name="horizontal" class="form-range" id="files-horizontal" min="2" max="12" step="1">
-                                    <div id="files-horizontal-display" class="input-group-prepend">
-                                    </div>
-                                </div>
-                            </td>  
-                            </tr>
-                            <tr>
-                            <th>Gallery Files Vertical</th>  
-                            <td>
-                                <div class="input-group">
-                                    <input type="range" name="vertical" class="form-range" id="files-vertical" min="2" max="12" step="1">
-                                    <div id="files-vertical-display" class="input-group-prepend">
-                                    </div>
-                                </div>
-                            </td>  
-                            </tr>
-                        </table>
-                    </form>
-                </article>
-                <footer>
-                    <input form="themeform" type="submit" class="btn" value="Submit">
-                </footer>
-			</div>
 			<div class="widget">
                 <header>
                     <h2>Server Settings</h2>
                 </header>
+                <script type='text/javascript'>
+                <?php
+                $js_array = json_encode($PAYLOAD);
+                echo "var PHP_PAYLOAD = ". $js_array . ";\n";
+                ?>
+                console.log("PHP PAYLOAD:");
+                console.log(PHP_PAYLOAD);
+                </script>
 				<article>
                     <form id="customizationform" method="POST">
+                        <input type="hidden" name="mode" value="options" readonly>
                         <table class="options">
                             <tr>
                             <th>Page Icon</th>  
                             <td>
                                 <div class="input-group">
-                                    <input type="text" name="favicon" value="#aa8812">
-                                </div>
-                            </td>  
-                            </tr>
-                            <tr>
-                            <th>Default Accent Color</th>  
-                            <td>
-                                <div class="input-group">
-                                    <input type="color" name="color">
+                                    <input type="text" name="pageicon" value="<?php echo($OPTIONS['pageicon']); ?>">
                                 </div>
                             </td>  
                             </tr>
@@ -138,9 +108,21 @@
                             <th>Generate Video Thumbnails</th>  
                             <td>
                                     <label class="switch">
-                                        <input type="checkbox">
+                                        <input type="checkbox" name="thumbnailgen" <?php
+                                            if($OPTIONS['thumbnailgen'] == "on"){
+                                                echo("checked");
+                                            }
+                                        ?>>
                                         <span class="slider round"></span>
                                     </label>
+                            </td>  
+                            </tr>
+                            <tr>
+                            <th>Thumbnail Directory</th>  
+                            <td>
+                                <div class="input-group">
+                                    <input type="text" name="thumbnaildir" value="<?php echo($OPTIONS['thumbnaildir']); ?>">
+                                </div>
                             </td>  
                             </tr>
                         </table>
@@ -155,10 +137,7 @@
                     <h2>Aliases</h2>
                 </header>
 				<article>
-                    <!--<form method="POST">
-                        
-                    </form>-->
-                    <table>
+                    <table class="table">
                         <thead>
                             <tr>
                                 <th>Alias</th>
@@ -169,36 +148,40 @@
                         <tbody>
                             <?php $ddb->alias_table(); ?>
                         </tbody>
-                        <tfooter>
+                        <tfoot>
                             <tr>
                                 <td>
-                                    <input name="aliasname" type="text" form="alias-add-form" value="$name" readonly/>
+                                    <input name="aliasname" type="text" form="alias-add-form"/>
                                     <form method="POST" id="alias-add-form" class="d-none"></form>
                                     <input name="mode" form="alias-add-form" value="aliasadd" class="d-none" readonly/>
                                 </td>
                                 <td>
-                                    <input name="directory" type="text" form="alias-add-form" value="$directory" readonly/>
+                                    <input name="directory" type="text" form="alias-add-form"/>
                                 </td>
                                 <td>
-                                    <input type="submit" form="alias-add-form" value="+" class="btn-danger"/>
+                                    <input type="submit" form="alias-add-form" value="+" class="btn btn-success"/>
                                 </td>
                             </tr>
-                        </tfooter>
+                        </tfoot>
                     </table>
+                    <p><i>Aliases with regex are not supported. Only simple Alias to directory possible.</i></p>
                 </article>
 			</div>
         </div>
     </div>
-    <script type='text/javascript'>
-    <?php
-    $js_array = json_encode($PAYLOAD);
-    echo "var PHP_PAYLOAD = ". $js_array . ";\n";
-    ?>
-    console.log("PHP PAYLOAD:");
-    console.log(PHP_PAYLOAD);
-    </script>
     <script src="/fancy-directory-index/js/common.js"></script>
     <script src="/fancy-directory-index/js/toast.js"></script>
     <script src="/fancy-directory-index/js/settings.js"></script>
+    <script>
+        if(PHP_PAYLOAD["POST"].length > 0){
+            SETTINGS_TOAST.show(
+                PHP_PAYLOAD["errors"].length < 1 ? "Success" : "Error",
+                "",
+                12,
+                Toast.BUTTONS_NONE
+            );
+            SETTINGS_TOAST.setListContent(PHP_PAYLOAD["errors"]);
+        }
+    </script>
 </body>
 </html>

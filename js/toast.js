@@ -114,6 +114,17 @@ class Toast {
         }
     }
 
+    // Set a list of strings as errors
+    setListContent(arr){
+        let ul = document.createElement("ul");
+        arr.forEach(element => {
+              let li = document.createElement("li");
+              li.innerText = element;
+              ul.appendChild(li);
+        });
+        this.text.appendChild(ul);
+    }
+
     show(title, text, timeout = 0, buttonset = Toast.BUTTONS_ALERT, image = "") {
         this.setButtons(buttonset);
         if (timeout > 0) {
@@ -147,15 +158,3 @@ class Toast {
         this.hide();
     }
 }
-
-/*let test = new Toast("Ching Chong", "Your religion is wrong!", BUTTONS_CONFIRM, "/assets/backgrounds/beidou.jpg");
-test.show(3);
-let testa = new Toast("STFU", "SHUT THE FUCK UP!", BUTTONS_YESNO_PREF_YES, "/assets/backgrounds/thicc.png");
-testa.show(7);
-testa.onfinish = function () {
-    console.log("Kurwa");
-    console.log(this);
-}
-window.setTimeout(function () {
-    console.log(test);
-}, 5000);*/ 

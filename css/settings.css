@@ -10,7 +10,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 40rem;
+    height: 25rem;
     width: 100%;
     max-width: unset;
     border: 1px solid grey;
@@ -20,6 +20,7 @@
     display: block;
     overflow-y: auto;
     flex-grow: 10;
+    padding: 6px;
 }
 
 .widget header{
@@ -50,4 +51,29 @@ table.options th{
 
 table.options th::after{
     content: ":";
+}
+
+table.table{
+    margin: auto;
+}
+
+table.table thead{
+    background-color: var(--color-main);
+    color: var(--color-text-button);
+}
+
+table.table input[name="directory"]{
+    width: 16rem;
+}
+
+table.table tfoot tr{
+    border-top: 2px solid grey;
+}
+
+.btn-danger{
+    background-color: red !important;
+}
+
+.btn-success{
+    background-color: green !important;
 }

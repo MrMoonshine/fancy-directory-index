@@ -6,6 +6,8 @@
     --color-text: white;
     --color-text-button: var(--color-text);
     --color-text-code: hotpink;
+
+    --background-image: none;
     
     --color-ok: #27ae60;
     --color-warning: orange;
@@ -14,6 +16,8 @@
     --gap-dashboard: 12px;
 
     --preview-info-width: 20rem;
+    --gallery-tiles-x: 5;
+    --gallery-tiles-y: 4;
 }
 
 /* Light mode */
@@ -41,7 +45,12 @@
 
 body{
     color: var(--color-text);
+    background-image: var(--background-image);
     background-color: var(--color-background-2);
+    background-repeat: no-repeat;
+    background-position: 50% 0%;
+    background-attachment: fixed;
+    background-size: cover;
 
     margin: 0;
     padding: 0;
