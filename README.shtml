@@ -2,6 +2,7 @@
 <script src="/fancy-directory-index/js/common.js"></script>
 <script src="/fancy-directory-index/js/toast.js"></script>
 <script src="/fancy-directory-index/js/pagination.js"></script>
+<script src="/fancy-directory-index/js/thumbnail.js"></script>
 <script src="/fancy-directory-index/js/file.js"></script>
 <script src="/fancy-directory-index/js/gallery.js"></script>
 <script src="/fancy-directory-index/js/directory.js"></script>

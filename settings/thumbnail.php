@@ -21,6 +21,34 @@ try {
     $ddb = new DirectoryDB(DirectoryDB::DB_FILE);
     $ddb->setup();
 
+    //var_dump($_POST);
+
+    if(isset($_POST['solicitation'])){
+        $jstr = base64_decode($_POST['solicitation']);
+        $query = json_decode($jstr, true);
+        $PAYLOAD["pathid"] = $ddb->path_get_id($query["path"]);
+        $existingThumbnails = $ddb->thumbnails_get($PAYLOAD["pathid"]);
+
+        $PAYLOAD["files"] = [];
+        foreach($query["files"] as $filename){
+            $file = [
+                "name" => $filename,
+                "thumbnail" => "",
+                "exists" => false
+            ];
+            if(count($existingThumbnails) > 0){
+                foreach($existingThumbnails as $thumbnail){
+                    //var_dump($thumbnail);
+                    if($thumbnail["video"] == $filename){
+                        $file['thumbnail'] = $thumbnail["thumbnail"];
+                        $file["exists"] = true;
+                    }
+                }
+            }
+            array_push($PAYLOAD["files"], $file);
+        }
+    }
+
     if(isset($_GET["directory"])){
         $video_files = [];
         $directory = $ddb->alias_resolve($_GET["directory"]);

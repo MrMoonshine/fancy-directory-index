@@ -16,13 +16,79 @@ class DirectoryDB extends SQLite3
     {
         if (!$this->tables_exist()) {
             //array_push($this->errors, "Tables need to be created");
-            $ddl = file_get_contents($base.DirectoryDB::DDL_FILE);
+            $ddl = file_get_contents($base . DirectoryDB::DDL_FILE);
             $this->exec($ddl);
 
-            if(!$this->tables_exist()){
-                array_push($this->errors, "Failed to create tables! ".$this->lastErrorMsg());
+            if (!$this->tables_exist()) {
+                array_push($this->errors, "Failed to create tables! " . $this->lastErrorMsg());
             }
         }
+    }
+
+    public function path_get_id($path)
+    {
+        $this->path_create($path);
+
+        $SQL = <<<SQL
+            SELECT id FROM paths WHERE path=:path ;
+        SQL;
+        $stmt = $this->prepare($SQL);
+        if (!$stmt) {
+            $this->errors_add();
+            return;
+        }
+        $stmt->bindValue(":path", DirectoryDB::add_last_slash($path), SQLITE3_TEXT);
+        $result = $this->querySingle($stmt->getSQL(true));
+        if (!$result) {
+            throw new Exception("Failed to create path entry in DB!");
+        }
+        return $result;
+    }
+
+    private function path_create($path)
+    {
+        $SQL = <<<SQL
+            INSERT OR IGNORE INTO paths ("path") VALUES (:pathname) ;
+        SQL;
+        $stmt = $this->prepare($SQL);
+        if (!$stmt) {
+            $this->errors_add();
+            return;
+        }
+        $stmt->bindValue(":pathname", DirectoryDB::add_last_slash($path), SQLITE3_TEXT);
+
+        $stmtresult = $stmt->execute();
+        if (!$stmtresult) {
+            $this->errors_add();
+            return;
+        }
+    }
+
+    public function thumbnails_get($pathid)
+    {
+        $retval = [];
+        $SQL = <<<SQL
+            SELECT * FROM thumbnails where path=:id ;
+        SQL;
+
+        $stmt = $this->prepare($SQL);
+        if (!$stmt) {
+            $this->errors_add();
+            return;
+        }
+
+        $stmt->bindValue(":id", $pathid, SQLITE3_INTEGER);
+
+        $stmtresult = $stmt->execute();
+        if (!$stmtresult) {
+            $this->errors_add();
+            return;
+        }
+        //array_push($this->errors, $stmt->getSQL(true));
+        while ($row = $stmtresult->fetchArray()){
+            array_push($retval, $row);
+        }
+        return $retval;
     }
 
     public function options_get()
@@ -93,14 +159,15 @@ class DirectoryDB extends SQLite3
         }
     }
 
-    public function alias_get(){
+    public function alias_get()
+    {
         $retval = [];
         $SQL = <<<SQL
             SELECT "id","aliasname","directory" FROM aliases;
         SQL;
 
         $results = $this->query($SQL);
-        while ($row = $results->fetchArray()){
+        while ($row = $results->fetchArray()) {
             array_push($retval, $row);
         }
         return $retval;
@@ -169,7 +236,7 @@ class DirectoryDB extends SQLite3
             return;
         }
         $stmt->bindValue(":id", $_POST["id"], SQLITE3_INTEGER);
-        
+
         $stmtresult = $stmt->execute();
         if (!$stmtresult) {
             $this->errors_add();
@@ -177,20 +244,22 @@ class DirectoryDB extends SQLite3
         }
     }
 
-    public function alias_resolve($pathname){
+    public function alias_resolve($pathname)
+    {
         $aliases = $this->alias_get();
         $docroot = DirectoryDB::remove_last_slash($_SERVER["DOCUMENT_ROOT"]);
-        $directory = $docroot.$pathname;
-        foreach($aliases as $alias){
+        $directory = $docroot . $pathname;
+        foreach ($aliases as $alias) {
             $patheval = DirectoryDB::add_last_slash($pathname);
-            if(str_contains($patheval, $alias["aliasname"])){
+            if (str_contains($patheval, $alias["aliasname"])) {
                 return str_replace($alias["aliasname"], $alias["directory"], $patheval);
             }
         }
         return DirectoryDB::add_last_slash($directory);
     }
 
-    public function directory_get_id($path){
+    public function directory_get_id($path)
+    {
         $this->directory_create($path);
 
         $SQL = <<<SQL
@@ -203,13 +272,14 @@ class DirectoryDB extends SQLite3
         }
         $stmt->bindValue(":path", $path, SQLITE3_TEXT);
         $result = $this->querySingle($stmt->getSQL(true));
-        if(!$result){
+        if (!$result) {
             throw new Exception("Failed to create Directory entry in DB!");
         }
         return $result;
     }
 
-    private function directory_create($path){
+    private function directory_create($path)
+    {
         $SQL = <<<SQL
             INSERT OR IGNORE INTO directories ("pathname") VALUES (:pathname) ;
         SQL;
@@ -219,7 +289,7 @@ class DirectoryDB extends SQLite3
             return;
         }
         $stmt->bindValue(":pathname", $path, SQLITE3_TEXT);
-        
+
         $stmtresult = $stmt->execute();
         if (!$stmtresult) {
             $this->errors_add();
@@ -260,18 +330,18 @@ class DirectoryDB extends SQLite3
         $retval = ["errors" => [], "status" => 0];
         try {
             // Create the dir if it doesn't exist
-            if (!file_exists($base.self::WORKDIR)) {
+            if (!file_exists($base . self::WORKDIR)) {
                 //echo ("Dir doesn't exist! Creating... " . self::WORKDIR . "<br>");
-                if (!mkdir($base.self::WORKDIR)) {
-                    array_push($retval["errors"], ["msg" => "Failed to create directory " . $base.self::WORKDIR . " . Review permissions!"]);
+                if (!mkdir($base . self::WORKDIR)) {
+                    array_push($retval["errors"], ["msg" => "Failed to create directory " . $base . self::WORKDIR . " . Review permissions!"]);
                     $retval['status'] = 1;
                     return $retval;
                 }
             }
             // Create the DB file if it doesn't exist
-            if (!file_exists($base.self::DB_FILE)) {
-                if (!touch($base.self::DB_FILE)) {
-                    array_push($retval["errors"], ["msg" => "Failed to create file " . $base.self::DB_FILE . " . Review permissions!"]);
+            if (!file_exists($base . self::DB_FILE)) {
+                if (!touch($base . self::DB_FILE)) {
+                    array_push($retval["errors"], ["msg" => "Failed to create file " . $base . self::DB_FILE . " . Review permissions!"]);
                     $retval['status'] = 1;
                     return $retval;
                 }
@@ -286,25 +356,28 @@ class DirectoryDB extends SQLite3
         return $retval;
     }
 
-    static function dir_slash_sanitize($dir){
-        if(str_ends_with($dir,"/")){
+    static function dir_slash_sanitize($dir)
+    {
+        if (str_ends_with($dir, "/")) {
             return $dir;
         }
-        return $dir."/";
+        return $dir . "/";
     }
 
-    static function remove_last_slash($path){
-        if(str_ends_with($path, "/")){
+    static function remove_last_slash($path)
+    {
+        if (str_ends_with($path, "/")) {
             return substr($path, 0, strlen($path) - 1);
         }
         return $path;
     }
 
-    static function add_last_slash($path){
-        if(str_ends_with($path, "/")){
+    static function add_last_slash($path)
+    {
+        if (str_ends_with($path, "/")) {
             return $path;
         }
-        return $path."/";
+        return $path . "/";
     }
 }
 ?>

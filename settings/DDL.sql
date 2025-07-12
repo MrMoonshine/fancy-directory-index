@@ -13,12 +13,19 @@ CREATE TABLE IF NOT EXISTS directories(
     PRIMARY KEY("id" AUTOINCREMENT)
 );
 
+-- Table with video paths
+CREATE TABLE IF NOT EXISTS paths(
+    "id" INTEGER,
+    "path" TEXT NOT NULL UNIQUE,
+    PRIMARY KEY("id" AUTOINCREMENT)
+);
+
 -- Table with video thumbnails
 CREATE TABLE IF NOT EXISTS thumbnails(
     "id" INTEGER,
-    "filename" TEXT NOT NULL,
-    "directory" INTEGER NOT NULL,
-    "videofile" TEXT NOT NULL,
+    "thumbnail" TEXT NOT NULL,
+    "video" TEXT NOT NULL,
+    "path" INTEGER NOT NULL,
     PRIMARY KEY("id" AUTOINCREMENT)
 );
 
