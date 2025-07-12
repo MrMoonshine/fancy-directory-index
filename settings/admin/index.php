@@ -44,14 +44,16 @@
                 "POST" => $_POST
             ];
             try {
-                require("db.php");
+                require("../db.php");
                 // Check if a File either exists or has been created successfully on demand
-                $fileFailureHandlingInfo = DirectoryDB::create_if_not_exists();
+                $fileFailureHandlingInfo = DirectoryDB::create_if_not_exists("../");
                 $PAYLOAD['status'] = $fileFailureHandlingInfo['status'];
                 $PAYLOAD['errors'] = array_merge($PAYLOAD['errors'], $fileFailureHandlingInfo['errors']);
                 // Create DB
-                $ddb = new DirectoryDB(DirectoryDB::DB_FILE);
-                $ddb->setup();
+                $ddb = new DirectoryDB("../".DirectoryDB::DB_FILE);
+                $ddb->setup("../");
+
+                //echo("../".DirectoryDB::DB_FILE." exists? ".file_exists("../".DirectoryDB::DB_FILE));
 
                 // Handling of DB stuff
                 echo($_POST["mode"]);

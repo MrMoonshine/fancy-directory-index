@@ -10,6 +10,7 @@ const ICON_COPY_LINK = APACHE_ALIAS + "assets/edit-copy.svg";
 const ICON_DOWNLOAD = APACHE_ALIAS + "assets/download.svg";
 
 const COOKIE_COLOR = "fdi_color";
+const COOKIE_PAGEICON = "fdi_page_icon";
 const COOKIE_BACKGROUND = "fdi_background_img";
 const COOKIE_HORIZONTAL = "fdi_tile_horizontal";
 const COOKIE_VERTICAL = "fdi_tile_vertical";

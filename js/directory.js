@@ -3,14 +3,35 @@ const THEME_TILES_Y = localStorage.getItem (COOKIE_VERTICAL) ?? 4;
 
 function set_theme_from_cookies(){
         let root = document.documentElement;
-        root.style.setProperty("--color-main", localStorage.getItem(COOKIE_COLOR) ?? "purple");
+        root.style.setProperty("--color-main", localStorage.getItem(COOKIE_COLOR) ?? "teal");
         root.style.setProperty("--gallery-tiles-x", THEME_TILES_X);
         root.style.setProperty("--gallery-tiles-y", THEME_TILES_Y);
         let bg = localStorage.getItem(COOKIE_BACKGROUND) ?? "none";
         if(bg.length < 1){
                 bg = "none";
         }
-        root.style.setProperty("--background-image", bg != "none" ? `url("${bg}")` : bg);
+        let backgroundAvailable = bg != "none";
+        root.style.setProperty("--background-image", backgroundAvailable ? `url("${bg}")` : bg);
+
+        let favicon = document.getElementById("pageicon");
+        if(!favicon){
+                return;
+        }
+
+        favicon.addEventListener("error", () => {
+                if(favicon.classList.contains(CLASS_UNKNOWN)){
+                        return;
+                }
+                favicon.classList.add(CLASS_UNKNOWN);
+
+                let src = localStorage.getItem(COOKIE_PAGEICON) ?? "";
+                console.log(src);
+                if(src.length < 1){
+                        src = "/favicon.ico";
+                }
+                favicon.src = src;
+        });
+        favicon.src = ".directory";
 }
 
 class DirectoryLinks {

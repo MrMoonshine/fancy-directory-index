@@ -37,12 +37,7 @@ figure figcaption{
     display: block;
     margin: auto;
     padding: 0px var(--gap-dashboard);
-    padding-bottom: 2rem;
-}
-
-#filelist,
-#sortingButtons{
-    background-color: rgba(0, 0, 0, 0.7);
+    padding-bottom: 1rem;
 }
 
 .file,
@@ -51,9 +46,11 @@ figure figcaption{
 }
 
 #sortingButtons,
-.widget{
+.widget.widget-filelist{
     max-width: 50rem;
     margin: auto;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .file{
@@ -87,17 +84,6 @@ button.file{
     padding-top: 1em;
 }
 
-/*.folder-link{
-    position: relative;
-    border: none !important;
-}
-
-.folder-link img{
-    position: absolute;
-    top: 0;
-    left: 0;
-}*/
-
 .file img{
     height: 2rem;
     width: 3rem;
@@ -117,12 +103,8 @@ button.file{
 }
 
 #sortingButtons{
-    padding-top: 0.5rem;
-    /*padding-bottom: 4px;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    background-color: var(--color-background-2);
-    */
+    padding: 4px;
+    margin: 0.4rem auto;
     display: grid;
 
 }
@@ -181,11 +163,11 @@ button.file{
     grid-template-rows: repeat(var(--gallery-tiles-y), minmax(0, 1fr));
     gap: 1em;
 
-    padding: var(--gap-dashboard) 0px;
-    height: calc(100vh - 2*var(--gap-dashboard) - 3rem - 2.4rem - 56px);
+    padding:0px;
+    height: calc(100vh - var(--gap-dashboard) - 6.4rem - 56px);
     overflow: hidden;
 
-    margin-bottom: 1rem;
+    margin-bottom: var(--gap-dashboard);
 }
 
 .polaroid{
@@ -472,7 +454,7 @@ nav form {
         display: block !important;
     }
 
-    ..d-desktop{
+    .d-desktop{
         display: none !important;
     }
 
@@ -487,11 +469,15 @@ nav form {
 
     div.overlay > .grid{
         display: block;
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: calc(100vh - 56px);
+        padding-bottom: 24px;
     }
 
     div.overlay .preview{
         max-width: unset;
-        height: 70vh;
+        height: unset;
 
         display: flex;
         flex-direction: column;

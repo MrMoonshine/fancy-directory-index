@@ -4,7 +4,7 @@ const DEFAULT_THUMBNAIL_DIR = "/fancy-directory-index/settings/data/";
 class DirectoryDB extends SQLite3
 {
     public $errors = [];
-    const WORKDIR = "../data/";
+    const WORKDIR = "data/";
     const DB_FILE = DirectoryDB::WORKDIR . "fancydirindex.sqlite3";
     const DDL_FILE = "DDL.sql";
 
@@ -12,10 +12,16 @@ class DirectoryDB extends SQLite3
     /*
         @brief checks if all necessary tables are available. if not run DDLs
     */
-    public function setup()
+    public function setup($base = "./")
     {
         if (!$this->tables_exist()) {
-            array_push($this->errors, "Tables need to be created");
+            //array_push($this->errors, "Tables need to be created");
+            $ddl = file_get_contents($base.DirectoryDB::DDL_FILE);
+            $this->exec($ddl);
+
+            if(!$this->tables_exist()){
+                array_push($this->errors, "Failed to create tables! ".$this->lastErrorMsg());
+            }
         }
     }
 
@@ -85,6 +91,19 @@ class DirectoryDB extends SQLite3
             }
             //array_push($this->errors, $stmt->getSQL(true));
         }
+    }
+
+    public function alias_get(){
+        $retval = [];
+        $SQL = <<<SQL
+            SELECT "id","aliasname","directory" FROM aliases;
+        SQL;
+
+        $results = $this->query($SQL);
+        while ($row = $results->fetchArray()){
+            array_push($retval, $row);
+        }
+        return $retval;
     }
 
     public function alias_table()
@@ -158,10 +177,59 @@ class DirectoryDB extends SQLite3
         }
     }
 
+    public function alias_resolve($pathname){
+        $aliases = $this->alias_get();
+        $docroot = DirectoryDB::remove_last_slash($_SERVER["DOCUMENT_ROOT"]);
+        $directory = $docroot.$pathname;
+        foreach($aliases as $alias){
+            $patheval = DirectoryDB::add_last_slash($pathname);
+            if(str_contains($patheval, $alias["aliasname"])){
+                return str_replace($alias["aliasname"], $alias["directory"], $patheval);
+            }
+        }
+        return DirectoryDB::add_last_slash($directory);
+    }
+
+    public function directory_get_id($path){
+        $this->directory_create($path);
+
+        $SQL = <<<SQL
+            SELECT id FROM directories WHERE pathname=:path ;
+        SQL;
+        $stmt = $this->prepare($SQL);
+        if (!$stmt) {
+            $this->errors_add();
+            return;
+        }
+        $stmt->bindValue(":path", $path, SQLITE3_TEXT);
+        $result = $this->querySingle($stmt->getSQL(true));
+        if(!$result){
+            throw new Exception("Failed to create Directory entry in DB!");
+        }
+        return $result;
+    }
+
+    private function directory_create($path){
+        $SQL = <<<SQL
+            INSERT OR IGNORE INTO directories ("pathname") VALUES (:pathname) ;
+        SQL;
+        $stmt = $this->prepare($SQL);
+        if (!$stmt) {
+            $this->errors_add();
+            return;
+        }
+        $stmt->bindValue(":pathname", $path, SQLITE3_TEXT);
+        
+        $stmtresult = $stmt->execute();
+        if (!$stmtresult) {
+            $this->errors_add();
+            return;
+        }
+    }
     // Check if the correct tables are in use
     private function tables_exist()
     {
-        $requiredTables = ["options", "directries", "thumbnails"];
+        $requiredTables = ["options", "directories", "thumbnails"];
         $placeholders = implode(",", array_fill(0, count($requiredTables), "?"));
         $SQL = "SELECT count(1) as tablecount FROM sqlite_master WHERE type='table' and name in (" . $placeholders . ")";
         $stmt = $this->prepare($SQL);
@@ -187,23 +255,23 @@ class DirectoryDB extends SQLite3
         array_push($this->errors, $this->lastErrorMsg());
     }
 
-    static function create_if_not_exists()
+    static function create_if_not_exists($base = "./")
     {
         $retval = ["errors" => [], "status" => 0];
         try {
             // Create the dir if it doesn't exist
-            if (!file_exists(self::WORKDIR)) {
+            if (!file_exists($base.self::WORKDIR)) {
                 //echo ("Dir doesn't exist! Creating... " . self::WORKDIR . "<br>");
-                if (!mkdir(self::WORKDIR)) {
-                    array_push($retval["errors"], ["msg" => "Failed to create directory " . self::WORKDIR . " . Review permissions!"]);
+                if (!mkdir($base.self::WORKDIR)) {
+                    array_push($retval["errors"], ["msg" => "Failed to create directory " . $base.self::WORKDIR . " . Review permissions!"]);
                     $retval['status'] = 1;
                     return $retval;
                 }
             }
             // Create the DB file if it doesn't exist
-            if (!file_exists(self::DB_FILE)) {
-                if (!touch(self::DB_FILE)) {
-                    array_push($retval["errors"], ["msg" => "Failed to create file " . self::DB_FILE . " . Review permissions!"]);
+            if (!file_exists($base.self::DB_FILE)) {
+                if (!touch($base.self::DB_FILE)) {
+                    array_push($retval["errors"], ["msg" => "Failed to create file " . $base.self::DB_FILE . " . Review permissions!"]);
                     $retval['status'] = 1;
                     return $retval;
                 }
@@ -212,7 +280,8 @@ class DirectoryDB extends SQLite3
             }
         } catch (\Throwable $th) {
             //throw $th;
-            echo ("Exception: " . $th->getMessage());
+            //echo ("Exception: " . $th->getMessage());
+            array_push($retval["errors"], $th->__tostring());
         }
         return $retval;
     }
@@ -222,6 +291,20 @@ class DirectoryDB extends SQLite3
             return $dir;
         }
         return $dir."/";
+    }
+
+    static function remove_last_slash($path){
+        if(str_ends_with($path, "/")){
+            return substr($path, 0, strlen($path) - 1);
+        }
+        return $path;
+    }
+
+    static function add_last_slash($path){
+        if(str_ends_with($path, "/")){
+            return $path;
+        }
+        return $path."/";
     }
 }
 ?>

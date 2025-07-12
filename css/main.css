@@ -1,5 +1,5 @@
 :root {
-    --color-main: rgb(104, 20, 104);
+    --color-main: teal;
     --color-background-1: #323232;
     --color-background-2: #222222;
     --color-background-translucent: rgba(34, 34, 34, .7);
@@ -61,7 +61,8 @@ body{
 
 .widget{
     display: block;
-    max-height: calc(100vh - 56px);
+    margin: auto;
+    max-height: calc(100vh - 56px - (3rem));
     overflow-y: auto;
 }
 
@@ -86,15 +87,6 @@ nav {
     justify-content:start;
     position: relative;
 }
-
-/*nav h1{
-    text-align: center;
-    margin: 0;
-    color: var(--color-text-button);
-
-    padding: 0px 0.4rem;
-    margin-top: 0.8rem;
-}*/
 
 nav div.navbar-collapse{
     min-width: 60%;

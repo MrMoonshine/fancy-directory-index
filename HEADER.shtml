@@ -17,7 +17,7 @@
 		<nav class="d-flex flex-nowrap justify-content-between">
 			<div class="d-flex">
 				<div class="nav-flex-column">
-					<img class="favicon" alt="Icon" src="/favicon.ico" onerror='this.style.display = "none"' />
+					<img class="favicon" id="pageicon" alt="Icon"/>
 				</div>
 				<div class="nav-flex-column">
 					<div class="dirpath" id="dirpath"></div>
@@ -47,7 +47,7 @@
 			</div>
 		</nav>
 		<div class="overlay d-none" id="overlay">
-			<button class="close"></button>
+			<button class="close d-desktop"></button>
 			<div class="grid">
 				<div class="preview"></div>
 				<div class="info"></div>
@@ -58,8 +58,7 @@
 				<div class="placeholder"></div>
 			</div>
 			<div class="widget" id="widget-gallery">
-				<!--<img alt="thumbnail" src="/assets/icons/application-video.svg" id="thumbnail-fallback" />-->
 				<article id="gallery"></article>
 			</div>
-			<div class="widget d-none" id="widget-details">
+			<div class="widget widget-filelist d-none" id="widget-details">
 				<article id="filelist">

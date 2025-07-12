@@ -7,9 +7,9 @@ CREATE TABLE IF NOT EXISTS options(
 );
 
 -- Table with video directories
-CREATE TABLE IF NOT EXISTS directries(
+CREATE TABLE IF NOT EXISTS directories(
     "id" INTEGER,
-    "pathname" TEXT NOT NULL,
+    "pathname" TEXT NOT NULL UNIQUE,
     PRIMARY KEY("id" AUTOINCREMENT)
 );
 
@@ -32,6 +32,6 @@ CREATE TABLE IF NOT EXISTS aliases(
 
 -- Initial DMLs
 INSERT INTO "options" ("name", "value") VALUES ("docroot", "/var/www/html/");
-INSERT INTO "options" ("name", "value") VALUES ("pageicon", "/favicon.ico");
+--INSERT INTO "options" ("name", "value") VALUES ("pageicon", "/favicon.ico");
 INSERT INTO "options" ("name", "value") VALUES ("thumbnailgen", "off");
 INSERT INTO "options" ("name", "value") VALUES ("thumbnaildir", "/fancy-directory-index/settings/data/");

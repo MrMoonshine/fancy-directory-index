@@ -36,7 +36,8 @@ class Form {
 }
 
 class ThemeForm extends Form {
-    static DEFAULT_COLOR = "#da1313";
+    static DEFAULT_COLOR = "#008080";
+    static DEFAULT_PAGEICON = "/favicon.ico";
     static DEFAULT_BACKGROUND = "";
     static DEFAULT_HORIZONTAL = 5;
     static DEFAULT_VERTICAL = 4;
@@ -68,16 +69,18 @@ class ThemeForm extends Form {
     }
 
     setValuesFromCookies() {
-        this.input_set_value("color", localStorage.getItem(COOKIE_COLOR) ?? ThemeForm.DEFAULT_COLOR);
-        this.input_set_value("background", localStorage.getItem(COOKIE_BACKGROUND) ?? ThemeForm.DEFAULT_BACKGROUND);
-        this.input_set_value("horizontal", localStorage.getItem(COOKIE_HORIZONTAL) ?? ThemeForm.DEFAULT_HORIZONTAL);
-        this.input_set_value("vertical", localStorage.getItem(COOKIE_VERTICAL) ?? ThemeForm.DEFAULT_VERTICAL);
+        this.input_set_value("color", ThemeForm.cookie_fallback(localStorage.getItem(COOKIE_COLOR), ThemeForm.DEFAULT_COLOR));
+        this.input_set_value("pageicon", ThemeForm.cookie_fallback(localStorage.getItem(COOKIE_PAGEICON), ThemeForm.DEFAULT_PAGEICON));
+        this.input_set_value("background", ThemeForm.cookie_fallback(localStorage.getItem(COOKIE_BACKGROUND), ThemeForm.DEFAULT_BACKGROUND));
+        this.input_set_value("horizontal", ThemeForm.cookie_fallback(localStorage.getItem(COOKIE_HORIZONTAL), ThemeForm.DEFAULT_HORIZONTAL));
+        this.input_set_value("vertical", ThemeForm.cookie_fallback(localStorage.getItem(COOKIE_VERTICAL), ThemeForm.DEFAULT_VERTICAL));
     }
 
     setCookies() {
         let error = false;
         try {
             localStorage.setItem(COOKIE_COLOR, this.input_get_value("color"));
+            localStorage.setItem(COOKIE_PAGEICON, this.input_get_value("pageicon"));
             localStorage.setItem(COOKIE_BACKGROUND, this.input_get_value("background"));
             localStorage.setItem(COOKIE_HORIZONTAL, this.input_get_value("horizontal"));
             localStorage.setItem(COOKIE_VERTICAL, this.input_get_value("vertical"));
@@ -91,6 +94,17 @@ class ThemeForm extends Form {
             4,
             Toast.BUTTONS_NONE
         );
+    }
+
+    static cookie_fallback(value, fallbackvalue){
+        if(!value){
+            return fallbackvalue;
+        }
+
+        if(value.length > 0){
+            return value;
+        }
+        return fallbackvalue;
     }
 }
 
