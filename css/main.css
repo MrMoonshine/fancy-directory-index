@@ -6,6 +6,7 @@
     --color-text: white;
     --color-text-button: var(--color-text);
     --color-text-code: hotpink;
+    --color-autoshadow: transparent;
 
     --background-image: none;
     

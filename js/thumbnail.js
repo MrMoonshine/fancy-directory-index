@@ -27,7 +27,7 @@ class Thumbnail{
                 console.error(e);
             }
         });
-        req.open("POST", url, false);
+        req.open("POST", url, true);
         //req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         req.send(fd);
     }

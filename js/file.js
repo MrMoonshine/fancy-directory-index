@@ -207,11 +207,8 @@ class File {
 
     static overlay = document.getElementById("overlay");
     static overlayCloser = overlay.querySelector("button.close");
-    //static preview = 
     static display = document.createElement("div");
-    //static btnOpen = document.createElement("a");
     static preview = new Preview(File.overlay);
-    //static btnDownload = document.createElement("a");
 
     constructor(table_row) {
         this.prev = null;
@@ -289,7 +286,7 @@ class File {
         // Bottom Link
         this.filename = document.createElement("div");
         this.filename.classList.add("filename");
-        this.filename.innerHTML = filelink.innerText;
+        this.filename.innerText = filelink.innerText;
 
         // Building item
         switch (this.filetype) {
@@ -299,11 +296,6 @@ class File {
                 a.appendChild(this.img);
                 this.item.appendChild(a);
                 a.classList.add("folder-link");
-
-                // Get folder icon
-                /*if (originalicon[0].alt == "[DIR]") {
-                    this.setFolderIcon(a);
-                }*/
                 break;
             default:
                 this.item.appendChild(this.img);
@@ -322,34 +314,6 @@ class File {
     showPreview() {
         File.preview.show(this);
         dom_show(File.overlay, true);
-        /*File.overlay.title.innerHTML = this.filename.innerHTML;
-        File.display.innerHTML = "";    // Clear overlay contents
-        switch (this.filetype) {
-            case File.Types.IMAGE:
-                let img = vid = document.createElement("img");
-                img.src = this.item.href;
-                img.alt = this.filename.innerHTML;
-
-                File.display.appendChild(img);
-                break;
-            case File.Types.VIDEO:
-                var vid = document.createElement("video");
-                vid.controls = true;
-                var src = document.createElement("source");
-                src.setAttribute("src", this.item.href);
-                vid.appendChild(src);
-                File.display.appendChild(vid);
-                vid.innerHTML += "Your browser does not support HTML5 video.";
-                break;
-            default:
-                File.display.innerHTML = "No preview for filetype " + this.filetype;
-        }
-
-        File.btnOpen.href = this.item.href;
-        File.btnDownload.href = this.item.href;
-        File.btnDownload.download = this.item.href;
-
-        File.overlay.show();*/
     }
 
     match(search = "") {
@@ -368,9 +332,9 @@ class File {
         this.item.style.display = "none";
     }
 
-    has_preview() {
+    /*has_preview() {
         return this.img.alt == "[IMG]" || this.img.alt == "[VIDEO]";
-    }
+    }*/
 
     getFileName() {
         return this.filename.innerText;
@@ -442,15 +406,6 @@ class File {
 
         return files;
     }
-
-    /*static getFallbackThumbnail(){
-        let dom = document.getElementById("thumbnail-fallback")
-        if(!dom){
-            return "";
-        }
-
-        return dom.src;
-    }*/
 }
 
 function overview_close() {

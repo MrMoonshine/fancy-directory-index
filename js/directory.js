@@ -12,6 +12,7 @@ function set_theme_from_cookies() {
     }
     let backgroundAvailable = bg != "none";
     root.style.setProperty("--background-image", backgroundAvailable ? `url("${bg}")` : bg);
+    root.style.setProperty("--color-autoshadow", backgroundAvailable ? `rgba(0, 0, 0, 0.7)` : "transparent");
 
     let favicon = document.getElementById("pageicon");
     if (!favicon) {
@@ -201,7 +202,26 @@ class DirectoryIndex {
             query["files"].push(filename);
         });
         let payload = btoa(JSON.stringify(query));
-        Thumbnail.solicitate(payload);
+        Thumbnail.solicitate(payload, (data) => {
+            console.log(data);
+            this.videos.forEach(video => {
+                data["files"].forEach(trf => {
+                    if(trf["name"] == video.getFileName()){
+                        console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
+                        if(trf["thumbnail"].length > 0){
+                            let polaroid = this.polaroids.find(polaroid => polaroid.file.getFileName() == trf["name"]);
+                            if(polaroid){
+                                polaroid.item.style.backgroundColor = "red";
+                                polaroid.thumbnail = THUMBNAIL_DIR + trf["thumbnail"];
+                                if(!polaroid.item.classList.contains(CLASS_HIDDEN)){
+                                    polaroid.setThumbnail(polaroid.thumbnail);
+                                }
+                            }
+                        }
+                    }
+                });               
+            });
+        });
     }
 }
 

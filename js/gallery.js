@@ -14,6 +14,8 @@ class Polaroid extends PaginationItem {
     super(document.createElement(isDirectory ? "a" : "div"));
     this.item.classList.add("polaroid");
     this.loaded = false;
+    this.thumbnail = "";
+    this.videoicon = new Image();
     // init
     this.file = file;
     this.filename = this.file.filename.innerHTML ?? "UNKNOWN";
@@ -100,39 +102,27 @@ class Polaroid extends PaginationItem {
     // show from parent class
     super.show();
 
+    // Ignore for videos
+    if(this.loaded && this.filetype == File.Types.VIDEO){
+      this.setThumbnail(this.thumbnail);
+    }
+
     if (this.loaded) {
       return;
     }
 
-    var image = "";
+    //var image = "";
     switch (this.file.filetype) {
       case File.Types.IMAGE:
-        //image = this.file.item.href;
-        //image = image.replaceAll("'", "%27"); // Fixes issue with CSS URL when an apostrophe is in use
-        //this.item.style.backgroundImage = "url(" + image + ")";
         this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.getFileLink())}")`;
-        this.loaded = true;
         break;
       case File.Types.VIDEO:
-        image = ".thumbnail." + this.filename + ".jpg";
-        this.item.style.backgroundImage = `url("${image}")`;
-        //this.item.classList.add("video");
-
-        let errtestimg = document.createElement("img");
-        errtestimg.addEventListener("error", (evt) => {
-          if (errtestimg.classList.contains(CLASS_UNKNOWN)) {
-            return;
-          }
-          errtestimg.classList.add(CLASS_UNKNOWN);
-          errtestimg.src = this.file.img.src;
-          image = this.file.img.src;
-          this.item.style.backgroundImage = `url("${image}")`;
-          console.log("image is jetzt " + image);
-        });
-        this.item.appendChild(errtestimg);
-        errtestimg.src = image;
-        errtestimg.classList.add(CLASS_HIDDEN);
-        this.loaded = true;
+        //image = ".thumbnail." + this.filename + ".jpg";
+        this.setThumbnail(this.thumbnail);
+        this.videoicon.classList.add("videoicon");
+        this.videoicon.alt = "Video";
+        this.videoicon.src = this.file.img.src;
+        this.item.appendChild(this.videoicon);
         break;
       case File.Types.FOLDER:
         this.item.href = this.file.item.href
@@ -141,7 +131,6 @@ class Polaroid extends PaginationItem {
         iconDir.src = this.file.img.src;
         iconDir.classList.add("icon");
         this.item.appendChild(iconDir);
-        this.loaded = true;
         break;
       default:
         let icon = new Image();
@@ -149,10 +138,9 @@ class Polaroid extends PaginationItem {
         icon.src = this.file.img.src;
         icon.classList.add("icon");
         this.item.appendChild(icon);
-
-        this.loaded = true;
         break;
     }
+    this.loaded = true;
   }
 
   match(term) {
@@ -183,6 +171,32 @@ class Polaroid extends PaginationItem {
       return;
     }
     
+  }
+
+  setThumbnail(image){
+    console.log("Try to set Thumbnail: " + image);
+    if(image.length < 1){
+      this.setThumbnail(this.file.img.src);
+      return;
+    }
+    this.item.style.backgroundImage = `url("${image}")`;
+    let errtestimg = document.createElement("img");
+        errtestimg.addEventListener("error", (evt) => {
+          if (errtestimg.classList.contains(CLASS_UNKNOWN)) {
+            return;
+          }
+          errtestimg.classList.add(CLASS_UNKNOWN);
+          errtestimg.src = this.file.img.src;
+          image = this.file.img.src;
+          this.setThumbnail(image);
+          console.log("image is now " + image);
+        });
+        errtestimg.addEventListener("load", () => {
+          errtestimg.remove();
+        });
+        this.item.appendChild(errtestimg);
+        errtestimg.src = image;
+        errtestimg.classList.add(CLASS_HIDDEN);
   }
 
   static hrefSanitize(href) {

@@ -1,9 +1,10 @@
+const APACHE_ALIAS = "/fancy-directory-index/";
+
 const THUMBNAIL_ENABLE = true;
+const THUMBNAIL_DIR = APACHE_ALIAS + "settings/data/";
 
 const CLASS_HIDDEN = "d-none";
 const CLASS_UNKNOWN = "unknown";
-
-const APACHE_ALIAS = "/fancy-directory-index/";
 
 const ICON_NEW_TAB = APACHE_ALIAS + "assets/newtab.svg";
 const ICON_COPY_LINK = APACHE_ALIAS + "assets/edit-copy.svg";

@@ -50,7 +50,7 @@ figure figcaption{
     max-width: 50rem;
     margin: auto;
     border-radius: 8px;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: var(--color-autoshadow);/*rgba(0, 0, 0, 0.7);*/
 }
 
 .file{
@@ -216,6 +216,16 @@ button.file{
     min-height: 4rem;
     height: calc(100% - 2rem);
     object-fit: scale-down;
+}
+
+.polaroid img.videoicon{
+    width: 64px;
+    height: 64px;
+    opacity: 0.5;
+    display: block;
+    position: absolute;
+    top: calc(50% - 32px);
+    left: calc(50% - 32px);
 }
 
 .polaroid button:hover,
@@ -444,8 +454,8 @@ nav form {
 
 @media only screen and (max-width: 1100px){
     .polaroids{
-        grid-template-columns: repeat(var(var(--gallery-tiles-y)), minmax(0, 1fr));
-        grid-template-rows: repeat(var(var(--gallery-tiles-x)), minmax(0, 1fr));
+        grid-template-columns: repeat(var(--gallery-tiles-y), minmax(0, 1fr));
+        grid-template-rows: repeat(var(--gallery-tiles-x), minmax(0, 1fr));
     }
 }
 
