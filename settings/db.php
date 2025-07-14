@@ -91,6 +91,26 @@ class DirectoryDB extends SQLite3
         return $retval;
     }
 
+    public function thumbnails_create($thumbnail, $video, $path){
+        $SQL = <<<SQL
+            INSERT INTO thumbnails (thumbnail, video, path) VALUES (:thumbnail, :video, :path);
+        SQL;
+        $stmt = $this->prepare($SQL);
+        if (!$stmt) {
+            $this->errors_add();
+            return;
+        }
+        $stmt->bindValue(":thumbnail", $thumbnail, SQLITE3_TEXT);
+        $stmt->bindValue(":video", $video, SQLITE3_TEXT);
+        $stmt->bindValue(":path", $path, SQLITE3_INTEGER);
+
+        $stmtresult = $stmt->execute();
+        if (!$stmtresult) {
+            $this->errors_add();
+            return;
+        }
+    }
+
     public function options_get()
     {
         $retval = [

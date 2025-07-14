@@ -207,16 +207,19 @@ class DirectoryIndex {
             this.videos.forEach(video => {
                 data["files"].forEach(trf => {
                     if(trf["name"] == video.getFileName()){
-                        console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
-                        if(trf["thumbnail"].length > 0){
-                            let polaroid = this.polaroids.find(polaroid => polaroid.file.getFileName() == trf["name"]);
+                        //console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
+                        let polaroid = this.polaroids.find(polaroid => polaroid.file.getFileName() == trf["name"]);
+                        if(trf["exists"]){
+                            console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
                             if(polaroid){
-                                polaroid.item.style.backgroundColor = "red";
+                                polaroid.videoicon.classList.remove(CLASS_HIDDEN);
                                 polaroid.thumbnail = THUMBNAIL_DIR + trf["thumbnail"];
-                                if(!polaroid.item.classList.contains(CLASS_HIDDEN)){
+                                if(!polaroid.isVisible()){
                                     polaroid.setThumbnail(polaroid.thumbnail);
                                 }
                             }
+                        }else{
+                            polaroid.createThumbnail();
                         }
                     }
                 });               

@@ -38,7 +38,6 @@ CREATE TABLE IF NOT EXISTS aliases(
 );
 
 -- Initial DMLs
-INSERT INTO "options" ("name", "value") VALUES ("docroot", "/var/www/html/");
 --INSERT INTO "options" ("name", "value") VALUES ("pageicon", "/favicon.ico");
 INSERT INTO "options" ("name", "value") VALUES ("thumbnailgen", "off");
-INSERT INTO "options" ("name", "value") VALUES ("thumbnaildir", "/fancy-directory-index/settings/data/");
+INSERT INTO "options" ("name", "value") VALUES ("thumbnaildir", "/var/www/fancy-directory-index/settings/data/");
