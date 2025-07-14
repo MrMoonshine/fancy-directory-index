@@ -21,6 +21,15 @@ figure audio.filedisplay{
     object-fit: scale-down;
 }
 
+figure pre.filedisplay{
+    overflow-y: auto;
+    font-family: monospace;
+}
+
+figure .pdf.filedisplay{
+    width: 100%;
+}
+
 figure video.filedisplay{
     background-color: black;
 }

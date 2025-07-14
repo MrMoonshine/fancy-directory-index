@@ -18,6 +18,9 @@ class Preview {
         this.previewVideo.innerText = "Your browser does not support the video tag";
         this.previewAudio = document.createElement("audio");
         this.previews.push(this.previewAudio);
+        this.previewPDF = document.createElement("embed");
+        this.previewPDF.classList.add("pdf");
+        this.previews.push(this.previewPDF);
         this.previewNone = new Image();
         this.previews.push(this.previewNone);
 
@@ -61,7 +64,7 @@ class Preview {
         hr.classList.add("d-mobile");
         this.domInfo.appendChild(hr);
         this.domInfo.appendChild(closeactions);
-        
+
         // Buttons for next & prev item
         this.prevbutton = document.createElement("button");
         this.prevbutton.classList.add("prev");
@@ -88,7 +91,7 @@ class Preview {
     }
 
     show(file) {
-        if(!file){
+        if (!file) {
             console.warn("Unable to show null as file!");
             return;
         }
@@ -97,6 +100,7 @@ class Preview {
         this.previews.forEach((preview) => {
             dom_show(preview, false);
         });
+        this.stop_video();
         // hide prev & next button in case no prev or next exists
         dom_show(this.prevbutton, Boolean(this.file.prev));
         dom_show(this.nextbutton, Boolean(this.file.next));
@@ -136,18 +140,26 @@ class Preview {
                 this.previewAudio.appendChild(src2);
                 this.figure.prepend(this.previewAudio);
                 break;
+            case File.Types.PDF:
+                this.previewPDF.src = file.getFileLink();
+                dom_show(this.previewPDF, true);
+                break;
             default:
                 dom_show(this.previewText, true);
-                this.previewText.innerText = "WIP";
+                this.previewText.innerText = "";
+                // Limit for filedisplay is 100K
+                if (file.getSize() <= 100 * Math.pow(10, 3)) {
+                    this.text_preview_load(file.getFileLink());
+                }
                 break;
         }
     }
 
-    show_prev(){
+    show_prev() {
         this.show(this.file.prev);
     }
 
-    show_next(){
+    show_next() {
         this.show(this.file.next);
     }
 
@@ -160,11 +172,25 @@ class Preview {
         });*/
     }
 
-    image_toggle_height_limit(){
+    text_preview_load(url) {
+        let req = new XMLHttpRequest();
+        req.addEventListener("load", (event) => {
+            if (req.status != 200) {
+                console.error(`${req.status} - ${req.statusText}`);
+                return;
+            }
+
+            this.previewText.innerText = req.response;
+        });
+        req.open("GET", url, true);
+        req.send();
+    }
+
+    image_toggle_height_limit() {
         const CLASS_UNSET = "unset-max-height";
-        if(this.previewImage.classList.contains(CLASS_UNSET)){
+        if (this.previewImage.classList.contains(CLASS_UNSET)) {
             this.previewImage.classList.remove(CLASS_UNSET);
-        }else{
+        } else {
             this.previewImage.classList.add(CLASS_UNSET);
         }
     }
@@ -348,6 +374,30 @@ class File {
         return this.img.src;
     }
 
+    getSizeH() {
+        return this.size.innerText;
+    }
+
+    getSize() {
+        let str = this.getSizeH();
+        const re = /\d+(((\.|\,)\d+)|)/g;
+        let num = str.match(re);
+        if (!num || num.length < 1) {
+            return -1;
+        }
+
+        let base = Number(num[0]);
+        let exponent = 1;
+        if (str.toUpperCase().includes("K")) {
+            exponent = 3;
+        } else if (str.toUpperCase().includes("M")) {
+            exponent = 6;
+        } else if (str.toUpperCase().includes("G")) {
+            exponent = 9;
+        }
+        return base * Math.pow(10, exponent);
+    }
+
     static fetchFromHTML(table, viewer) {
         let files = [];
         // Error handle
@@ -365,11 +415,11 @@ class File {
                 files.push(currentfile);
                 let currentIndex = files.length - 1;
                 // Skip in case of DIR
-                if(currentfile.filetype == File.Types.FOLDER){
+                if (currentfile.filetype == File.Types.FOLDER) {
                     continue;
                 }
                 // Add prev and next links
-                if(prevFileIndex >= 0){
+                if (prevFileIndex >= 0) {
                     files[currentIndex].prev = files[prevFileIndex];
                     files[prevFileIndex].next = files[currentIndex];
                 }
