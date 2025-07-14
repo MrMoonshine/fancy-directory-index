@@ -1,7 +1,7 @@
 const APACHE_ALIAS = "/fancy-directory-index/";
 
 const THUMBNAIL_ENABLE = true;
-const THUMBNAIL_DIR = APACHE_ALIAS + "settings/data/";
+var THUMBNAIL_DIR = APACHE_ALIAS + "settings/data/";
 
 const CLASS_HIDDEN = "d-none";
 const CLASS_UNKNOWN = "unknown";

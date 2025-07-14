@@ -14,6 +14,33 @@ class Form {
         }
     }
 
+    xhr_submit_handle(callback, method="POST") {
+        this.dom.addEventListener("submit", (event) => {
+            event.preventDefault();
+            let fd = new FormData(this.dom);
+            let url = new URL(window.location);
+            url.pathname = this.dom.getAttribute("action");
+            let req = new XMLHttpRequest();
+            req.addEventListener("load", (event) => {
+                if (req.status != 200) {
+                    console.error(`${req.status} - ${req.statusText}`);
+                    return;
+                }
+                try {
+                    //console.log(req.response);
+                    let jobj = JSON.parse(req.response);
+                    callback(jobj);
+                } catch (e) {
+                    console.error(e);
+                }
+            });
+            req.open(method, url, true);
+            //req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            req.send(fd);
+            console.log(fd);
+        });
+    }
+
     input_set_value(name, value) {
         let inputs = this.dom.querySelectorAll(`input[name="${name}"]`);
         if (inputs.length == 1) {
@@ -49,7 +76,7 @@ class ThemeForm extends Form {
             this.setCookies();
         });
 
-        try{
+        try {
             let fvd = document.getElementById("files-vertical-display");
             let fv = this.dom.querySelector(`input[name="vertical"]`);
             fvd.innerText = fv.value;
@@ -63,7 +90,7 @@ class ThemeForm extends Form {
             fh.addEventListener("change", () => {
                 fhd.innerText = fh.value;
             });
-        }catch(e){
+        } catch (e) {
             console.error(e);
         }
     }
@@ -96,19 +123,36 @@ class ThemeForm extends Form {
         );
     }
 
-    static cookie_fallback(value, fallbackvalue){
-        if(!value){
+    static cookie_fallback(value, fallbackvalue) {
+        if (!value) {
             return fallbackvalue;
         }
 
-        if(value.length > 0){
+        if (value.length > 0) {
             return value;
         }
         return fallbackvalue;
     }
 }
 
+class CleanupForm extends Form {
+    constructor(dom) {
+        super(dom);
+        this.xhr_submit_handle((data) => {
+            console.log(data);
+            let statusdiv = document.getElementById("cleanupformstatus");
+            statusdiv.innerHTML = "";
+            statusdiv.innerText = `Cleaned up ${data["orphans"].length} files in total`;
+        });
+    }
+}
+
 let themeformdom = document.querySelector("#themeform");
-if(themeformdom){
-    let themeform = new ThemeForm(themeformdom);
+if (themeformdom) {
+    new ThemeForm(themeformdom);
+}
+
+let cleanupform = document.querySelector("#cleanupform");
+if (cleanupform) {
+    new CleanupForm(cleanupform);
 }

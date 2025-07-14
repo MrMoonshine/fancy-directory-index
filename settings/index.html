@@ -96,6 +96,18 @@
                     <input form="themeform" type="submit" class="btn" value="Submit">
                 </footer>
 			</div>
+            <div class="widget">
+                <header>
+                    <h2>Cleanup</h2>
+                </header>
+                <article>
+                    <form id="cleanupform" action="/fancy-directory-index/settings/thumbnail.php">
+                        <input name="cleanup" value="1" class="d-none"/>
+                    </form>
+                    <input form="cleanupform" type="submit" class="btn" value="Cleanup">
+                    <div id="cleanupformstatus"></div>
+                </article>
+            </div>
         </div>
     </div>
     <script src="/fancy-directory-index/js/common.js"></script>

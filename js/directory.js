@@ -195,36 +195,65 @@ class DirectoryIndex {
         };
         this.videos.forEach(video => {
             let url = new URL(video.href);
+            let videofile = video.getFileName();
             const lastSlashIndex = url.pathname.lastIndexOf('/');
-            // Split into directory and filename
+            const lastSlashIndexVideo = videofile.lastIndexOf('/');
+
             query["path"] = url.pathname.substring(0, lastSlashIndex + 1); // includes trailing slash
-            const filename = url.pathname.substring(lastSlashIndex + 1);
-            query["files"].push(filename);
+            const filename = videofile.substring(lastSlashIndexVideo + 1);
+            query["files"].push(encodeURIComponent(filename));
         });
+        console.log(query);
         let payload = btoa(JSON.stringify(query));
         Thumbnail.solicitate(payload, (data) => {
             console.log(data);
+            // set resolved dir path
+            Thumbnail.DIRECTORY = data["path"];
+            // Check for thumbnails
             this.videos.forEach(video => {
                 data["files"].forEach(trf => {
-                    if(trf["name"] == video.getFileName()){
-                        //console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
-                        let polaroid = this.polaroids.find(polaroid => polaroid.file.getFileName() == trf["name"]);
-                        if(trf["exists"]){
+                    if (DirectoryIndex.matchFilename(video.getFileName(), trf["name"])) {
+                        let polaroid = this.polaroids.find(polaroid => DirectoryIndex.matchFilename(polaroid.file.getFileName(), trf["name"]));
+                        if(polaroid.file.getFileName().includes(" ") || true){
                             console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
-                            if(polaroid){
-                                polaroid.videoicon.classList.remove(CLASS_HIDDEN);
-                                polaroid.thumbnail = THUMBNAIL_DIR + trf["thumbnail"];
-                                if(!polaroid.isVisible()){
-                                    polaroid.setThumbnail(polaroid.thumbnail);
+                        }
+                        if (polaroid) {
+                            if (trf["exists"]) {
+                                //console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
+                                if (polaroid) {
+                                    polaroid.videoicon.classList.remove(CLASS_HIDDEN);
+                                    polaroid.thumbnail = Thumbnail.DIRECTORY + trf["thumbnail"];
+                                    if (!polaroid.isVisible()) {
+                                        polaroid.setThumbnail(polaroid.thumbnail);
+                                    }
                                 }
+                            } else {
+                                Thumbnail.TODO.push(polaroid);
                             }
-                        }else{
-                            polaroid.createThumbnail();
                         }
                     }
-                });               
+                });
             });
+            // Create necessary thumbnails
+            DirectoryIndex.thumbnailHelper();
         });
+    }
+
+    static thumbnailHelper() {
+        let element = Thumbnail.TODO.pop();
+        if (element) {
+            element.createThumbnail(Thumbnail.DIRECTORY, () => {
+                DirectoryIndex.thumbnailHelper();
+            })
+        }
+    }
+
+    static matchFilename(fn1, fn2){
+        return fn1 == fn2 || encodeURIComponent(fn1) == fn2 ||  encodeURIComponent(fn2) == fn1 || encodeURIComponent(fn1) == encodeURIComponent(fn2);
+    }
+
+    static stringIsNonAscii(str){
+        return str.split("").some(function(char) { return char.charCodeAt(0) > 127 });
     }
 }
 

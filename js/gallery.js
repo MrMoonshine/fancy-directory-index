@@ -201,11 +201,23 @@ class Polaroid extends PaginationItem {
         errtestimg.classList.add(CLASS_HIDDEN);
     }
 
-    createThumbnail() {
-        console.log("Requesting a new Thumbnail for " + this.file.getFileName());
-        let thumbnail = new Thumbnail(this.file.getFileName(), (data) => {
-            this.setThumbnail(THUMBNAIL_DIR + data["thumbnail"]);
-        });
+    createThumbnail(tdir = THUMBNAIL_DIR, callback = null) {
+        let filename = encodeURIComponent(this.file.getFileName());
+        console.log("Requesting a new Thumbnail for " + filename);
+        try{
+            let thumbnail = new Thumbnail(filename, (data) => {
+                if(data){
+                    console.log(`Setting new Thumbnail for ${filename} to ${tdir + data["thumbnail"]}`);
+                    this.setThumbnail(tdir + data["thumbnail"]);
+                }
+                
+                if(callback){
+                    callback();
+                }
+            });
+        }catch(e){
+            console.warn(e);
+        }
     }
 
     isVisible() {

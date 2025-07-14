@@ -67,9 +67,11 @@ class DirectoryDB extends SQLite3
     public function thumbnails_get($pathid)
     {
         $retval = [];
-        $SQL = <<<SQL
-            SELECT * FROM thumbnails where path=:id ;
-        SQL;
+        $SQL = 'SELECT * FROM thumbnails where path=:id';
+        if($pathid < 0){
+            $SQL .= " OR 1=1";
+        }
+        $SQL .= ";";
 
         $stmt = $this->prepare($SQL);
         if (!$stmt) {
@@ -78,7 +80,7 @@ class DirectoryDB extends SQLite3
         }
 
         $stmt->bindValue(":id", $pathid, SQLITE3_INTEGER);
-
+        //array_push($this->errors, $stmt->getSQL(true));
         $stmtresult = $stmt->execute();
         if (!$stmtresult) {
             $this->errors_add();
@@ -93,16 +95,53 @@ class DirectoryDB extends SQLite3
 
     public function thumbnails_create($thumbnail, $video, $path){
         $SQL = <<<SQL
+            SELECT count(1) as "resultcount" from thumbnails where video=:video and path=:path ;
+        SQL;
+
+        $stmtl = $this->prepare($SQL);
+        if (!$stmtl) {
+            $this->errors_add();
+            return -1;
+        }
+        $stmtl->bindValue(":video", $video, SQLITE3_TEXT);
+        $stmtl->bindValue(":path", $path, SQLITE3_INTEGER);
+
+        $counter = $this->querySingle($stmtl->getSQL(true));
+        if($counter > 0){
+            array_push($this->errors, "Already exists, not creating new thumbnail!");
+            return -1;
+        }
+
+        $SQL = <<<SQL
             INSERT INTO thumbnails (thumbnail, video, path) VALUES (:thumbnail, :video, :path);
+        SQL;
+        $stmt = $this->prepare($SQL);
+        if (!$stmt) {
+            $this->errors_add();
+            return -1;
+        }
+        $stmt->bindValue(":thumbnail", $thumbnail, SQLITE3_TEXT);
+        $stmt->bindValue(":video", $video, SQLITE3_TEXT);
+        $stmt->bindValue(":path", $path, SQLITE3_INTEGER);
+
+        $stmtresult = $stmt->execute();
+        if (!$stmtresult) {
+            $this->errors_add();
+            return -1;
+        }
+        return 0;
+    }
+
+    public function thumbnails_delete($id){
+        $SQL = <<<SQL
+            DELETE FROM thumbnails WHERE id = :id;
         SQL;
         $stmt = $this->prepare($SQL);
         if (!$stmt) {
             $this->errors_add();
             return;
         }
-        $stmt->bindValue(":thumbnail", $thumbnail, SQLITE3_TEXT);
-        $stmt->bindValue(":video", $video, SQLITE3_TEXT);
-        $stmt->bindValue(":path", $path, SQLITE3_INTEGER);
+        $stmt->bindValue(":id", $id, SQLITE3_INTEGER);
 
         $stmtresult = $stmt->execute();
         if (!$stmtresult) {
@@ -116,13 +155,14 @@ class DirectoryDB extends SQLite3
         $retval = [
             "pageicon" => "/favicon.ico",
             "thumbnailgen" => "off",
-            "thumbnaildir" => DEFAULT_THUMBNAIL_DIR
+            "thumbnaildir" => DEFAULT_THUMBNAIL_DIR,
         ];
         $SQL = 'select "name", "value" from "options";';
         $results = $this->query($SQL);
         while ($row = $results->fetchArray()) {
             $retval[$row["name"]] = $row["value"];
         }
+        $retval["docroot"] = $_SERVER["DOCUMENT_ROOT"];
         return $retval;
     }
 
@@ -264,18 +304,24 @@ class DirectoryDB extends SQLite3
         }
     }
 
-    public function alias_resolve($pathname)
+    public function alias_resolve($pathname, $reverse = false)
     {
         $aliases = $this->alias_get();
         $docroot = DirectoryDB::remove_last_slash($_SERVER["DOCUMENT_ROOT"]);
         $directory = $docroot . $pathname;
         foreach ($aliases as $alias) {
             $patheval = DirectoryDB::add_last_slash($pathname);
-            if (str_contains($patheval, $alias["aliasname"])) {
+            if (!$reverse && str_contains($patheval, $alias["aliasname"])) {
                 return str_replace($alias["aliasname"], $alias["directory"], $patheval);
+            }else if($reverse){
+                // Treat incoming $pathname as directory here
+                if(str_starts_with($pathname, $alias["directory"])){
+                    $dir = str_replace($alias["directory"], $alias["aliasname"], $pathname);
+                    return $dir;
+                }
             }
         }
-        return DirectoryDB::add_last_slash($directory);
+        return $reverse ? $pathname : DirectoryDB::add_last_slash($directory);
     }
 
     public function directory_get_id($path)

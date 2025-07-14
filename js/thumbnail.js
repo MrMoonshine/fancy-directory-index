@@ -1,9 +1,10 @@
 const THUMBNAIL_API = APACHE_ALIAS + "settings/thumbnail.php";
 class Thumbnail{
+    static TODO = [];
+    static DIRECTORY = THUMBNAIL_DIR;
     constructor(filename, callback){
         this.video = document.createElement("video");
         this.source = document.createElement("source");
-        this.source.src = filename;
 
         this.video.classList.add(CLASS_HIDDEN);
         this.video.appendChild(this.source);
@@ -16,32 +17,49 @@ class Thumbnail{
         fd.set("path", myurl.pathname);
 
         this.video.addEventListener("loadeddata", () => {
-            let base64 = this.toBase64();
-            //console.log(base64);
-            fd.set("thumbnail", base64);
-            // Submit finished thumbnail to server
-            let url = new URL(window.location);
-            url.pathname = THUMBNAIL_API;
-            let req = new XMLHttpRequest();
-            req.addEventListener("load", (event) => {
-                if(req.status != 200){
-                    console.error(`${req.status} - ${req.statusText}`);
-                    return;
-                }
+            this.video.addEventListener("seeked", () => {
+                let base64 = this.toBase64();
+                //console.log(base64);
+                fd.set("thumbnail", base64);
+                // Submit finished thumbnail to server
+                let url = new URL(window.location);
+                url.pathname = THUMBNAIL_API;
+                let req = new XMLHttpRequest();
+                req.addEventListener("load", (event) => {
+                    if(req.status != 200){
+                        console.error(`${req.status} - ${req.statusText}`);
+                        return;
+                    }
 
-                //console.log(JSON.parse(req.response));
-                //console.log(req.response);
-                try{
-                    let jobj = JSON.parse(req.response);
-                    callback(jobj);
-                }catch(e){
-                    console.error(e);
-                }
+                    //console.log(JSON.parse(req.response));
+                    //console.log(req.response);
+                    try{
+                        //console.log(req.response);
+                        let jobj = JSON.parse(req.response);
+                        callback(jobj);
+                    }catch(e){
+                        console.error(e);
+                    }
+                });
+                req.open("POST", url, true);
+                //req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                req.send(fd);
             });
-            req.open("POST", url, true);
-            //req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            req.send(fd);
+            // To get the thumbnail from 10% of the video
+            this.video.currentTime = 0.1 * this.video.duration;
         });
+
+        this.source.addEventListener("error", (err) => {
+            console.warn("Got video error!");
+            //console.warn(err);
+            try{
+                callback(null);
+            }catch(e){
+                console.error(e);
+            }
+        });
+
+        this.source.src = filename;
     }
 
     toBase64(){
