@@ -59,6 +59,7 @@ figure figcaption{
     max-width: 50rem;
     margin: auto;
     border-radius: 8px;
+    color: var(--color-autoshadow-text);
     background-color: var(--color-autoshadow);/*rgba(0, 0, 0, 0.7);*/
 }
 
@@ -73,17 +74,23 @@ figure figcaption{
     padding: 4px;
 }
 
+#sortingButtons a,
 a.file,
 button.file{
     text-decoration: none;
+    color: var(--color-autoshadow-text);
+}
+
+a.file,
+button.file{
     font-size: 1rem;
-    color: var(--color-text) !important;
     background-color: transparent;
     border: none;
 }
 
 .file:hover{
     cursor: pointer;
+    color: var(--color-text);
     background-color: var(--color-background-1);
     text-decoration: underline;
 }
@@ -116,11 +123,6 @@ button.file{
     margin: 0.4rem auto;
     display: grid;
 
-}
-
-#sortingButtons a{
-    text-decoration: none;
-    color: var(--color-text) !important;
 }
 
 #sortingButtons a:hover{

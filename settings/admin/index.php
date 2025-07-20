@@ -21,17 +21,25 @@
 					<img class="favicon" alt="Icon" src="/favicon.ico" onerror='this.style.display = "none"' />
 				</div>
 				<div class="nav-flex-column">
-					<h1>Fancy-Directory-Index Settings</h1>
+					<h1>Admin Settings</h1>
 				</div>
 			</div>
 			<div class="d-flex gap">
 				<div class="nav-flex-column">
                     <div class="btn-group">
-                        <button onclick="history.back()" class="btn btn-outline big append">
-                            &#10558;
+                        <button onclick="history.back()" class="btn btn-outline big append w-unset">
+                            &#10558; Back
                         </button>
-                        <a href="/" class="btn btn-outline big prepend">
-                            <img alt="Home" src="/favicon.ico">
+                        <a href="../" class="btn btn-outline big w-unset center flex-vertical-center">
+                            ⚙️ Basic Settings
+                        </a>
+                        <a href="/" class="btn btn-outline big prepend w-unset">
+                            <div class="d-flex">
+                                <img alt="Home" src="/favicon.ico">
+                                <div class="flex-vertical-center">
+                                    Home
+                                </div>
+                            </div>
                         </a>
                     </div>
 				</div>

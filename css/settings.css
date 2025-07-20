@@ -1,3 +1,7 @@
+body{
+    overflow-y: auto !important;
+}
+
 .dashboard{
     padding: 1rem var(--gap-dashboard);
 
@@ -76,4 +80,15 @@ table.table tfoot tr{
 
 .btn-success{
     background-color: green !important;
+}
+
+@media only screen and (max-width: 1500px){
+    .dashboard{
+        display: block;
+    }
+
+    .widget{
+        margin-bottom: var(--gap-dashboard);
+        max-width: 50em;
+    }
 }

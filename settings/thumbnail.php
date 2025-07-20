@@ -117,7 +117,7 @@ try {
         }
     }
 
-    if (isset($_POST["cleanup"])) {
+    if (isset($_POST["cleanup"]) || isset($_GET["cleanup"])) {
         // Detect orphans and remove them
         $PAYLOAD["orphans"] = [];
         $thumbnals = $ddb->thumbnails_get(-1);

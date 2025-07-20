@@ -13,6 +13,7 @@ function set_theme_from_cookies() {
     let backgroundAvailable = bg != "none";
     root.style.setProperty("--background-image", backgroundAvailable ? `url("${bg}")` : bg);
     root.style.setProperty("--color-autoshadow", backgroundAvailable ? `rgba(0, 0, 0, 0.7)` : "transparent");
+    root.style.setProperty("--color-autoshadow-text", backgroundAvailable ? `white` : "inherit");
 
     let favicon = document.getElementById("pageicon");
     if (!favicon) {
