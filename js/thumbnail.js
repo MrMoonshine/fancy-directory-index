@@ -1,8 +1,16 @@
 const THUMBNAIL_API = APACHE_ALIAS + "settings/thumbnail.php";
-class Thumbnail{
+class Thumbnail {
     static TODO = [];
     static DIRECTORY = THUMBNAIL_DIR;
-    constructor(filename, callback){
+    constructor(filename, callback) {
+        if (filename.toLowerCase().endsWith(".mp3")) {
+            this.createAudioThumbnail(filename, callback);
+        } else {
+            this.createVideoThumbnail(filename, callback);
+        }
+    }
+
+    createVideoThumbnail(filename, callback) {
         this.video = document.createElement("video");
         this.source = document.createElement("source");
 
@@ -26,20 +34,7 @@ class Thumbnail{
                 url.pathname = THUMBNAIL_API;
                 let req = new XMLHttpRequest();
                 req.addEventListener("load", (event) => {
-                    if(req.status != 200){
-                        console.error(`${req.status} - ${req.statusText}`);
-                        return;
-                    }
-
-                    //console.log(JSON.parse(req.response));
-                    //console.log(req.response);
-                    try{
-                        //console.log(req.response);
-                        let jobj = JSON.parse(req.response);
-                        callback(jobj);
-                    }catch(e){
-                        console.error(e);
-                    }
+                    Thumbnail.requestHandler(req, callback);
                 });
                 req.open("POST", url, true);
                 //req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -52,9 +47,9 @@ class Thumbnail{
         this.source.addEventListener("error", (err) => {
             console.warn("Got video error!");
             //console.warn(err);
-            try{
+            try {
                 callback(null);
-            }catch(e){
+            } catch (e) {
                 console.error(e);
             }
         });
@@ -62,7 +57,62 @@ class Thumbnail{
         this.source.src = filename;
     }
 
-    toBase64(){
+    createAudioThumbnail(filename, callback) {
+        if (!jsmediatags) {
+            console.warn(`Unable to create Thumbnail for ${filename}: jsmediatags failed to load!`)
+        }
+
+        console.log("Checking " + filename);
+
+        var req = new XMLHttpRequest();
+        req.open('GET', filename);
+        req.responseType = 'blob';
+        req.addEventListener("load", () => {
+            console.log(req.response);
+            jsmediatags.read(req.response, {
+            onSuccess: (tag) => {
+                console.log("Tags from audio:", tag);
+                const picture = tag.tags.picture;
+                // Setup API URL
+                let thumburl = new URL(window.location);
+                thumburl.pathname = THUMBNAIL_API;
+                let myurl = new URL(window.location);
+                let fd = new FormData();
+                fd.set("video", filename);
+                fd.set("path", myurl.pathname);
+                let thumbreq = new XMLHttpRequest();
+                if (picture) {
+                    const base64String = picture.data
+                        .map(byte => String.fromCharCode(byte))
+                        .join('');
+                    const imageUrl = `data:${picture.format};base64,${btoa(base64String)}`;
+
+                    fd.set("thumbnail", imageUrl);
+                    thumbreq.addEventListener("load", (event) => {
+                        Thumbnail.requestHandler(thumbreq, callback);
+                    });
+                    //thumbreq.setthumbrequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    console.log("Requesting thumbnail for "+filename);
+                    
+                }else{
+                    fd.set("thumbnail", "NONE");
+                    console.log(filename + " has no thumbnail!");
+                    callback(null);
+                    // Fire and forget
+                }
+
+                thumbreq.open("POST", thumburl, true);
+                thumbreq.send(fd);
+            },
+            onError: function(error) {
+                console.error("Metadata read error:", error);
+            }
+        });
+        });
+        req.send();
+    }
+
+    toBase64() {
         let canvas = document.createElement("canvas");
         canvas.width = this.video.videoWidth;
         canvas.height = this.video.videoHeight;
@@ -77,7 +127,22 @@ class Thumbnail{
         //document.getElementById("outimg").src = base64Image;
     }
 
-    static solicitate(queryb64, callback){
+    static requestHandler(req, callback) {
+        if (req.status != 200) {
+            console.error(`${req.status} - ${req.statusText}`);
+            return;
+        }
+        //console.log(JSON.parse(req.response));
+        //console.log(req.response);
+        try {
+            let jobj = JSON.parse(req.response);
+            callback(jobj);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    static solicitate(queryb64, callback) {
         let url = new URL(window.location);
         url.pathname = THUMBNAIL_API;
 
@@ -87,17 +152,17 @@ class Thumbnail{
 
         let req = new XMLHttpRequest();
         req.addEventListener("load", (event) => {
-            if(req.status != 200){
+            if (req.status != 200) {
                 console.error(`${req.status} - ${req.statusText}`);
                 return;
             }
 
             //console.log(JSON.parse(req.response));
             //console.log(req.response);
-            try{
+            try {
                 let jobj = JSON.parse(req.response);
                 callback(jobj);
-            }catch(e){
+            } catch (e) {
                 console.error(e);
             }
         });

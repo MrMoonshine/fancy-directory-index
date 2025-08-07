@@ -27,10 +27,13 @@
     :root {
         --color-background-2: #dfdfdf;
         --color-background-1: #cfcfcf;
+        --color-background-intense: white;
         --color-background-translucent: rgba(223,223,223,.7);
         --color-text-button: white;
         --color-text: black;
         --color-text-code: purple;
+
+        --color-autoshadow-themed: rgba(255,255,255, 0.7);
     }
 }
 
@@ -39,13 +42,22 @@
     :root {
         --color-background-1: #323232;
         --color-background-2: #222222;
+        --color-background-intense: black;
         --color-background-translucent: rgba(34, 34, 34, .7);
         --color-text: white;
         --color-text-code: hotpink;
+
+        --color-autoshadow-themed: rgba(0, 0, 0, 0.7);
     }
 }
 
 body{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: var(--gap-dashboard);
+
     color: var(--color-text);
     background-image: var(--background-image);
     background-color: var(--color-background-2);
@@ -56,6 +68,7 @@ body{
 
     margin: 0;
     padding: 0;
+    height: 100vh;
 
     font-family:Arial, Helvetica, sans-serif;
     overflow-y: hidden;
@@ -66,10 +79,6 @@ body{
     margin: auto;
     max-height: calc(100vh - 56px - (3rem));
     overflow-y: auto;
-}
-
-#widget-gallery{
-    max-width: 64rem;
 }
 
 h1 {
@@ -187,7 +196,7 @@ code{
     color: grey;
 }
 
-.masked-icon{
+nav .masked-icon{
     background-color: var(--color-text-button);
 }
 
@@ -238,6 +247,10 @@ code{
 
 .flex-nowrap{
     flex-wrap: nowrap;
+}
+
+.flex-grow-1{
+    flex-grow: 1;
 }
 
 .h-100{

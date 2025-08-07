@@ -12,13 +12,19 @@ figure .filedisplay{
 }
 
 figure img.filedisplay,
-figure video.filedisplay,
-figure audio.filedisplay{
+figure video.filedisplay{
     display: block;
     margin: 0px auto;
     max-width: calc(100vw - var(--preview-info-width));
     border-radius: 8px;
     object-fit: scale-down;
+}
+
+.preview audio.filedisplay{
+    display: block;
+    width: 100%;
+    border-top: 4px solid var(--color-main);
+    border-radius: 0px;
 }
 
 figure pre.filedisplay{
@@ -56,11 +62,16 @@ figure figcaption{
 
 #sortingButtons,
 .widget.widget-filelist{
+    display: block;
+    width: 98vw;
     max-width: 50rem;
     margin: auto;
+    box-sizing: content-box;
     border-radius: 8px;
-    color: var(--color-autoshadow-text);
+    color: var(--color-text);
     background-color: var(--color-autoshadow);/*rgba(0, 0, 0, 0.7);*/
+    /*max-height: calc(100vh - 56px - 2*var(--gap-dashboard) - 10rem);*/
+    /*max-height: (100% - 10rem);*/
 }
 
 .file{
@@ -78,7 +89,7 @@ figure figcaption{
 a.file,
 button.file{
     text-decoration: none;
-    color: var(--color-autoshadow-text);
+    color: var(--color-text);
 }
 
 a.file,
@@ -91,7 +102,7 @@ button.file{
 .file:hover{
     cursor: pointer;
     color: var(--color-text);
-    background-color: var(--color-background-1);
+    background-color: var(--color-background-2);
     text-decoration: underline;
 }
 
@@ -120,9 +131,8 @@ button.file{
 
 #sortingButtons{
     padding: 4px;
-    margin: 0.4rem auto;
+    margin: auto;
     display: grid;
-
 }
 
 #sortingButtons a:hover{
@@ -138,11 +148,36 @@ button.file{
 }
 
 .dashboard{
-    display: block;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: start;
+
+    min-height: 0; /* Critical for nested flex */
+    flex-grow: 1; /* Takes available space */
+    overflow: auto; /* Handles overflow */
+
+    gap: var(--gap-dashboard);
 }
 
 .d-phone-only{
     display: none;
+}
+
+.widget.widget-gallery{
+    width: 98vw;
+    max-width: 64rem;
+
+    display: block;
+    flex-grow: 1;
+}
+
+#gallery{
+    height: 100%;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 #gallery .btn-group{
@@ -169,13 +204,14 @@ button.file{
 }
 
 .polaroids{
+    flex-grow: 1;
+    /*max-height: calc(100vh - var(--gap-dashboard) - 8.4rem - 56px);*/
     display: grid;
     grid-template-columns: repeat(var(--gallery-tiles-x), minmax(0, 1fr));
     grid-template-rows: repeat(var(--gallery-tiles-y), minmax(0, 1fr));
     gap: 1em;
 
     padding:0px;
-    height: calc(100vh - var(--gap-dashboard) - 6.4rem - 56px);
     overflow: hidden;
 
     margin-bottom: var(--gap-dashboard);
@@ -282,58 +318,42 @@ button.file{
     border: none;
 }
 
-div.overlay{
+dialog{
     position: relative;
     background-color: var(--color-background-2);
-    height: calc(100vh - 56px);
+    height: 95vh;
+    width: 95vw;
     overflow-y: hidden;
 }
 
-div.overlay > .grid{
+dialog .modal-body{
+    padding: 0px;
+    max-height: unset;
+    height: calc(95vh - 4rem);
     display: grid;
-    width: 100vw;
     overflow-x: hidden;
     grid-template-columns: auto var(--preview-info-width);
 }
 
-div.overlay button.close{
-    position:absolute;
-    top: 0;
-    right: 0;
-
-    background-color: transparent;
-    border: 0px solid transparent;
-    font-size: 2em;
-    color: grey;
-    cursor: pointer;
-}
-
-div.overlay button.close::after{
-    display: inline-block;
-    content: "\00d7"; /* This will render the 'X' */
-}
-
-div.overlay button.close:hover{
-    color: var(--color-text);
-}
-
-div.overlay .preview{
+dialog .preview{
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     max-width: calc(100vw - var(--preview-info-width));
 
-    height: calc(100vh - 56px);
+    height: 100%;
     overflow-y: auto;
 }
 
-div.overlay .preview figure{
+dialog .preview figure{
     margin: auto;
     display: block;
 
     flex-grow: 1;
 }
 
-div.overlay figure img{
+dialog figure img{
     display: block;
     margin: auto;
     
@@ -347,12 +367,12 @@ div.overlay figure img{
     max-height: unset !important;
 }
 
-div.overlay figure img.unset-max-height{
+dialog figure img.unset-max-height{
     height: unset !important;
     cursor: zoom-out;
 }
 
-div.overlay figcaption{
+dialog figcaption{
     text-align: center;
     margin: auto;
     max-width: 90vw;
@@ -360,35 +380,35 @@ div.overlay figcaption{
     word-wrap: break-word;
 }
 
-div.overlay .info{
+dialog .info{
     display: block;
     background-color: var(--color-background-1);
-    height: calc(100vh - 56px);
+    /*height: calc(100vh - 56px);*/
 }
 
-div.overlay .info img.mimeicon{
+dialog .info img.mimeicon{
     display: block;
     height: 6rem;
     margin: auto;
 }
 
-div.overlay .actions{
+dialog .actions{
     display: block;
     padding: 12px;
 }
 
-div.overlay .actions .action:first-child{
+dialog .action:first-child{
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
 }
 
-div.overlay .actions .action:last-child{
+dialog .action:last-child{
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     border-bottom: 2px solid var(--color-text);
 }
 
-div.overlay .actions .action{
+dialog .action{
     display: block;
     width: 100%;
     padding: 12px 24px;
@@ -404,24 +424,24 @@ div.overlay .actions .action{
     text-decoration: none;
 }
 
-div.overlay .actions .action:not([disabled]):hover{
+dialog .action:not([disabled]):hover{
     background-color: var(--color-background-1);
 }
 
-div.overlay .actions .action:disabled{
+dialog .action:disabled{
     text-align: left;
     font-weight: bold;
     cursor: unset;
 }
 
-div.overlay .actions .action img{
+dialog .action img{
     height: 1rem;
     width: 1rem;
     object-fit: scale-down;
 }
 
-div.overlay .preview .prev,
-div.overlay .preview .next{
+dialog .preview .prev,
+dialog .preview .next{
     position: absolute;
     top: 45vh;
     left: 0;
@@ -430,14 +450,17 @@ div.overlay .preview .next{
     padding-bottom: 12px;
 
     font-size: 32px;
-    background-color: rgba(0, 0, 0, 0.3);
-    color: white;
+    /*background-color: rgba(0, 0, 0, 0.3);
+    color: white;*/
+    /*background-color: rgba(var(--color-background-intense), 0.3);*/
+    background-color: var(--color-background-intense);
+    color: var(--color-text);
     border: none;
-
     cursor: pointer;
+    opacity: 0.3;
 }
 
-div.overlay .preview .next{
+dialog .preview .next{
     left: unset;
     right: 0;
 
@@ -445,14 +468,15 @@ div.overlay .preview .next{
     border-bottom-left-radius: 8px;
 }
 
-div.overlay .preview .prev{
+dialog .preview .prev{
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
 }
 
-div.overlay .preview .prev:hover,
-div.overlay .preview .next:hover{
-    background-color: rgba(0, 0, 0, 0.6);
+dialog .preview .prev:hover,
+dialog .preview .next:hover{
+    /*background-color: rgba(var(--color-background-intense), 0.6);*/
+    opacity: 0.7;
 }
 
 nav form {
@@ -463,6 +487,16 @@ nav form {
     display: none;
 }
 
+.mobile-spacer{
+    height: 8rem;
+    color: transparent;
+    background-color: var(--color-background-2);
+}
+
+.music-player.d-none + .mobile-spacer{
+    background-color: transparent
+}
+
 @media only screen and (max-width: 1100px){
     .polaroids{
         grid-template-columns: repeat(var(--gallery-tiles-y), minmax(0, 1fr));
@@ -471,6 +505,10 @@ nav form {
 }
 
 @media only screen and (max-width: 700px){
+    body{
+        height: 100dvh;
+    }
+
     .d-mobile{
         display: block !important;
     }
@@ -488,15 +526,12 @@ nav form {
         grid-template-columns: 4em 50vw auto 3em;
     }
 
-    div.overlay > .grid{
+    dialog .modal-body{
         display: block;
-        overflow-x: hidden;
         overflow-y: auto;
-        height: calc(100vh - 56px);
-        padding-bottom: 24px;
     }
 
-    div.overlay .preview{
+    dialog .preview{
         max-width: unset;
         height: unset;
 
@@ -505,13 +540,18 @@ nav form {
         justify-content: center;
     }
 
-    div.overlay .info{
+    dialog .info{
         height: unset !important;
     }
 
     figure .filedisplay{
         height: unset !important;
         margin-top: 1rem;
+    }
+
+    video.filedisplay{
+        max-width: unset !important;
+        width: 100%;
     }
 
     nav input[type="search"]{
@@ -539,9 +579,9 @@ nav form {
         flex: 1 0 4%;
     }
 
-    #galery{
+    /*#galery{
         display: none !important;
-    }
+    }*/
 
     .d-phone-only{
         display: block;

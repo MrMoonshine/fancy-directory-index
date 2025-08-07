@@ -1,0 +1,123 @@
+.music-player{
+    padding: 8px;
+    display: grid;
+    grid-template-columns: 16rem auto 16rem;
+
+    color: var(--color-text);
+    background-color: var(--color-background-2);
+
+    box-shadow: 0px 0px 8px 1px var(--color-main);
+}
+
+.music-player img.albumcover{
+    object-fit: cover;
+    width: 5rem;
+    height: 5rem;
+
+    border-radius: 8px;
+}
+
+.music-player #songartist{
+    font-size: small;
+}
+
+/*.music-player .musicbuttons{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}*/
+
+.music-player .playercontrol{
+    border-radius: 100%;
+    height: 40px;
+    width: 40px;
+    padding: 8px;
+
+    border: none;
+    outline: none;
+    background-color: var(--color-background-intense);
+
+    cursor: pointer;
+}
+
+.music-player .playercontrol:hover{
+    color: var(--color-main);
+    box-shadow: 0 0 8px 1px var(--color-main);
+}
+
+.music-player .playercontrol img,
+.music-player .playercontrol .masked-icon{
+    background-color: var(--color-text);
+    display: block;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    object-fit: scale-down;
+    mask-size: 18px, 20px, contain;
+    mask-position: center;
+    mask-repeat: no-repeat; 
+}
+
+.music-player .playercontrol:hover img,
+.music-player .playercontrol:hover .masked-icon{
+    background-color: var(--color-main);
+}
+
+.music-player #play{
+    height: 56px;
+    width: 56px;
+}
+
+.music-player .sillouhette-button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.music-player .sillouhette-button .masked-icon{
+    background-color: var(--color-text);
+    width: 24px;
+    height: 24px;
+    mask-size: 100%, 100%, contain;
+    mask-position: center;
+    mask-repeat: no-repeat; 
+}
+.music-player .sillouhette-button.enabled .masked-icon,
+.music-player input[type="checkbox"]:checked + label.sillouhette-button .masked-icon{
+    background-color: var(--color-main);
+}
+
+.music-player #play:checked + label #img-pause,
+.music-player #play:not(:checked) + label #img-play{
+    display: none;
+}
+
+.music-player .sillouhette-button:hover .masked-icon{
+    background-color: grey;
+}
+
+.music-player input[type="checkbox"]{
+    display: none;
+}
+
+#mute-range{
+    width: 6rem;
+}
+
+.music-player .timebar{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    flex-grow: 1;
+    gap: 4px;
+}
+
+.music-player .timebar input[type="range"]{
+    flex-grow: 4;
+}
+
+@media only screen and (max-width: 700px){
+    .music-player{
+        display: block;
+    }
+}

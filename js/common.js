@@ -25,6 +25,26 @@ function dom_show(dom, shown) {
     }
 }
 
+function fancy_range_slider_set(slider) {
+    if (!slider.max) {
+        return;
+    }
+    const tempSliderValue = slider.value;
+    const progress = (tempSliderValue / slider.max) * 100;
+    //console.log("Progress is " + progress + " - oida - " + slider.max);
+    slider.style.background = `linear-gradient(to right, var(--color-main) ${progress}%, var(--color-background-1) ${progress}%)`;
+}
+
+function fancy_range_sliders() {
+    let sliders = Array.from(document.querySelectorAll('input[type="range"]'));
+    sliders.forEach(slider => {
+        fancy_range_slider_set(slider);
+        slider.addEventListener("input", (event) => {
+            fancy_range_slider_set(slider);
+        });
+    });
+}
+
 class DirectoryView {
     #mode = 0;
     constructor() {

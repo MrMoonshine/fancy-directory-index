@@ -80,18 +80,23 @@ try {
             $ddb->thumbnails_delete($leftover["id"]);
         }
     } else if (isset($_POST["video"]) && isset($_POST["path"]) && isset($_POST["thumbnail"])) {
-        // Create new Thumbnail
-        $filename = hash("sha256", time() . $_POST["thumbnail"]) . ".webp";
-        $thumbnaildata = preg_replace("/^data\:image\/[a-z]+\;base64\,/", "", $_POST["thumbnail"], 1);
         $pathid = $ddb->path_get_id($_POST["path"]);
-        // thumbnaildir
-        $filepath = $OPTIONS["thumbnaildir"] . $filename;
-        //$filepath = "/var/www/fancy-directory-index/settings/data/".$filename;
-        $PAYLOAD["thumbnail"] = $filename;
-        $dbret = $ddb->thumbnails_create($filename, $_POST["video"], $pathid);
-        if($dbret >= 0){
-            file_put_contents($filepath, base64_decode($thumbnaildata));
+        if($_POST["thumbnail"] != "NONE"){
+            // Create new Thumbnail
+            $filename = hash("sha256", time() . $_POST["thumbnail"]) . ".webp";
+            $thumbnaildata = preg_replace("/^data\:image\/[a-z]+\;base64\,/", "", $_POST["thumbnail"], 1);
+            // thumbnaildir
+            $filepath = $OPTIONS["thumbnaildir"] . $filename;
+            //$filepath = "/var/www/fancy-directory-index/settings/data/".$filename;
+            $PAYLOAD["thumbnail"] = $filename;
+            $dbret = $ddb->thumbnails_create($filename, $_POST["video"], $pathid);
+            if($dbret >= 0){
+                file_put_contents($filepath, base64_decode($thumbnaildata));
+            }
+        }else{
+            $dbret = $ddb->thumbnails_create("NONE", $_POST["video"], $pathid);
         }
+        
     }
 
     if (isset($_GET["directory"])) {

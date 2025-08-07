@@ -1,8 +1,100 @@
 </article>
+</div>
+</div>
+</div>
+<div class="d-block">
+    <div class="music-player d-none" id="music-player">
+        <div class="d-flex flex-nowrap gap">
+            <img class="albumcover" id="albumcover" alt="cover">
+            <div class="songinfoomini d-flex flex-column justify-content-center">
+                <div id="songtitle">UNKNOWN</div>
+                <!--<div id="songartist">UNKNOWN</div>-->
+            </div>
+        </div>
+        <div class="d-block">
+            <div class="musicbuttons d-flex flex-nowrap flex-grow-1 justify-content-center gap">
+                <div class="d-flex flex-column justify-content-center">
+                    <input type="checkbox" id="shuffle">
+                    <label class="playlistcontrol sillouhette-button" for="shuffle">
+                        <!--<img id="img-shuffle" alt="&#x23EE;" src="/fancy-directory-index/assets/shuffle.svg.png" />-->
+                        <div class="masked-icon" id="img-shuffle"
+                            style="mask-image: url('/fancy-directory-index/assets/shuffle.svg.png')">
+                        </div>
+                    </label>
+                </div>
+                <div class="d-flex flex-column justify-content-center">
+                    <button class="playercontrol" id="skip-bck">
+                        <div class="masked-icon" id="img-skip-bck"
+                            style="mask-image: url('/fancy-directory-index/assets/skip_bck.svg.png')">
+                        </div>
+                    </button>
+                </div>
+                <div class="d-flex flex-column justify-content-center">
+                    <input type="checkbox" id="play">
+                    <label class="playercontrol" for="play">
+                        <div class="masked-icon" id="img-play"
+                            style="mask-image: url('/fancy-directory-index/assets/play.svg.png')">
+                        </div>
+                        <div class="masked-icon" id="img-pause"
+                            style="mask-image: url('/fancy-directory-index/assets/pause.svg.png')">
+                        </div>
+                    </lable>
+                </div>
+                <div class="d-flex flex-column justify-content-center">
+                    <button class="playercontrol" id="skip-fwd">
+                        <div class="masked-icon" id="img-skip-fwd"
+                            style="mask-image: url('/fancy-directory-index/assets/skip_fwd.svg.png')">
+                        </div>
+                    </button>
+                </div>
+                <div class="d-flex flex-column justify-content-center">
+                    <input type="checkbox" id="repeat" autocomplete="off">
+                    <label class="playlistcontrol sillouhette-button" for="repeat">
+                        <div class="masked-icon" id="img-repeat"
+                            style="mask-image: url('/fancy-directory-index/assets/repeat.svg.png')">
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="timebar flex-grow-1 justify-content-center">
+                <div id="display-current">0:00</div>
+                <div class="fancy-range flex-grow-1">
+                    <input type="range" id="music-progress" min="0" max="100"/>
+                </div>
+                <div id="display-duration">99:99</div>
+            </div>
+        </div>
+        <div class="d-flex flex-column justify-content-end">
+                <div class="d-flex justify-content-end">
+                    <div class="d-flex flex-column justify-content-center">
+                        <button class="playlistcontrol sillouhette-button" id="mute">
+                            <div class="masked-icon" id="img-unmute"
+                                style="mask-image: url('/fancy-directory-index/assets/speaker.svg')">
+                            </div>
+                            <div class="masked-icon d-none" id="img-mute"
+                                style="mask-image: url('/fancy-directory-index/assets/speaker_mute.svg')">
+                            </div>
+                        </button>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        <input id="volume" type="range" min="0" max="1" step="0.1" value="1"/>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <!--<div class="mobile-spacer d-mobile">
+        -
+    </div>-->
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/jsmediatags@3.9.7/dist/jsmediatags.min.js"></script>
 <script src="/fancy-directory-index/js/common.js"></script>
+<script src="/fancy-directory-index/js/overlay.js"></script>
 <script src="/fancy-directory-index/js/toast.js"></script>
 <script src="/fancy-directory-index/js/pagination.js"></script>
 <script src="/fancy-directory-index/js/thumbnail.js"></script>
+<script src="/fancy-directory-index/js/musicplayer.js"></script>
+<script src="/fancy-directory-index/js/preview.js"></script>
 <script src="/fancy-directory-index/js/file.js"></script>
 <script src="/fancy-directory-index/js/gallery.js"></script>
 <script src="/fancy-directory-index/js/directory.js"></script>
@@ -10,9 +102,8 @@
     let view = new DirectoryView();
     var index = new DirectoryIndex();
     index.createGalery();
+
+    fancy_range_sliders();
 </script>
-</div>
-</div>
-</div>
-</body>
+
 </html>

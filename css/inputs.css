@@ -156,3 +156,77 @@ nav input[type="search"]::placeholder{
     -ms-transform: translateX(calc(var(--input-switch-size) - var(--input-switch-padding)));
     transform: translateX(calc(var(--input-switch-size) - var(--input-switch-padding)));
 }
+
+/*
+    Range Sliders
+*/
+input[type="range"] {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none; 
+  /* creating a custom design */
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+  border-radius: 15px;
+  /*  overflow: hidden;  remove this line*/
+  
+  /* New additions */
+  height: 6px;
+  background: var(--color-background-1);
+}
+
+/* Thumb: webkit */
+input[type="range"]::-webkit-slider-thumb {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none; 
+  /* creating a custom design */
+  height: 15px;
+  width: 15px;
+  background-color: var(--color-text);
+  background: linear-gradient(-45deg, grey, white);
+  border-radius: 50%;
+  border: 2px solid white;
+
+  /* box-shadow: -407px 0 0 400px var(--color-main); emove this line */
+  transition: .2s ease-in-out;
+}
+
+/* Thumb: Firefox */
+input[type="range"]::-moz-range-thumb{
+  /* creating a custom design */
+  height: 15px;
+  width: 15px;
+  background-color: var(--color-text);
+  background: linear-gradient(-45deg, grey, white);
+  border-radius: 50%;
+  border: 2px solid white;
+
+  /* box-shadow: -407px 0 0 400px var(--color-main); emove this line */
+  transition: .2s ease-in-out;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover,
+input[type="range"]:active::-webkit-slider-thumb,
+input[type="range"]:focus::-webkit-slider-thumb,
+input[type="range"]::-moz-range-thumb:hover,
+input[type="range"]:active::-moz-range-thumb,
+input[type="range"]:focus::-moz-range-thumb {
+   border: 2px solid var(--color-main);
+}
+
+/*=============
+Aesthetics 
+=========================*/
+
+.fancy-range {
+    height: 2rem;
+  /*display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+  height: 4rem;
+  padding: 0px 10px;*/
+}

@@ -12,8 +12,8 @@ function set_theme_from_cookies() {
     }
     let backgroundAvailable = bg != "none";
     root.style.setProperty("--background-image", backgroundAvailable ? `url("${bg}")` : bg);
-    root.style.setProperty("--color-autoshadow", backgroundAvailable ? `rgba(0, 0, 0, 0.7)` : "transparent");
-    root.style.setProperty("--color-autoshadow-text", backgroundAvailable ? `white` : "inherit");
+    root.style.setProperty("--color-autoshadow", backgroundAvailable ? `var(--color-autoshadow-themed)` : "transparent");
+    //root.style.setProperty("--color-autoshadow-text", backgroundAvailable ? `white` : "inherit");
 
     let favicon = document.getElementById("pageicon");
     if (!favicon) {
@@ -83,7 +83,7 @@ class DirectoryLinks {
 class DirectoryIndex {
     static paginationOptions = {
         items_per_page: THEME_TILES_X * THEME_TILES_Y,
-        max_buttons: 7,
+        max_buttons: 9,
         page_prompt_text: PAGINATION_NUMBER_PROMPT_DEFAULT,
         appendToParent: true
     }
@@ -104,9 +104,14 @@ class DirectoryIndex {
 
         this.files = File.fetchFromHTML(table, null);
 
-        this.videos = this.files.filter(val => val.filetype == File.Types.VIDEO);
-        if (this.videos.length > 0) {
+        this.avfiles = this.files.filter(val => (val.filetype == File.Types.VIDEO || val.filetype == File.Types.AUDIO));
+        if (this.avfiles.length > 0) {
             this.getThumbnails();
+        }
+
+        this.songs = this.files.filter(val => val.filetype == File.Types.AUDIO);
+        if (this.songs.length > 0) {
+            Preview.musicplayer.setPlaylist(this.songs);
         }
 
         // found files: hide table
@@ -185,18 +190,15 @@ class DirectoryIndex {
         });
     }
 
-    getThumbnails() {
-        this.thumbnailSolicitation();
-    }
     // look for existing wallpapers on server
-    thumbnailSolicitation() {
+    getThumbnails() {
         let query = {
             "path": "",
             "files": []
         };
-        this.videos.forEach(video => {
-            let url = new URL(video.href);
-            let videofile = video.getFileName();
+        this.avfiles.forEach(avfile => {
+            let url = new URL(avfile.href);
+            let videofile = avfile.getFileName();
             const lastSlashIndex = url.pathname.lastIndexOf('/');
             const lastSlashIndexVideo = videofile.lastIndexOf('/');
 
@@ -211,9 +213,12 @@ class DirectoryIndex {
             // set resolved dir path
             Thumbnail.DIRECTORY = data["path"];
             // Check for thumbnails
-            this.videos.forEach(video => {
+            this.avfiles.forEach(video => {
                 data["files"].forEach(trf => {
                     if (DirectoryIndex.matchFilename(video.getFileName(), trf["name"])) {
+                        if(trf["thumbnail"].length > 0){
+                            video.thumbnail = Thumbnail.DIRECTORY + trf["thumbnail"];
+                        }
                         let polaroid = this.polaroids.find(polaroid => DirectoryIndex.matchFilename(polaroid.file.getFileName(), trf["name"]));
                         if(polaroid.file.getFileName().includes(" ") || true){
                             console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
@@ -221,7 +226,7 @@ class DirectoryIndex {
                         if (polaroid) {
                             if (trf["exists"]) {
                                 //console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
-                                if (polaroid) {
+                                if (polaroid && trf["thumbnail"] != "NONE") {
                                     polaroid.videoicon.classList.remove(CLASS_HIDDEN);
                                     polaroid.thumbnail = Thumbnail.DIRECTORY + trf["thumbnail"];
                                     if (!polaroid.isVisible()) {
@@ -241,6 +246,7 @@ class DirectoryIndex {
     }
 
     static thumbnailHelper() {
+        //console.log(Thumbnail.TODO);
         let element = Thumbnail.TODO.pop();
         if (element) {
             element.createThumbnail(Thumbnail.DIRECTORY, () => {
