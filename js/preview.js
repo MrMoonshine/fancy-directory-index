@@ -1,4 +1,4 @@
-class Preview extends Overlay{
+class Preview extends Overlay {
     static musicplayer = new MusicPlayer(document.getElementById("music-player"));
 
     constructor() {
@@ -60,6 +60,23 @@ class Preview extends Overlay{
 
         this.actionnewtab = Preview.action_create("Open in new tab", ICON_NEW_TAB);
         this.actionnewtab.setAttribute("target", "_blank");
+
+        this.actionShare = Preview.action_create("Share", ICON_SHARE, "button", () => {
+            try {
+                let url = new URL(window.location);
+                url.pathname += this.file.getFileName();
+                let sharePromise = navigator.share({
+                    url: url
+                });
+                sharePromise.then(() => {
+                    console.log("Shared...");
+                });
+            } catch (err) {
+                console.error(`Error: ${err}`);
+            }
+        });
+        this.actions.appendChild(this.actionShare);
+
         this.actions.appendChild(this.actionnewtab);
         this.actiondownload = Preview.action_create("Download", ICON_DOWNLOAD);
         this.actions.appendChild(this.actiondownload);
@@ -81,6 +98,24 @@ class Preview extends Overlay{
         hr.classList.add("d-mobile");
         this.domInfo.appendChild(hr);
         this.domInfo.appendChild(closeactions);
+
+        // Captions
+        let captions = [];
+        for (let i = 0; i < 3; i++) {
+            let caption = document.createElement("div");
+            caption.classList.add("caption");
+            this.mimefigcaption.appendChild(caption);
+            captions.push(caption);
+        }
+        this.captionFilename = captions[0];
+        this.captionDimensions = captions[1];
+        this.captionSize = captions[2];
+
+        // Write Image DImensions
+        this.previewImage.addEventListener("load", () => {
+            this.captionDimensions.innerText = `${this.previewImage.naturalWidth}x${this.previewImage.naturalHeight}`;
+            this.captionDimensions.classList.remove(CLASS_HIDDEN);
+        });
 
         // Buttons for next & prev item
         this.prevbutton = document.createElement("button");
@@ -128,21 +163,31 @@ class Preview extends Overlay{
         dom_show(this.nextbutton, Boolean(this.file.next));
 
         this.figcaption.innerText = file.getFileName();
-        this.mimefigcaption.innerText = file.getFileName();
+        //this.mimefigcaption.innerText = file.getFileName();
+        this.captionFilename.innerText = file.getFileName();
         this.mimeicon.src = file.getMimeIcon();
 
         this.actionnewtab.href = file.getFileName();
         this.actiondownload.href = file.getFileName();
         this.actiondownload.setAttribute("download", file.getFileName());
 
+        /*if(navigator.canShare){
+            console.log("Can share")
+            dom_show(this.actionShare, navigator.canShare);
+        }else{
+            console.log("Can't share")
+            dom_show(this.actionShare, false);
+        }*/
+       dom_show(this.actionShare, navigator.canShare);
+
         let isAudio = file.filetype == File.Types.AUDIO;
         dom_show(Preview.musicplayer.dom, isAudio);
-        if(Preview.musicplayer.audio){
-            if(!isAudio){
+        if (Preview.musicplayer.audio) {
+            if (!isAudio) {
                 Preview.musicplayer.audio.remove();
             }
         }
-        
+
         switch (file.filetype) {
             case File.Types.IMAGE:
                 dom_show(this.previewImage, true);
@@ -160,20 +205,7 @@ class Preview extends Overlay{
                 this.figure.prepend(this.previewVideo);
                 break;
             case File.Types.AUDIO:
-                Preview.musicplayer.play(file);                
-                /*this.previewAudio.remove();
-                this.previewAudio = document.createElement("audio");
-                let src2 = document.createElement("source");
-                src2.src = file.getFileLink();
-                //src.type = "audio/mp4";
-                this.previewAudio.controls = true;
-                this.previewAudio.classList.add("filedisplay");
-                this.previewAudio.appendChild(src2);
-                this.domPreview.appendChild(this.previewAudio);
-
-                // Thumbnail
-                this.previewAudioThumbnail.src = file.getMimeIcon();
-                dom_show(this.previewAudioThumbnail, true);*/
+                Preview.musicplayer.play(file);
                 return;
                 break;
             case File.Types.PDF:
@@ -240,10 +272,17 @@ class Preview extends Overlay{
             action.classList.add("d-flex");
             action.classList.add("justify-content-left");
             action.classList.add("gap");
-            let img = new Image();
-            img.src = icon;
-            img.alt = "[IMG]";
-            action.appendChild(img);
+            let imgcontainer = document.createElement("div");
+            imgcontainer.classList.add("sillouhette-img");
+            let img = document.createElement("div");
+            img.classList.add("masked-icon");
+            // mask-image: url('/fancy-directory-index/assets/speaker.svg')
+            img.style.maskImage = `url('${icon}')`;
+            /*img.src = icon;
+            img.alt = "[IMG]";*/
+
+            imgcontainer.appendChild(img);
+            action.appendChild(imgcontainer);
             let textdiv = document.createElement("div");
             textdiv.innerText = text;
             action.appendChild(textdiv);

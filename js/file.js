@@ -177,6 +177,22 @@ class File {
         return base * Math.pow(10, exponent);
     }
 
+    getMusicThumbnail(){
+        if(this.thumbnail.length > 0){
+            if(!this.thumbnail.endsWith("NONE")){
+                return this.thumbnail;
+            }
+        }
+        let pageicon = document.querySelector("#pageicon");
+        console.log(pageicon);
+        if(pageicon){
+            if(pageicon.src.endsWith(".directory")){
+                return pageicon.src;
+            }
+        }
+        return this.getMimeIcon();
+    }
+
     static fetchFromHTML(table, viewer) {
         let files = [];
         // Error handle
@@ -237,7 +253,7 @@ class File {
     }
 }
 
-function overview_close() {
+/*function overview_close() {
     dom_show(File.overlay, false);
     File.preview.stop_video();
 }
@@ -247,5 +263,5 @@ document.addEventListener("keyup", (e) => {
     if (e.key === "Escape") {
         overview_close();
     }
-});
+});*/
 

@@ -67,7 +67,7 @@ class DirectoryLinks {
         let a = document.createElement("a");
         a.href = link;
         let div = document.createElement("div");
-        div.innerText = name;
+        div.innerText = decodeURI(name);
 
         let img = new Image();
         img.addEventListener("error", () => { img.classList.add(CLASS_HIDDEN) });
@@ -225,17 +225,20 @@ class DirectoryIndex {
                         }
                         if (polaroid) {
                             if (trf["exists"]) {
-                                //console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
-                                if (polaroid && trf["thumbnail"] != "NONE") {
+                                console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
+                                if ((trf["thumbnail"] != "NONE")) {
                                     polaroid.videoicon.classList.remove(CLASS_HIDDEN);
                                     polaroid.thumbnail = Thumbnail.DIRECTORY + trf["thumbnail"];
-                                    if (!polaroid.isVisible()) {
+                                    console.log(video.filename.innerText + " polaroid thumbnail is: " + trf["thumbnail"]);
+                                    if (polaroid.isVisible()) {
                                         polaroid.setThumbnail(polaroid.thumbnail);
                                     }
                                 }
                             } else {
                                 Thumbnail.TODO.push(polaroid);
                             }
+                        }else{
+                            console.warn("No polaroid for " + trf["name"]);
                         }
                     }
                 });

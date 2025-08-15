@@ -1,5 +1,5 @@
-class MusicPlayer{
-    constructor(dom){
+class MusicPlayer {
+    constructor(dom) {
         this.dom = dom;
         // Playlist Variables
         this.playlist = null;
@@ -9,6 +9,7 @@ class MusicPlayer{
         //this.artist = document.getElementById("songartist");
         this.cover = document.getElementById("albumcover");
 
+        this.loader = document.getElementById("music-load-indicator");
         this.slider = document.getElementById("music-progress");
         this.playButton = document.getElementById("play");
         this.skipFwd = document.getElementById("skip-fwd");
@@ -16,6 +17,9 @@ class MusicPlayer{
 
         this.volume = document.getElementById("volume");
         this.mutebutton = document.getElementById("mute");
+
+        this.downloader = document.getElementById("song-download");
+        this.sharer = document.getElementById("song-share");
 
         this.repeat = document.getElementById("repeat");
         this.shuffle = document.getElementById("shuffle");
@@ -50,7 +54,7 @@ class MusicPlayer{
         this.volume.addEventListener("input", () => {
             this.volumeCache = this.volume.value;
             this.mutebutton_icon(this.volume.value == 0);
-            if(!this.audio){
+            if (!this.audio) {
                 return;
             }
             this.audio.volume = this.volume.value;
@@ -58,36 +62,58 @@ class MusicPlayer{
 
         this.mutebutton.addEventListener("click", () => {
             console.log("Mutebutton!");
-            if(this.volume.value == 0){
+            if (this.volume.value == 0) {
                 this.volume.value = this.volumeCache;
-            }else{
+            } else {
                 this.volume.value = 0;
             }
             this.mutebutton_icon(this.volume.value == 0);
             fancy_range_slider_set(this.volume);
-            if(!this.audio){
+            if (!this.audio) {
                 return;
             }
             this.audio.volume = this.volume.value;
         });
+        /*
+            Sharing Song
+        */
+        if (navigator.canShare) {
+            this.sharer.addEventListener("click", () => {
+                try {
+                    let sharePromise = navigator.share({
+                        url: new URL(this.downloader.href)
+                    });
+                    sharePromise.then(() => {
+                        console.log("Shared...");
+                    });
+                } catch (err) {
+                    console.error(`Error: ${err}`);
+                }
+            });
+        } else {
+            this.sharer.classList.add(CLASS_HIDDEN);
+        }
     }
 
-    play(file, index=-1, startTime=0, startImmediately = true){
-        if(!file && index >= 0){
+    play(file, index = -1, startTime = 0, startImmediately = true) {
+        dom_show(this.loader, true);
+        dom_show(this.slider, false);
+
+        if (!file && index >= 0) {
             file = this.loadFromIndex(index);
             this.title.innerText = file.getFileName();
-        }else if(file){
+        } else if (file) {
             this.title.innerText = file.getFileName();
             this.currentIndex = this.getPlaylistIndex();
         }
         //console.log("Index in playlist is " + this.currentIndex);
-        
+
         // Cleanup
-        if(this.audio){
+        if (this.audio) {
             this.audio.remove();
         }
 
-        if(this.source){
+        if (this.source) {
             this.source.remove();
         }
         // Create new audio element
@@ -96,7 +122,7 @@ class MusicPlayer{
         this.dom.appendChild(this.audio);
         this.audio.appendChild(this.source);
 
-        if(startImmediately){
+        if (startImmediately) {
             this.audio.autoplay = true;
             this.playButton.checked = false;
         }
@@ -106,10 +132,10 @@ class MusicPlayer{
         this.audio.currentTime = startTime;
 
         this.playButton.addEventListener("input", () => {
-            if(!this.playButton.checked){
+            if (!this.playButton.checked) {
                 this.audio.play();
                 console.log("Playing...");
-            }else{
+            } else {
                 this.audio.pause();
                 console.log("Paused!");
             }
@@ -120,7 +146,7 @@ class MusicPlayer{
         this.audio.addEventListener('timeupdate', () => {
             //console.log("Timeupdate! " + Math.floor(this.audio.currentTime));
             this.updateSlider();
-            
+
         });
 
         this.audio.addEventListener('loadedmetadata', () => {
@@ -129,69 +155,106 @@ class MusicPlayer{
             this.slider.setAttribute("max", this.audio.duration);
             this.duration.innerText = MusicPlayer.secondsHumanReadable(this.audio.duration);
         });
+
+        this.audio.addEventListener("canplay", () => {
+            dom_show(this.loader, false);
+            dom_show(this.slider, true);
+        });
+
+        // Song must be loaded first. thumbnails can wiat
+        this.audio.addEventListener("canplaythrough", () => {
+            // Set album cover if any
+            console.log(file.thumbnail);
+            this.cover.src = file.getMusicThumbnail();
+            // Provide Info for System
+            this.setSystemInfo(file);
+        });
+
         // Go to next song if it finishes
         this.audio.addEventListener("ended", () => {
             this.nextSong();
         });
 
         this.source.src = file.getFileName();
-        // Set album cover if any
-        console.log(file.thumbnail);
-        if(file.thumbnail.length > 0){
-            if(file.thumbnail == "NONE"){
-                this.cover.src = file.getMimeIcon();
-            }else{
-                this.cover.src = file.thumbnail;
-            }
-        }else{
-            this.cover.src = file.getMimeIcon();
+        this.downloader.href = file.getFileName();
+        this.downloader.download = file.getFileName();
+    }
+
+    setSystemInfo(file) {
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: file.getFileName(),
+                artist: "UNKNOWN",
+                album: "UNKNOWN",
+                artwork: [{ src: new URL(this.cover.src), sizes: `${this.cover.width}x${this.cover.height}`, type: 'image/jpeg' }]
+            });
+
+            navigator.mediaSession.setActionHandler('play', () => {
+                // Your custom play logic
+                this.audio.play();
+            });
+
+            navigator.mediaSession.setActionHandler('pause', () => {
+                // Your custom pause logic
+                this.audio.pause();
+            });
+
+            navigator.mediaSession.setActionHandler('previoustrack', () => {
+                // Custom logic to go to previous track
+                this.prevSong();
+            });
+
+            navigator.mediaSession.setActionHandler('nexttrack', () => {
+                // Custom logic to go to next track
+                this.nextSong();
+            });
         }
     }
 
-    setPlaylist(playlist){
+    setPlaylist(playlist) {
         this.playlist = playlist;
     }
 
-    getPlaylistIndex(){
-        if(!this.playlist){
+    getPlaylistIndex() {
+        if (!this.playlist) {
             return -1;
         }
 
-        for(let i = 0; i < this.playlist.length; i++){
-            if(this.playlist[i].getFileName() == this.title.innerText){
+        for (let i = 0; i < this.playlist.length; i++) {
+            if (this.playlist[i].getFileName() == this.title.innerText) {
                 return i;
             }
         }
         return -1;
     }
 
-    loadFromIndex(index){
+    loadFromIndex(index) {
         this.currentIndex = index % this.playlist.length;
         return this.playlist[this.currentIndex];
     }
 
-    playbutton_icon(icon){
+    playbutton_icon(icon) {
         dom_show(document.getElementById("img-play"), icon);
         dom_show(document.getElementById("img-pause"), !icon);
     }
 
-    mutebutton_icon(icon){
+    mutebutton_icon(icon) {
         dom_show(document.getElementById("img-mute"), icon);
         dom_show(document.getElementById("img-unmute"), !icon);
     }
 
-    updateSlider(){
+    updateSlider() {
         this.slider.value = Math.floor(this.audio.currentTime);
         this.current.innerText = MusicPlayer.secondsHumanReadable(this.audio.currentTime);
         fancy_range_slider_set(this.slider);
     }
 
-    shuffling(){
+    shuffling() {
         return this.shuffle.checked;
     }
 
-    setLooping(looping){
-        if(!this.audio){
+    setLooping(looping) {
+        if (!this.audio) {
             return;
         }
         this.audio.loop = looping;
@@ -205,24 +268,24 @@ class MusicPlayer{
         this.looping = this.audio.loop;*/
     }
 
-    nextSong(){
-        if(!this.playlist){
+    nextSong() {
+        if (!this.playlist) {
             return;
         }
-        if(!this.shuffling()){
+        if (!this.shuffling()) {
             this.play(null, this.currentIndex + 1);
             return;
         }
-        
-        let indexDiff = Math.ceil(Math.random()*(this.playlist.length - 1))
+
+        let indexDiff = Math.ceil(Math.random() * (this.playlist.length - 1))
         this.play(null, this.currentIndex + indexDiff);
     }
 
-    prevSong(){
+    prevSong() {
         this.play(null, this.playlist.length + this.currentIndex - 1);
     }
 
-    static secondsHumanReadable(timeS){
+    static secondsHumanReadable(timeS) {
         timeS = Math.floor(timeS);
         let minutes = Math.floor(timeS / 60);
         let seconds = timeS % 60;

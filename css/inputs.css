@@ -160,7 +160,7 @@ nav input[type="search"]::placeholder{
 /*
     Range Sliders
 */
-input[type="range"] {
+input[type="range"]{
   /* removing default appearance */
   -webkit-appearance: none;
   appearance: none; 

@@ -8,16 +8,20 @@ img, video{
 }
 
 figure .filedisplay{
-    height: 85vh;
+    height: 80vh;
 }
 
 figure img.filedisplay,
 figure video.filedisplay{
     display: block;
     margin: 0px auto;
-    max-width: calc(100vw - var(--preview-info-width));
+    max-width: calc(95vw - 8px - var(--preview-info-width));
     border-radius: 8px;
     object-fit: scale-down;
+}
+
+figure .pdf.filedisplay{
+    width: calc(95vw - 8px - var(--preview-info-width));
 }
 
 .preview audio.filedisplay{
@@ -30,10 +34,6 @@ figure video.filedisplay{
 figure pre.filedisplay{
     overflow-y: auto;
     font-family: monospace;
-}
-
-figure .pdf.filedisplay{
-    width: 100%;
 }
 
 figure video.filedisplay{
@@ -382,7 +382,8 @@ dialog figcaption{
 
 dialog .info{
     display: block;
-    background-color: var(--color-background-1);
+    border-left: 2px solid var(--color-background-1);
+    /*background-color: var(--color-background-1);*/
     /*height: calc(100vh - 56px);*/
 }
 
@@ -409,7 +410,7 @@ dialog .action:last-child{
 }
 
 dialog .action{
-    display: block;
+    display: flex;
     width: 100%;
     padding: 12px 24px;
     box-sizing: border-box;
@@ -417,7 +418,7 @@ dialog .action{
     cursor: pointer;
 
     color: var(--color-text);
-    background-color: var(--color-background-2);
+    background-color: var(--color-background-1);
     border: 2px solid var(--color-text);
     border-bottom: none;
 
@@ -425,7 +426,7 @@ dialog .action{
 }
 
 dialog .action:not([disabled]):hover{
-    background-color: var(--color-background-1);
+    background-color: var(--color-background-2);
 }
 
 dialog .action:disabled{
@@ -438,6 +439,20 @@ dialog .action img{
     height: 1rem;
     width: 1rem;
     object-fit: scale-down;
+}
+
+dialog .action .sillouhette-img{
+    width: 24px;
+    height: 24px;
+}
+
+dialog .action .sillouhette-img .masked-icon{
+    background-color: var(--color-text);
+    width: 24px;
+    height: 24px;
+    mask-size: 100%, 100%, contain;
+    mask-position: center;
+    mask-repeat: no-repeat; 
 }
 
 dialog .preview .prev,

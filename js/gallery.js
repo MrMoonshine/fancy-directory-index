@@ -126,6 +126,14 @@ class Polaroid extends PaginationItem {
                 this.videoicon.src = this.file.img.src;
                 this.item.appendChild(this.videoicon);
                 break;
+            case File.Types.AUDIO:
+                //image = ".thumbnail." + this.filename + ".jpg";
+                this.setThumbnail(this.thumbnail);
+                this.videoicon.classList.add("videoicon");
+                this.videoicon.alt = "Audio";
+                this.videoicon.src = this.file.img.src;
+                this.item.appendChild(this.videoicon);
+                break;
             case File.Types.FOLDER:
                 this.item.href = this.file.item.href
                 let iconDir = new Image();
@@ -176,7 +184,7 @@ class Polaroid extends PaginationItem {
     }
 
     setThumbnail(image) {
-        //console.log("Try to set Thumbnail: " + image);
+        console.log("[POLAROID] Try to set "+ this.file.getFileName() + " Thumbnail: " + image);
         if (image.length < 1) {
             this.item.style.backgroundImage = `url("${this.file.img.src}")`;
             return;
@@ -221,7 +229,7 @@ class Polaroid extends PaginationItem {
     }
 
     isVisible() {
-        return this.item.classList.contains(CLASS_HIDDEN)
+        return !this.item.classList.contains(CLASS_HIDDEN)
     }
 
     static hrefSanitize(href) {

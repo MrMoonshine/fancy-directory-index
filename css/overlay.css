@@ -23,10 +23,11 @@ dialog::backdrop{
 dialog{
     background-color: var(--color-background-1);
     color: var(--color-text);
-    border: 1px solid var(--color-main);
     border-radius: 0.5em;
     box-shadow: 4px 4px 8px black;
     padding: 0px;
+    border: none;
+    box-shadow: 0 0 8px 1px var(--color-main);
 }
 
 dialog[open]{
@@ -39,6 +40,9 @@ dialog h2{
     margin-bottom: 4px;
     margin-top: 12px;
     padding: 0px 0px;
+
+    font-size: medium;
+    text-wrap: wrap;
 }
 
 .modal-dialog{
@@ -56,12 +60,12 @@ dialog h2{
     flex-wrap: nowrap;
     padding: 0px 1em;
 
-    border-bottom: 2px solid grey;
+    /*border-bottom: 2px solid grey;*/
 }
 
 .modal-footer{
     padding: 1em;
-    border-top: 2px solid grey;
+    /*border-top: 2px solid grey;*/
 }
 
 .modal-body, dialog article{

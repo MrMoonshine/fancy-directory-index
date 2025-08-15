@@ -9,6 +9,7 @@ const CLASS_UNKNOWN = "unknown";
 const ICON_NEW_TAB = APACHE_ALIAS + "assets/newtab.svg";
 const ICON_COPY_LINK = APACHE_ALIAS + "assets/edit-copy.svg";
 const ICON_DOWNLOAD = APACHE_ALIAS + "assets/download.svg";
+const ICON_SHARE = APACHE_ALIAS + "assets/share.svg";
 
 const COOKIE_COLOR = "fdi_color";
 const COOKIE_PAGEICON = "fdi_page_icon";

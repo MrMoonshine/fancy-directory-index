@@ -62,6 +62,6 @@
 		<div class="widget widget-gallery" id="widget-gallery">
 			<article id="gallery"></article>
 		</div>
-		<div class="d-block flex-grow-1">
-			<div class="widget widget-filelist d-none" id="widget-details">
+		<div class="d-none d-block flex-grow-1" id="widget-details">
+			<div class="widget widget-filelist">
 				<article id="filelist">

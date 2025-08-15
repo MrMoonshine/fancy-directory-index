@@ -218,7 +218,7 @@ nav .masked-icon{
 }
 
 .d-flex{
-    display: flex !important;
+    display: flex;
 }
 
 .justify-content-start{
