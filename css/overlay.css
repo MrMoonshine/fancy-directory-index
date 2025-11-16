@@ -21,7 +21,7 @@ dialog::backdrop{
 }
 
 dialog{
-    background-color: var(--color-background-1);
+    background-color: var(--color-background-2);
     color: var(--color-text);
     border-radius: 0.5em;
     box-shadow: 4px 4px 8px black;

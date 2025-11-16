@@ -75,7 +75,31 @@ class Preview extends Overlay {
                 console.error(`Error: ${err}`);
             }
         });
+        this.actionShare.setAttribute("type", "button");
         this.actions.appendChild(this.actionShare);
+
+        this.actionCopy = Preview.action_create("Copy Link", ICON_COPY, "button", () => {
+            let copycontent = new URL(this.file.getFileLink());
+            //copycontent.pathname += this.file.getFileLink();
+            let promise = navigator.clipboard.writeText(copycontent);
+            promise.then(() => {
+                try {
+                    POLAROID_TOAST.show(
+                        "Copied!",
+                        copycontent,
+                        4,
+                        Toast.BUTTONS_NONE,
+                        POLAROID_COPY_IMAGE
+                    );
+                } catch (error) {
+                    console.log(error);
+                }
+            }, () => {
+                console.log("Unable to copy to clipboard");
+            })
+        });
+        //this.actionCopy.setAttribute("type", "button");
+        this.actions.appendChild(this.actionCopy);
 
         this.actions.appendChild(this.actionnewtab);
         this.actiondownload = Preview.action_create("Download", ICON_DOWNLOAD);
@@ -178,7 +202,8 @@ class Preview extends Overlay {
             console.log("Can't share")
             dom_show(this.actionShare, false);
         }*/
-       dom_show(this.actionShare, navigator.canShare);
+        dom_show(this.actionShare, navigator.canShare);
+        dom_show(this.actionCopy, !navigator.canShare);
 
         let isAudio = file.filetype == File.Types.AUDIO;
         dom_show(Preview.musicplayer.dom, isAudio);
