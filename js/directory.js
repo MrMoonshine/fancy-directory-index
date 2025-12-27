@@ -216,11 +216,11 @@ class DirectoryIndex {
             this.avfiles.forEach(video => {
                 data["files"].forEach(trf => {
                     if (DirectoryIndex.matchFilename(video.getFileName(), trf["name"])) {
-                        if(trf["thumbnail"].length > 0){
+                        if (trf["thumbnail"].length > 0) {
                             video.thumbnail = Thumbnail.DIRECTORY + trf["thumbnail"];
                         }
                         let polaroid = this.polaroids.find(polaroid => DirectoryIndex.matchFilename(polaroid.file.getFileName(), trf["name"]));
-                        if(polaroid.file.getFileName().includes(" ") || true){
+                        if (polaroid.file.getFileName().includes(" ") || true) {
                             console.log(video.filename.innerText + " thumbnail is: " + trf["thumbnail"]);
                         }
                         if (polaroid) {
@@ -237,7 +237,7 @@ class DirectoryIndex {
                             } else {
                                 Thumbnail.TODO.push(polaroid);
                             }
-                        }else{
+                        } else {
                             console.warn("No polaroid for " + trf["name"]);
                         }
                     }
@@ -251,19 +251,24 @@ class DirectoryIndex {
     static thumbnailHelper() {
         //console.log(Thumbnail.TODO);
         let element = Thumbnail.TODO.pop();
-        if (element) {
-            element.createThumbnail(Thumbnail.DIRECTORY, () => {
-                DirectoryIndex.thumbnailHelper();
-            })
+        if (!element) {
+            return;
         }
+
+        setTimeout(() => {
+            element.createThumbnail(Thumbnail.DIRECTORY, () => {
+            DirectoryIndex.thumbnailHelper();
+        })
+        }, THUMBNAIL_CREATE_RATE_LIMIT);
+        
     }
 
-    static matchFilename(fn1, fn2){
-        return fn1 == fn2 || encodeURIComponent(fn1) == fn2 ||  encodeURIComponent(fn2) == fn1 || encodeURIComponent(fn1) == encodeURIComponent(fn2);
+    static matchFilename(fn1, fn2) {
+        return fn1 == fn2 || encodeURIComponent(fn1) == fn2 || encodeURIComponent(fn2) == fn1 || encodeURIComponent(fn1) == encodeURIComponent(fn2);
     }
 
-    static stringIsNonAscii(str){
-        return str.split("").some(function(char) { return char.charCodeAt(0) > 127 });
+    static stringIsNonAscii(str) {
+        return str.split("").some(function (char) { return char.charCodeAt(0) > 127 });
     }
 }
 

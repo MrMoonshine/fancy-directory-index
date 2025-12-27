@@ -1,4 +1,6 @@
 const THUMBNAIL_API = APACHE_ALIAS + "settings/thumbnail.php";
+const THUMBNAIL_CREATE_RATE_LIMIT = 5000; //ms => wait 5 seconds after each generation
+
 class Thumbnail {
     static TODO = [];
     static DIRECTORY = THUMBNAIL_DIR;
