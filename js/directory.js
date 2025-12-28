@@ -235,7 +235,8 @@ class DirectoryIndex {
                                     }
                                 }
                             } else {
-                                Thumbnail.TODO.push(polaroid);
+                                console.log(polaroid);
+                                Thumbnail.TODO.unshift(polaroid);
                             }
                         } else {
                             console.warn("No polaroid for " + trf["name"]);
@@ -254,7 +255,7 @@ class DirectoryIndex {
         if (!element) {
             return;
         }
-
+        console.log(Thumbnail.TODO.length + " Thumbnails left to generate...");
         setTimeout(() => {
             element.createThumbnail(Thumbnail.DIRECTORY, () => {
             DirectoryIndex.thumbnailHelper();
