@@ -86,8 +86,15 @@ class Polaroid extends PaginationItem {
             //fbtop.appendChild(maximizebutton);
             this.item.appendChild(fbtop);
         }
-        this.item.appendChild(filenamep);
 
+        let filenameContainer = document.createElement("div");
+        filenameContainer.className = "filename-container mx-auto";
+        filenameContainer.appendChild(filenamep);
+        this.item.appendChild(filenameContainer);
+
+        this.iconContainer = document.createElement("div");
+        this.iconContainer.className = "icon-container";
+        this.item.appendChild(this.iconContainer);
         //maximizebutton.addEventListener("click", this.file.showPreview.bind(this.file));
         if (isDirectory) {
             if (!this.file.img.alt.includes("PARENT")) {
@@ -117,6 +124,7 @@ class Polaroid extends PaginationItem {
         switch (this.file.filetype) {
             case File.Types.IMAGE:
                 this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.getFileLink())}")`;
+                this.item.classList.add("frame");
                 break;
             case File.Types.VIDEO:
                 //image = ".thumbnail." + this.filename + ".jpg";
@@ -124,7 +132,7 @@ class Polaroid extends PaginationItem {
                 this.videoicon.classList.add("videoicon");
                 this.videoicon.alt = "Video";
                 this.videoicon.src = this.file.img.src;
-                this.item.appendChild(this.videoicon);
+                this.iconContainer.appendChild(this.videoicon);
                 break;
             case File.Types.AUDIO:
                 //image = ".thumbnail." + this.filename + ".jpg";
@@ -132,7 +140,7 @@ class Polaroid extends PaginationItem {
                 this.videoicon.classList.add("videoicon");
                 this.videoicon.alt = "Audio";
                 this.videoicon.src = this.file.img.src;
-                this.item.appendChild(this.videoicon);
+                this.iconContainer.appendChild(this.videoicon);
                 break;
             case File.Types.FOLDER:
                 this.item.href = this.file.item.href
@@ -140,14 +148,14 @@ class Polaroid extends PaginationItem {
                 iconDir.alt = this.file.img.alt ?? "[DIR]";
                 iconDir.src = this.file.img.src;
                 iconDir.classList.add("icon");
-                this.item.appendChild(iconDir);
+                this.iconContainer.appendChild(iconDir);
                 break;
             default:
                 let icon = new Image();
                 icon.alt = this.file.img.alt ?? "";
                 icon.src = this.file.img.src;
                 icon.classList.add("icon");
-                this.item.appendChild(icon);
+                this.iconContainer.appendChild(icon);
                 break;
         }
         this.loaded = true;
@@ -176,7 +184,7 @@ class Polaroid extends PaginationItem {
             img.alt = "";
             img.src = file + ".directory";
             img.classList.add("folder-icon");
-            this.item.appendChild(img);
+            this.iconContainer.appendChild(img);
         } catch (err) {
             return;
         }
@@ -203,6 +211,7 @@ class Polaroid extends PaginationItem {
         });
         errtestimg.addEventListener("load", () => {
             errtestimg.remove();
+            this.item.classList.add("frame");
         });
         this.item.appendChild(errtestimg);
         errtestimg.src = image;

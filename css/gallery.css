@@ -218,17 +218,21 @@ button.file{
 }
 
 .polaroid{
+    cursor:  pointer;
     position: relative;
     display: block;
 
-    background-color: var(--color-background-1);
-    border: 2px solid var(--color-main);
-    border-radius: 0.5em;
     padding: 4px;
     overflow: hidden;
 
     background-size: cover;
     background-position: center; 
+}
+
+.polaroid.frame{
+    background-color: var(--color-background-1);
+    border: 2px solid var(--color-main);
+    border-radius: 0.5em;
 }
 
 .polaroid .buttons.d-flex{
@@ -298,7 +302,7 @@ button.file{
 
     background-color: var(--color-background-2);
     color: var(--color-text);
-    box-shadow: 3px 3px 12px var(--color-main);
+    box-shadow: 3px 3px 12px black;
 
     padding: 4px;
     margin: 0px;

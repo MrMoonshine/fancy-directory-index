@@ -75,9 +75,12 @@ try {
             array_push($PAYLOAD["files"], $file);
         }
         // Cleanup DB
-        $leftovers = thumbnail_leftovers($query["files"], $existingThumbnails);
-        foreach($leftovers as $leftover){
-            $ddb->thumbnails_delete($leftover["id"]);
+        if(!isset($_POST["nocleanup"])){
+            $leftovers = thumbnail_leftovers($query["files"], $existingThumbnails);
+            $PAYLOAD["leftovers"] = $leftovers;
+            foreach($leftovers as $leftover){
+                $ddb->thumbnails_delete($leftover["id"]);
+            }
         }
     } else if (isset($_POST["video"]) && isset($_POST["path"]) && isset($_POST["thumbnail"])) {
         $pathid = $ddb->path_get_id($_POST["path"]);

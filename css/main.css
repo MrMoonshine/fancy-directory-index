@@ -253,6 +253,11 @@ nav .masked-icon{
     flex-grow: 1;
 }
 
+.mx-auto{
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .h-100{
     height: 100%;
 }

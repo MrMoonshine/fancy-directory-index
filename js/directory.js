@@ -253,9 +253,24 @@ class DirectoryIndex {
         //console.log(Thumbnail.TODO);
         let element = Thumbnail.TODO.pop();
         if (!element) {
+            Thumbnail.PROGRESS_BAR.setAttribute("max", 1);
+            Thumbnail.PROGRESS_BAR.setAttribute("value", 0);
+            Thumbnail.TOAST.hide();
             return;
         }
-        console.log(Thumbnail.TODO.length + " Thumbnails left to generate...");
+        //console.log(Thumbnail.TODO.length + " Thumbnails left to generate...");
+        // Set Todo max. Length as max on the bar
+        if(Thumbnail.TODO.length > Thumbnail.PROGRESS_BAR.getAttribute("max")){
+            Thumbnail.PROGRESS_BAR.setAttribute("max", Thumbnail.TODO.length);
+        }
+        Thumbnail.PROGRESS_BAR.setAttribute("value", Thumbnail.PROGRESS_BAR.getAttribute("max") - Thumbnail.TODO.length);
+        Thumbnail.TOAST.show(
+            "Generating Thumbnails",
+            `(${1 + Number(Thumbnail.PROGRESS_BAR.getAttribute("value"))}/${1 + Number(Thumbnail.PROGRESS_BAR.getAttribute("max"))}) ${element.file.getFileName()}`,
+            0,
+            Toast.BUTTONS_NONE,
+            element.videoicon.src ?? ""
+        );
         setTimeout(() => {
             element.createThumbnail(Thumbnail.DIRECTORY, () => {
             DirectoryIndex.thumbnailHelper();

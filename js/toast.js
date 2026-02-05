@@ -82,12 +82,16 @@ class Toast {
         article.appendChild(this.img);
         article.appendChild(this.text);
 
+        this.additionalContent = document.createElement("div");
+        this.additionalContent.classList.add("additional-content");
+
         this.divbot = document.createElement("div");
         this.divbot.setAttribute("class", "toast-bot");
         
 
         this.toast.appendChild(divtop);
         this.toast.appendChild(article);
+        this.toast.appendChild(this.additionalContent);
         this.toast.appendChild(this.divbot);
         // Append to area
         toastarea.appendChild(this.toast);

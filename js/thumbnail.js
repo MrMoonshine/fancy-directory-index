@@ -1,9 +1,12 @@
 const THUMBNAIL_API = APACHE_ALIAS + "settings/thumbnail.php";
-const THUMBNAIL_CREATE_RATE_LIMIT = 5000; //ms => wait 5 seconds after each generation
-
+const THUMBNAIL_CREATE_RATE_LIMIT = 2500; //ms => wait 5 seconds after each generation
+ 
 class Thumbnail {
     static TODO = [];
     static DIRECTORY = THUMBNAIL_DIR;
+    static PROGRESS_BAR = document.createElement("progress");
+    static TOAST = new Toast();
+
     constructor(filename, callback) {
         if (filename.toLowerCase().endsWith(".mp3")) {
             this.createAudioThumbnail(filename, callback);
@@ -144,6 +147,10 @@ class Thumbnail {
         }
     }
 
+    static setToastProgress(){
+
+    }
+
     static solicitate(queryb64, callback) {
         let url = new URL(window.location);
         url.pathname = THUMBNAIL_API;
@@ -173,3 +180,9 @@ class Thumbnail {
         req.send(fd);
     }
 }
+// Configure Progress Bar
+Thumbnail.PROGRESS_BAR = document.createElement("progress");
+Thumbnail.PROGRESS_BAR.setAttribute("max", 1);
+Thumbnail.PROGRESS_BAR.setAttribute("value", 0);
+Thumbnail.TOAST.additionalContent.appendChild(Thumbnail.PROGRESS_BAR);
+//Thumbnail.TOAST.show("Oida", "Bam Oida", 0, Toast.BUTTONS_NONE);

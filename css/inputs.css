@@ -230,3 +230,7 @@ Aesthetics
   height: 4rem;
   padding: 0px 10px;*/
 }
+
+progress[value] {
+  width: 100%;
+}
