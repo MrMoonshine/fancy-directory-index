@@ -20,6 +20,7 @@ class MusicPlayer {
 
         this.downloader = document.getElementById("song-download");
         this.sharer = document.getElementById("song-share");
+        this.playlistAdder = document.getElementById("song-playlist-add");
 
         this.repeat = document.getElementById("repeat");
         this.shuffle = document.getElementById("shuffle");
@@ -93,6 +94,14 @@ class MusicPlayer {
         } else {
             this.sharer.classList.add(CLASS_HIDDEN);
         }
+        /*
+            Playlist
+        */
+        this.currentSong = "";
+        this.playlistMenu = new Overlay("Add to Playlist");
+        this.playlistCheckboxes = [];
+        this.playlistAdder.addEventListener("click", () => { this.playlistMenuShow() });
+        this.playlistMenuBuild();
     }
 
     play(file, index = -1, startTime = 0, startImmediately = true) {
@@ -178,6 +187,8 @@ class MusicPlayer {
         this.source.src = file.getFileName();
         this.downloader.href = file.getFileName();
         this.downloader.download = file.getFileName();
+
+        this.currentSong = file.getFileName();
     }
 
     setSystemInfo(file) {
@@ -283,6 +294,71 @@ class MusicPlayer {
 
     prevSong() {
         this.play(null, this.playlist.length + this.currentIndex - 1);
+    }
+
+    playlistMenuShow() {
+        this.playlistMenu.show();
+    }
+
+    playlistMenuBuild() {
+        this.playlistMenu.content.classList.add("playlist-add-selection");
+        let  counter = 0;
+        api_get((data) => {
+            //console.log(data);
+            data.forEach(playlist => {
+                let formid = "plaf" + counter;
+                let checkbox = document.createElement("input");
+                checkbox.setAttribute("type", "checkbox");
+                checkbox.setAttribute("form", formid);
+                checkbox.name = "add";
+                checkbox.classList.add("d-none");
+                checkbox.id = "plamcb" + counter;
+                this.playlistCheckboxes.push(checkbox);
+
+                let dom = document.createElement("label");
+                dom.setAttribute("for", checkbox.id);
+                dom.className = "playlist-listitem";
+
+                let img = new Image();
+                img.alt = "[IMG]";
+                img.src = playlist.icon;
+
+                let textdiv = document.createElement("div");
+                textdiv.className = "text";
+                textdiv.innerText = playlist.name;
+
+                let form = document.createElement("form");
+                form.id = formid;
+                let hiplaylist = document.createElement("input");
+                hiplaylist.setAttribute("type", "hidden");
+                hiplaylist.name = "playlist";
+                hiplaylist.value = playlist.id;
+
+                form.appendChild(hiplaylist);
+
+                dom.appendChild(img);
+                dom.appendChild(textdiv);
+                dom.appendChild(form);
+                this.playlistMenu.content.appendChild(checkbox);
+                this.playlistMenu.content.appendChild(dom);
+                counter++;
+
+                dom.addEventListener("click", () => {
+                    let url = new URL(window.location);
+
+                    let fd = new FormData(form);
+                    fd.append("resource", "playlists");
+                    fd.append("mode", "modify");
+                    fd.append("path", url.pathname);
+                    fd.append("song", this.currentSong);
+                    console.log(fd);
+
+                    api_modify((data) => {
+
+                    }, "playlist_songs", fd);
+                });
+            });
+        }, "playlists");
     }
 
     static secondsHumanReadable(timeS) {

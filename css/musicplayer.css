@@ -158,6 +158,38 @@
     flex-grow: 4;
 }
 
+.playlist-add-selection{
+    display: block !important;
+    padding: 8px !important;
+}
+
+.playlist-listitem{
+    cursor: pointer;
+    height: 5rem;
+    padding: 8px;
+    margin: 4px 0px;
+    display: flex;
+    gap: 8px;
+
+    border-radius: calc(0.5rem + 8px);
+}
+
+input[type="checkbox"]:checked + .playlist-listitem{
+    background-color: var(--color-main);
+    color: var(--color-text-button);
+}
+
+.playlist-listitem > img{
+    height: 5rem;
+    width: 5rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.playlist-listitem > .text{
+    margin: auto 0px;
+}
+
 @media only screen and (max-width: 700px) {
     .music-player {
         display: block;

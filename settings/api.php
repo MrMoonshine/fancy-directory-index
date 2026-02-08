@@ -6,26 +6,29 @@ error_reporting(E_ALL);*/
 $PAYLOAD = [
     "status" => 0,
     "errors" => [],
-    //"POST" => $_POST,
-    "files" => []
+    "POST" => $_POST,
+    "files" => [],
+    "data" => []
 ];
 
-function thumbnail_dir2path($db, $dir){
+function thumbnail_dir2path($db, $dir)
+{
     // Is it on default document root?
-    if(str_starts_with($dir, $_SERVER["DOCUMENT_ROOT"])){
+    if (str_starts_with($dir, $_SERVER["DOCUMENT_ROOT"])) {
         $dir = str_replace($_SERVER["DOCUMENT_ROOT"], "", $dir);
-        if(str_starts_with($dir,"/")){
+        if (str_starts_with($dir, "/")) {
             return $dir;
         }
-        return "/".$dir;
+        return "/" . $dir;
     }
     return $db->alias_resolve($dir, true);
 }
 
-function thumbnail_leftovers($newtns, $oldtns){
+function thumbnail_leftovers($newtns, $oldtns)
+{
     $retval = [];
-    foreach($oldtns as $oldtn){
-        if(!in_array($oldtn["video"], $newtns)){
+    foreach ($oldtns as $oldtn) {
+        if (!in_array($oldtn["video"], $newtns)) {
             array_push($retval, $oldtn);
         }
     }
@@ -75,16 +78,16 @@ try {
             array_push($PAYLOAD["files"], $file);
         }
         // Cleanup DB
-        if(!isset($_POST["nocleanup"])){
+        if (!isset($_POST["nocleanup"])) {
             $leftovers = thumbnail_leftovers($query["files"], $existingThumbnails);
             $PAYLOAD["leftovers"] = $leftovers;
-            foreach($leftovers as $leftover){
+            foreach ($leftovers as $leftover) {
                 $ddb->thumbnails_delete($leftover["id"]);
             }
         }
     } else if (isset($_POST["video"]) && isset($_POST["path"]) && isset($_POST["thumbnail"])) {
         $pathid = $ddb->path_get_id($_POST["path"]);
-        if($_POST["thumbnail"] != "NONE"){
+        if ($_POST["thumbnail"] != "NONE") {
             // Create new Thumbnail
             $filename = hash("sha256", time() . $_POST["thumbnail"]) . ".webp";
             $thumbnaildata = preg_replace("/^data\:image\/[a-z]+\;base64\,/", "", $_POST["thumbnail"], 1);
@@ -93,13 +96,13 @@ try {
             //$filepath = "/var/www/fancy-directory-index/settings/data/".$filename;
             $PAYLOAD["thumbnail"] = $filename;
             $dbret = $ddb->thumbnails_create($filename, $_POST["video"], $pathid);
-            if($dbret >= 0){
+            if ($dbret >= 0) {
                 file_put_contents($filepath, base64_decode($thumbnaildata));
             }
-        }else{
+        } else {
             $dbret = $ddb->thumbnails_create("NONE", $_POST["video"], $pathid);
         }
-        
+
     }
 
     if (isset($_GET["directory"])) {
@@ -130,23 +133,49 @@ try {
         $PAYLOAD["orphans"] = [];
         $thumbnals = $ddb->thumbnails_get(-1);
         $files = scandir($OPTIONS['thumbnaildir']);
-        foreach($files as $file){
-            if(!str_ends_with($file, ".webp")){
+        foreach ($files as $file) {
+            if (!str_ends_with($file, ".webp")) {
                 continue;
             }
             $counter = 0;
-            foreach($thumbnals as $thumbnail){
-                if($thumbnail["thumbnail"] == $file){
+            foreach ($thumbnals as $thumbnail) {
+                if ($thumbnail["thumbnail"] == $file) {
                     $counter++;
                 }
             }
 
-            if($counter == 0){
+            if ($counter == 0) {
                 array_push($PAYLOAD["orphans"], $file);
-                unlink(DirectoryDB::add_last_slash($OPTIONS['thumbnaildir']).$file);
+                unlink(DirectoryDB::add_last_slash($OPTIONS['thumbnaildir']) . $file);
             }
         }
         $PAYLOAD["cleanupcount"] = count($PAYLOAD["orphans"]);
+    }
+
+    if (isset($_GET["resource"])) {
+        switch ($_GET["resource"]) {
+            case "playlists":
+                $PAYLOAD["data"] = $ddb->playlist_get($_GET["id"] ?? null);
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (isset($_POST["resource"])) {
+        switch ($_POST["mode"]) {
+            case "modify":
+                switch ($_POST["resource"]) {
+                    case "playlists":
+                        $songid = $ddb->song_get_id($_POST["song"]);
+                        $PAYLOAD["songid"] = $songid;
+                        $PAYLOAD["data"] = $ddb->playlist_songs_modify($_POST["playlist"], $songid, isset($_POST["add"]));
+                        break;
+                    default:
+                        break;
+                }
+                break;
+        }
     }
 
     //var_dump($ddb->errors);

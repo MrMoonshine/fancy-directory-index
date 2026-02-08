@@ -72,6 +72,11 @@
                         style="mask-image: url('/fancy-directory-index/assets/share.svg')">
                     </div>
                 </button>
+                <button class="sillouhette-button" id="song-playlist-add">
+                    <div class="masked-icon" id="img-playlist-add"
+                        style="mask-image: url('/fancy-directory-index/assets/bookmarks.svg')">
+                    </div>
+                </button>
                 <a class="sillouhette-button" id="song-download" download="file.mp3">
                     <div class="masked-icon" id="img-download"
                         style="mask-image: url('/fancy-directory-index/assets/download.svg')">
@@ -102,6 +107,7 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jsmediatags@3.9.7/dist/jsmediatags.min.js"></script>
 <script src="/fancy-directory-index/js/common.js"></script>
+<script src="/fancy-directory-index/js/api.js"></script>
 <script src="/fancy-directory-index/js/overlay.js"></script>
 <script src="/fancy-directory-index/js/toast.js"></script>
 <script src="/fancy-directory-index/js/pagination.js"></script>

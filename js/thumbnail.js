@@ -1,4 +1,4 @@
-const THUMBNAIL_API = APACHE_ALIAS + "settings/thumbnail.php";
+const THUMBNAIL_API = APACHE_ALIAS + "settings/api.php";
 const THUMBNAIL_CREATE_RATE_LIMIT = 2500; //ms => wait 5 seconds after each generation
  
 class Thumbnail {

@@ -1,4 +1,5 @@
 const APACHE_ALIAS = "/fancy-directory-index/";
+const API_ENDPOINT = APACHE_ALIAS + "settings/api.php";
 
 const THUMBNAIL_ENABLE = true;
 var THUMBNAIL_DIR = APACHE_ALIAS + "settings/data/";
@@ -45,6 +46,61 @@ function fancy_range_sliders() {
             fancy_range_slider_set(slider);
         });
     });
+}
+/**
+ * Converts hex color to HSV array [hue, saturation%, value%]
+ * @param {string} hex - #rrggbb or #rgb
+ * @returns {[number, number, number]} [hue 0–360, saturation 0–100, value 0–100]
+ */
+function color_hex_to_hsv(hex) {
+  // Remove # and normalize short hex
+  hex = hex.replace(/^#/, '').toLowerCase();
+  if (hex.length === 3) {
+    hex = hex.split('').map(c => c + c).join('');
+  }
+
+  if (hex.length !== 6 || !/^[0-9a-f]{6}$/.test(hex)) {
+    throw new Error("Invalid hex color");
+  }
+
+  // Hex → RGB (0–255)
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+
+  // Normalize to 0–1
+  const rNorm = r / 255;
+  const gNorm = g / 255;
+  const bNorm = b / 255;
+
+  const max = Math.max(rNorm, gNorm, bNorm);
+  const min = Math.min(rNorm, gNorm, bNorm);
+  const delta = max - min;
+
+  // Value (brightness)
+  const v = Math.round(max * 100);
+
+  // Saturation
+  let s = 0;
+  if (max !== 0) {
+    s = Math.round((delta / max) * 100);
+  }
+
+  // Hue
+  let h = 0;
+  if (delta !== 0) {
+    if (max === rNorm) {
+      h = (gNorm - bNorm) / delta;
+    } else if (max === gNorm) {
+      h = 2 + (bNorm - rNorm) / delta;
+    } else {
+      h = 4 + (rNorm - gNorm) / delta;
+    }
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+
+  return [Math.round(h), s, v];
 }
 
 class DirectoryView {

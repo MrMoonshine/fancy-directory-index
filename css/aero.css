@@ -1,0 +1,52 @@
+:root {
+    --color-main-hue: 180;
+    --color-main-sat: 64%;
+    --color-border: #4b4b4b;
+    --color-border-petite: #0f0f0f;
+}
+
+.gradient-main,
+body.aero .playlist-player > header{
+    color: var(--color-text-button);
+    background-color: var(--color-main);
+    background: linear-gradient(to bottom,
+            hsl(var(--color-main-hue), var(--color-main-sat), 75%) 0%,
+            hsl(var(--color-main-hue), var(--color-main-sat), 65%) 15%,
+            hsl(var(--color-main-hue), var(--color-main-sat), 53%) 50%,
+            hsl(var(--color-main-hue), var(--color-main-sat), 45%) 60%,
+            hsl(var(--color-main-hue), var(--color-main-sat), 60%) 90%,
+            hsl(var(--color-main-hue), var(--color-main-sat), 70%) 100%);
+}
+
+.gradient-dull,
+body.aero .btn,
+body.aero .playlist-player > footer{
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, .25) 0,
+            rgba(117, 117, 117, .2) 20%,
+            rgba(92, 92, 92, .2) 50%, rgba(43, 43, 43, .3) 50%,
+            rgba(161, 161, 161, .3) 100%);
+}
+
+.aero-glass{
+    /*background-image: url("/fancy-directory-index/assets/aero_glass.png");*/
+    background-image: url("/fancy-directory-index/assets/aero_glass.png"), linear-gradient(var(--color-background-translucent), var(--color-background-translucent), var(--color-background-translucent));
+}
+
+.border,
+body.aero .music-player{
+    border: 1px solid var(--color-border);
+}
+
+body.aero .music-player{
+    box-shadow: unset;
+}
+
+body.aero .hue-rotate{
+    filter: hue-rotate(calc((var(--color-main-hue) - 120) * 1deg));
+}
+
+body.aero .btn.btn-dark{
+    background-color: var(--color-background-2);
+    border: 1px solid var(--color-border);
+}

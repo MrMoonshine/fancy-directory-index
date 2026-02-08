@@ -6,6 +6,7 @@
     --color-text: white;
     --color-text-button: var(--color-text);
     --color-text-code: hotpink;
+    --color-text-petite: lightgrey;
     --color-autoshadow: transparent;
     --color-autoshadow-text: inherit;
 
@@ -31,6 +32,7 @@
         --color-background-translucent: rgba(223,223,223,.7);
         --color-text-button: white;
         --color-text: black;
+        --color-text-petite: rgb(53, 53, 53);
         --color-text-code: purple;
 
         --color-autoshadow-themed: rgba(255,255,255, 0.7);
@@ -212,6 +214,10 @@ nav .masked-icon{
     gap: var(--gap-dashboard)
 }
 
+.d-block{
+    display: block !important;
+}
+
 .d-none,
 .d-mobile{
     display: none !important;
@@ -219,6 +225,18 @@ nav .masked-icon{
 
 .d-flex{
     display: flex;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.text-small{
+    font-size: small;
+}
+
+.text-petite{
+    color: var(--color-text-petite);
 }
 
 .justify-content-start{
@@ -253,9 +271,26 @@ nav .masked-icon{
     flex-grow: 1;
 }
 
+.cursor-pointer{
+    cursor: pointer;
+}
+
+.position-relative{
+    position: relative;
+}
+
+.position-absolute{
+    position: absolute;
+}
+
 .mx-auto{
     margin-left: auto;
     margin-right: auto;
+}
+
+.my-auto{
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .h-100{

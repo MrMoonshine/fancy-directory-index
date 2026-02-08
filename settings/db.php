@@ -8,6 +8,14 @@ class DirectoryDB extends SQLite3
     const DB_FILE = DirectoryDB::WORKDIR . "fancydirindex.sqlite3";
     const DDL_FILE = "DDL.sql";
 
+    public function __construct($filename) {
+        try{
+            parent::__construct($filename);
+        } catch (\Throwable $th) {
+            echo($th->getMessage());
+            //throw $th;
+        }
+    }
 
     /*
         @brief checks if all necessary tables are available. if not run DDLs
@@ -68,7 +76,7 @@ class DirectoryDB extends SQLite3
     {
         $retval = [];
         $SQL = 'SELECT * FROM thumbnails where path=:id';
-        if($pathid < 0){
+        if ($pathid < 0) {
             $SQL .= " OR 1=1";
         }
         $SQL .= ";";
@@ -87,13 +95,14 @@ class DirectoryDB extends SQLite3
             return;
         }
         //array_push($this->errors, $stmt->getSQL(true));
-        while ($row = $stmtresult->fetchArray()){
+        while ($row = $stmtresult->fetchArray()) {
             array_push($retval, $row);
         }
         return $retval;
     }
 
-    public function thumbnails_create($thumbnail, $video, $path){
+    public function thumbnails_create($thumbnail, $video, $path)
+    {
         $SQL = <<<SQL
             SELECT count(1) as "resultcount" from thumbnails where video=:video and path=:path ;
         SQL;
@@ -107,7 +116,7 @@ class DirectoryDB extends SQLite3
         $stmtl->bindValue(":path", $path, SQLITE3_INTEGER);
 
         $counter = $this->querySingle($stmtl->getSQL(true));
-        if($counter > 0){
+        if ($counter > 0) {
             array_push($this->errors, "Already exists, not creating new thumbnail!");
             return -1;
         }
@@ -132,7 +141,8 @@ class DirectoryDB extends SQLite3
         return 0;
     }
 
-    public function thumbnails_delete($id){
+    public function thumbnails_delete($id)
+    {
         $SQL = <<<SQL
             DELETE FROM thumbnails WHERE id = :id;
         SQL;
@@ -313,9 +323,9 @@ class DirectoryDB extends SQLite3
             $patheval = DirectoryDB::add_last_slash($pathname);
             if (!$reverse && str_contains($patheval, $alias["aliasname"])) {
                 return str_replace($alias["aliasname"], $alias["directory"], $patheval);
-            }else if($reverse){
+            } else if ($reverse) {
                 // Treat incoming $pathname as directory here
-                if(str_starts_with($pathname, $alias["directory"])){
+                if (str_starts_with($pathname, $alias["directory"])) {
                     $dir = str_replace($alias["directory"], $alias["aliasname"], $pathname);
                     return $dir;
                 }
@@ -362,6 +372,88 @@ class DirectoryDB extends SQLite3
             return;
         }
     }
+
+    public function playlist_get($id = null)
+    {
+        $retval = [];
+        $params = [];
+        $filters = "WHERE 1=1 ";
+        if($id){
+            $filters .= " AND id = :id ";
+            $params["id"] = intval($id);
+        }
+        $results = $this->universalDML(<<<SQL
+            SELECT 
+                *,
+                (select count(1) from playlist_songs where playlist = playlists.id) as songCount
+            FROM playlists
+            $filters
+            ORDER BY name ASC
+        SQL, $params);
+        while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+            if(!$id){
+                array_push($retval, $row);
+                continue;    
+            }
+            $row["songs"] = $this->queryArrayBound(<<<SQL
+                SELECT * FROM v_playlist_songs WHERE playlist = :playlist ;
+            SQL, ["playlist" => intval($id)]);
+            array_push($retval, $row);
+        }
+
+        return $retval;
+    }
+
+    public function song_get_id($songname){
+        $pathid = $this->path_get_id($_POST["path"]);
+        $retval = -1;
+        $tries = 0;
+        do{
+            $retval = $this->querySingleBound(<<<SQL
+                SELECT id FROM songs
+                WHERE path = :path AND song = :song ;
+            SQL, ["path" => intval($pathid), "song" => strval($_POST["song"])]);
+            //array_push($this->errors, "Here 1: ".$retval);
+            if($retval != false && $retval != null){
+                break;
+            }
+            $retval = -1;
+            $tries++;
+            $this->universalDML(<<<SQL
+                INSERT OR IGNORE INTO songs (path, song) VALUES (:path, :song);
+            SQL, ["path" => intval($pathid), "song" => strval($_POST["song"])]);
+        }while($retval < 0 && $tries < 2);
+        
+        return $retval;
+    }
+
+    public function playlist_songs_modify($playlist, $song, $add = false){
+        if(!$add){
+            // Deleting
+            $occurances = $this->querySingleBound(<<<SQL
+                delete from playlist_songs where playlist = :playlist and song = :song;
+            SQL, ["playlist" => intval($playlist), "song" => intval($song)]);
+            return null;
+        }
+        // Adding
+        $occurances = $this->querySingleBound(<<<SQL
+                select count(1) from playlist_songs where playlist = :playlist and song = :song;
+        SQL, ["playlist" => intval($playlist), "song" => intval($song)]);
+
+        if(($occurances ?? 0) > 0){
+            array_push($this->errors, "Song ".$_POST["song"]." already esxists in this playlist! Thus, not adding!");
+            return false;
+        }
+
+        return $this->universalDML(<<<SQL
+            INSERT OR IGNORE INTO playlist_songs (song, playlist, timestamp) VALUES (:song, :playlist, :timestamp);
+        SQL, [
+            "song" => intval($song),
+            "playlist" => intval($playlist),
+            "timestamp" => strval(date("Y-m-d H:i"))
+        ]);
+    }
+
     // Check if the correct tables are in use
     private function tables_exist()
     {
@@ -389,6 +481,76 @@ class DirectoryDB extends SQLite3
     private function errors_add()
     {
         array_push($this->errors, $this->lastErrorMsg());
+    }
+
+    private function universalStatement($sql, $params = [])
+    {
+        $stmt = $this->prepare($sql);
+        if (!$stmt) {
+            array_push($this->errors, $this->lastErrorMsg());
+            return false;
+        }
+
+        foreach (array_keys($params) as $key) {
+            $type = gettype($params[$key]);
+            switch ($type) {
+                case 'integer':
+                    $stmt->bindValue($key, $params[$key], SQLITE3_INTEGER);
+                    break;
+                case 'double':
+                    $stmt->bindValue($key, $params[$key], SQLITE3_FLOAT);
+                    break;
+                case 'string':
+                    $stmt->bindValue($key, $params[$key], SQLITE3_TEXT);
+                    break;
+                case 'NULL':
+                    $stmt->bindValue($key, $params[$key], SQLITE3_NULL);
+                    break;
+                default:
+                    array_push($this->errors, 'WARNING: Unknown type: "' . $type . '" for key "' . $key . '". Casting to String');
+                    $stmt->bindValue($key, strval($params[$key]), SQLITE3_TEXT);
+                    break;
+            }
+        }
+        //array_push($this->errors, $stmt->getSQL(true));
+        return $stmt;
+    }
+
+    public function universalDML($sql, $params = [])
+    {
+        $stmt = $this->universalStatement($sql, $params);
+        if(!$stmt){
+            return false;
+        }
+        $result = $stmt->execute();
+        if (!$result) {
+            array_push($this->errors, $this->lastErrorMsg());
+        }
+        return $result;
+    }
+
+    public function querySingleBound($query, $params = [], $entireRow = false)
+    {
+        $stmt = $this->universalStatement($query, $params);
+        if(!$stmt){
+            return false;
+        }
+        return parent::querySingle($stmt->getSQL(true), $entireRow);
+    }
+
+    public function queryArrayBound($query, $params = [], $entireRow = false)
+    {
+        $retval = [];
+        $stmt = $this->universalStatement($query, $params);
+        if(!$stmt){
+            return false;
+        }
+        
+        $results = $this->universalDML($query, $params);
+        while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+            array_push($retval, $row);
+        }
+        return $retval;
     }
 
     static function create_if_not_exists($base = "./")
