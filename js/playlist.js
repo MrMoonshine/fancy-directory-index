@@ -67,8 +67,8 @@ class PlaylistSong{
         this.dom = document.createElement("div");
         this.dom.className = "playlist-song-item";
 
-        let pbcont = document.createElement("div");
-        pbcont.className = "playbutton-container";
+        this.playbutton = document.createElement("div");
+        this.playbutton.className = "playbutton-container";
 
         let playbuttonSby = document.createElement("img");
         playbuttonSby.className = "playbutton standby my-auto";
@@ -89,15 +89,15 @@ class PlaylistSong{
 
         let title = document.createElement("div");
         title.className = "my-auto";
-        title.innerText = song.song;
+        MusicPlayer.songTitleUIPrepare(song.song ?? "UNKNOWN", title);
 
         let dateadded = document.createElement("div");
         dateadded.className = "my-auto";
         dateadded.innerText = song.timestamp;
 
-        pbcont.appendChild(playbutton);
-        pbcont.appendChild(playbuttonSby);
-        this.dom.appendChild(pbcont);
+        this.playbutton.appendChild(playbutton);
+        this.playbutton.appendChild(playbuttonSby);
+        this.dom.appendChild(this.playbutton);
         this.dom.appendChild(thumbnail);
         this.dom.appendChild(title);
         this.dom.appendChild(dateadded);
@@ -110,7 +110,7 @@ class Playlist{
         this.dom = dom;
         this.songItems = [];
 
-        
+        this.player = new MusicPlayer(document.querySelector("#music-player"));
     }
 
     update(data){
@@ -118,6 +118,10 @@ class Playlist{
         console.log(data);
         (data.songs ?? []).forEach((song) => {
             let item = new PlaylistSong(this.dom, song);
+            item.playbutton.addEventListener("click", () => {
+                console.log(item.song);
+                this.player.playRaw(item.song.song, item.song.filename, item.song.thumbnail ? `/nas/web/thumbnails/${item.song.thumbnail}` : "");
+            });
             this.songItems.push(item);
         });
     }

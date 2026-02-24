@@ -191,6 +191,86 @@ class MusicPlayer {
         this.currentSong = file.getFileName();
     }
 
+    playRaw(songtitle, filename, thumbnail = "", startImmediately = true) {
+        dom_show(this.loader, true);
+        dom_show(this.slider, false);
+
+        // Set Title
+        MusicPlayer.songTitleUIPrepare(songtitle, this.title);
+
+        // Cleanup
+        if (this.audio) {
+            this.audio.remove();
+        }
+
+        if (this.source) {
+            this.source.remove();
+        }
+        // Create new audio element
+        this.audio = document.createElement("audio");
+        this.source = document.createElement("source");
+        this.dom.appendChild(this.audio);
+        this.audio.appendChild(this.source);
+
+        if (startImmediately) {
+            this.audio.autoplay = true;
+            this.playButton.checked = false;
+        }
+
+        this.audio.loop = this.looping;
+        this.audio.volume = this.volumeCache;
+        this.audio.currentTime = 0;
+
+        this.playButton.addEventListener("input", () => {
+            if (!this.playButton.checked) {
+                this.audio.play();
+                console.log("Playing...");
+            } else {
+                this.audio.pause();
+                console.log("Paused!");
+            }
+            //this.playbutton_icon(this.audio.paused);
+            console.log(this.audio);
+        });
+
+        this.audio.addEventListener('timeupdate', () => {
+            //console.log("Timeupdate! " + Math.floor(this.audio.currentTime));
+            this.updateSlider();
+
+        });
+
+        this.audio.addEventListener('loadedmetadata', () => {
+            this.slider.setAttribute("step", "1");
+            this.slider.setAttribute("min", "0");
+            this.slider.setAttribute("max", this.audio.duration);
+            this.duration.innerText = MusicPlayer.secondsHumanReadable(this.audio.duration);
+        });
+
+        this.audio.addEventListener("canplay", () => {
+            dom_show(this.loader, false);
+            dom_show(this.slider, true);
+        });
+
+        // Song must be loaded first. thumbnails can wiat
+        this.audio.addEventListener("canplaythrough", () => {
+            // Set album cover if any
+            console.log(thumbnail);
+            this.cover.src = thumbnail;
+            // Provide Info for System
+            //this.setSystemInfo(file);
+        });
+
+        // Go to next song if it finishes
+        this.audio.addEventListener("ended", () => {
+            this.nextSong();
+        });
+
+        this.source.src = filename;
+        this.downloader.href = filename;
+        this.downloader.download = filename;
+        this.currentSong = filename;
+    }
+
     setSystemInfo(file) {
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
@@ -302,7 +382,7 @@ class MusicPlayer {
 
     playlistMenuBuild() {
         this.playlistMenu.content.classList.add("playlist-add-selection");
-        let  counter = 0;
+        let counter = 0;
         api_get((data) => {
             //console.log(data);
             data.forEach(playlist => {
@@ -350,7 +430,7 @@ class MusicPlayer {
                     fd.append("resource", "playlists");
                     fd.append("mode", "modify");
                     fd.append("path", url.pathname);
-                    fd.append("song", this.currentSong);
+                    fd.append("song", encodeURI(this.currentSong));
                     console.log(fd);
 
                     api_modify((data) => {
@@ -372,5 +452,41 @@ class MusicPlayer {
         num = num.toString();
         while (num.length < size) num = "0" + num;
         return num;
+    }
+
+    static songTitleNamePrepare(songtitle){
+        let decodedtitle = decodeURI(songtitle);
+        const extensions = ["mp3", "webm"];
+        extensions.forEach(exten => {
+            let re = new RegExp(`\.${exten}$`, "gi");
+            console.log(re);
+            decodedtitle = decodedtitle.replace(re, "");
+        });
+        return decodedtitle;
+    }
+
+    static songTitleUIPrepare(songtitle, parent) {
+        const separator = " - ";
+        parent.innerHTML = "";
+        let decodedtitle = MusicPlayer.songTitleNamePrepare(songtitle);
+        try {
+            const arr = decodedtitle.split(separator);
+            // fallback
+            if(arr.length < 2){
+                parent.innerText = decodedtitle;
+                return
+            }
+            let tt = document.createElement("div");
+            tt.innerText = arr.shift();
+
+            let ta = document.createElement("div");
+            ta.className = "text-petite";
+            ta.innerText = arr.join(separator);
+
+            parent.appendChild(tt);
+            parent.appendChild(ta);
+        } catch (err) {
+            console.warn(err);
+        }
     }
 }
