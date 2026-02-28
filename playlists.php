@@ -26,32 +26,39 @@
             </div>
         </header>
         <article>
-            <div class="aero-glass">
-                <div id="playlist-library">
-                    <h3 class="text-center">Library</h3>
-                    <?php
-                    require("settings/db.php");
-                    $db = new DirectoryDB("settings/" . DirectoryDB::DB_FILE);
-                    $playlists = [];
-                    $playlists = $db->playlist_get();
-                    //playlistList($playlists);
-                    ?>
-                    <div id="playlist-library-cardspace" class="playlist-selection d-flex gap justify-content-center">
-                    </div>
-                    <div id="playlist-song-selection" class="playlist-selection d-flex gap justify-content-center">
-                        <div class="position-relative">
-                            <button class="btn btn-dark  position-absolute d-flex cursor-pointer">
-                                <img style="height:2rem" class="hue-rotate" alt="&rarr;"
-                                    src="/fancy-directory-index/assets/arrow-left.png">
-                                <div class="my-auto">
-                                    Back
-                                </div>
-                            </button>
-                            <h2 class="text-center">Bam Oida</h2>
+            <div class="aero-glass d-flex gap justify-content-around">
+                <div id="playlist-player-content" class="flex-grow-1">
+                    <div id="playlist-library">
+                        <h3 class="text-center">Library</h3>
+                        <?php
+                        require("settings/db.php");
+                        $db = new DirectoryDB("settings/" . DirectoryDB::DB_FILE);
+                        $playlists = [];
+                        $playlists = $db->playlist_get();
+                        //playlistList($playlists);
+                        ?>
+                        <div id="playlist-library-cardspace" class="playlist-selection d-flex gap justify-content-center">
                         </div>
-                        <hr>
+                        <div id="playlist-song-selection" class="playlist-selection d-flex gap justify-content-center">
+                            <div class="position-relative">
+                                <button class="btn btn-dark  position-absolute d-flex cursor-pointer">
+                                    <img style="height:2rem" class="hue-rotate" alt="&rarr;"
+                                        src="/fancy-directory-index/assets/arrow-left.png">
+                                    <div class="my-auto">
+                                        Back
+                                    </div>
+                                </button>
+                                <h2 class="text-center" id="playlist-title-display">xxx</h2>
+                            </div>
+                            <hr>
+                        </div>
                     </div>
                 </div>
+                <div id="next-up-space">
+                    <h3>Next from: <i class="playlist-title-display">xxx</i></h3>
+                </div>
+            </div>
+            <div>
                 <div class="music-player" id="music-player">
                     <div class="d-flex flex-nowrap gap">
                         <img class="albumcover" id="albumcover" alt="cover">

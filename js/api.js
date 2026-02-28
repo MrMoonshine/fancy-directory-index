@@ -14,7 +14,7 @@ function api_get(callback, resource, id = null){
         }
         try {
             let jobs = JSON.parse(req.responseText);
-            callback(jobs.data);
+            callback(jobs);
         } catch (err) {
             console.error(err);
         }
@@ -36,7 +36,7 @@ function api_modify(callback, resource, formData = null){
         }
         try {
             let jobs = JSON.parse(req.responseText);
-            callback(jobs.data);
+            callback(jobs);
         } catch (err) {
             console.error(err);
         }

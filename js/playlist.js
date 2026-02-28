@@ -47,8 +47,14 @@ class PlaylistCard {
         textDiv.appendChild(songCountText);
 
         this.dom.addEventListener("click", () => {
-            api_get((apidata) => {
-                this.playlistMain.update(apidata[0]);
+            api_get((apidataall) => {
+                try {
+                    let apidata = apidataall.data;
+                    this.playlistMain.update(apidata[0]);
+                } catch (error) {
+                    console.error("Unable to set playlist!");
+                }
+
             }, "playlists", this.data.id);
         });
 
@@ -60,8 +66,8 @@ class PlaylistCard {
     }
 }
 
-class PlaylistSong{
-    constructor(parent, song){
+class PlaylistSong {
+    constructor(parent, song) {
         this.song = song;
 
         this.dom = document.createElement("div");
@@ -83,7 +89,7 @@ class PlaylistSong{
         let thumbnail = new Image();
         thumbnail.className = "thumbnail";
         thumbnail.alt = "[IMG]";
-        if(song.thumbnail){
+        if (song.thumbnail) {
             thumbnail.src = `/nas/web/thumbnails/${song.thumbnail}`;
         }
 
@@ -105,32 +111,43 @@ class PlaylistSong{
     }
 }
 
-class Playlist{
-    constructor(dom){
+class Playlist {
+    constructor(dom) {
         this.dom = dom;
         this.songItems = [];
+        this.songs = [];
+        this.name = "";
 
         this.player = new MusicPlayer(document.querySelector("#music-player"));
+        this.titleDom = document.querySelector("#playlist-title-display");
     }
 
-    update(data){
+    update(data) {
         this.clear();
         console.log(data);
-        (data.songs ?? []).forEach((song) => {
+        this.name = data.name ?? "UNKNOWN";
+        this.titleDom.innerText = this.name;
+
+        this.songs = data.songs ?? [];
+        for(let i = 0; i < (data.songs ?? []).length; i++){
+            let song = data.songs[i];
             let item = new PlaylistSong(this.dom, song);
             item.playbutton.addEventListener("click", () => {
                 console.log(item.song);
-                this.player.playRaw(item.song.song, item.song.filename, item.song.thumbnail ? `/nas/web/thumbnails/${item.song.thumbnail}` : "");
+                //this.player.playRaw(item.song.song, item.song.filename, item.song.thumbnail ?? "");
+                this.player.setPlaylist(this.name, this.songs, i);
+                this.player.nextSong();
             });
             this.songItems.push(item);
-        });
+        }
     }
 
-    clear(){
+    clear() {
         this.songItems.forEach(item => {
             item.dom.remove();
         });
         this.songItems = [];
+        this.songs = [];
     }
 }
 

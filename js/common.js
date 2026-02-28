@@ -103,6 +103,10 @@ function color_hex_to_hsv(hex) {
   return [Math.round(h), s, v];
 }
 
+function thumbnail_full_path(thumbnail){
+    return `/nas/web/thumbnails/${thumbnail}`;
+}
+
 class DirectoryView {
     #mode = 0;
     constructor() {

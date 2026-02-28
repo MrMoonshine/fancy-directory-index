@@ -1,8 +1,14 @@
 class MusicPlayer {
-    constructor(dom) {
+    /*
+        @brief constructor
+        @param dom parent
+        @param nextUpSpace dom to be used for next-up
+    */
+    constructor(dom, nextUpSpace = null) {
         this.dom = dom;
         // Playlist Variables
-        this.playlist = null;
+        this.directoryPlaylist = null;      // playlist for directories
+        this.playlist = new SongQueue(document.querySelector("#next-up-space"));               // actual playlists
         this.currentIndex = 0;
 
         this.title = document.getElementById("songtitle");
@@ -98,7 +104,7 @@ class MusicPlayer {
             Playlist
         */
         this.currentSong = "";
-        this.playlistMenu = new Overlay("Add to Playlist");
+        this.playlistMenu = new MusicPlaylistManager("Add to Playlist");
         this.playlistCheckboxes = [];
         this.playlistAdder.addEventListener("click", () => { this.playlistMenuShow() });
         this.playlistMenuBuild();
@@ -255,7 +261,8 @@ class MusicPlayer {
         this.audio.addEventListener("canplaythrough", () => {
             // Set album cover if any
             console.log(thumbnail);
-            this.cover.src = thumbnail;
+            //this.cover.src = `/nas/web/thumbnails/${thumbnail}`;
+            this.cover.src = thumbnail_full_path(thumbnail);
             // Provide Info for System
             //this.setSystemInfo(file);
         });
@@ -302,17 +309,28 @@ class MusicPlayer {
         }
     }
 
-    setPlaylist(playlist) {
-        this.playlist = playlist;
+    setPlaylist(name, playlist, offset = 0) {
+        /*Array.from(document.querySelectorAll(".playlist-title-display")).forEach(ptd => {
+            console.log(ptd);
+            ptd.innerText = name;
+        });*/
+        this.playlist.clear();
+        this.playlist.addSongs(playlist, offset, name);
+        //this.playlist = playlist;
+        //console.log(playlist);
+    }
+
+    setDirectoryPlaylist(playlist) {
+        this.directoryPlaylist = playlist;
     }
 
     getPlaylistIndex() {
-        if (!this.playlist) {
+        if (!this.directoryPlaylist) {
             return -1;
         }
 
-        for (let i = 0; i < this.playlist.length; i++) {
-            if (this.playlist[i].getFileName() == this.title.innerText) {
+        for (let i = 0; i < this.directoryPlaylist.length; i++) {
+            if (this.directoryPlaylist[i].getFileName() == this.title.innerText) {
                 return i;
             }
         }
@@ -320,8 +338,8 @@ class MusicPlayer {
     }
 
     loadFromIndex(index) {
-        this.currentIndex = index % this.playlist.length;
-        return this.playlist[this.currentIndex];
+        this.currentIndex = index % this.directoryPlaylist.length;
+        return this.directoryPlaylist[this.currentIndex];
     }
 
     playbutton_icon(icon) {
@@ -360,7 +378,24 @@ class MusicPlayer {
     }
 
     nextSong() {
-        if (!this.playlist) {
+        /*if((this.playlist ?? []).length > 0){
+            //console.log(this.playlist);
+            let song = this.playlist.shift();
+            this.playlist.push(song);
+            this.playRaw(song.song, song.filename, song.thumbnail, true);
+            return;
+        }*/
+       if(this.playlist.songs.length > 0){
+            let song = this.playlist.getNext();
+            if(!song){
+                this.audio.pause();
+                return;
+            }
+            this.playRaw(song.song, song.filename, song.thumbnail, true);
+            return;
+       }
+
+        if (!this.directoryPlaylist) {
             return;
         }
         if (!this.shuffling()) {
@@ -368,12 +403,28 @@ class MusicPlayer {
             return;
         }
 
-        let indexDiff = Math.ceil(Math.random() * (this.playlist.length - 1))
+        let indexDiff = Math.ceil(Math.random() * (this.directoryPlaylist.length - 1))
         this.play(null, this.currentIndex + indexDiff);
     }
 
     prevSong() {
-        this.play(null, this.playlist.length + this.currentIndex - 1);
+        /*if((this.playlist ?? []).length > 0){
+            //console.log(this.playlist);
+            let song = this.playlist.pop();
+            this.playlist.unshift(song);
+            this.playRaw(song.song, song.filename, song.thumbnail, true);
+            return;
+        }*/
+       if(this.playlist.songs.length > 0){
+            let song = this.playlist.getPrev();
+            if(!song){
+                this.audio.pause();
+                return;
+            }
+            this.playRaw(song.song, song.filename, song.thumbnail, true);
+            return;
+       }
+        this.play(null, this.directoryPlaylist.length + this.currentIndex - 1);
     }
 
     playlistMenuShow() {
@@ -383,7 +434,8 @@ class MusicPlayer {
     playlistMenuBuild() {
         this.playlistMenu.content.classList.add("playlist-add-selection");
         let counter = 0;
-        api_get((data) => {
+        api_get((dataall) => {
+            let data = dataall.data ?? [];
             //console.log(data);
             data.forEach(playlist => {
                 let formid = "plaf" + counter;
@@ -459,7 +511,6 @@ class MusicPlayer {
         const extensions = ["mp3", "webm"];
         extensions.forEach(exten => {
             let re = new RegExp(`\.${exten}$`, "gi");
-            console.log(re);
             decodedtitle = decodedtitle.replace(re, "");
         });
         return decodedtitle;
@@ -488,5 +539,110 @@ class MusicPlayer {
         } catch (err) {
             console.warn(err);
         }
+    }
+}
+
+class MusicPlaylistManager extends Overlay{
+    //constructor(title = "", content = null, defaulttype = "dialog") {
+    constructor(title = "", content = null, defaulttype = "dialog"){
+        super(title, content);
+    }
+}
+
+const SongQueueColumn = {
+    TITLE: "song",
+    TIMESTAMP: "timestamp"
+}
+
+class SongQueue{
+    static MAX_DISPLAY = 10;
+    constructor(display = null){
+        this.display = display;
+        this.songs = [];
+        this.name = "UNKNOWN";
+        
+    }
+
+    getNext(){
+        if(this.songs.length < 1){
+            return null;
+        }
+        let elem = this.songs.shift();
+        this.songs.push(elem);
+        this.updateDisplay();
+        return elem;
+    }
+
+    getPrev(){
+        if(this.songs.length < 1){
+            return null;
+        }
+        let elem = this.songs.pop();
+        this.songs.unshift(elem);
+        this.updateDisplay();
+        return elem;
+    }
+
+    addSong(song){
+        this.songs.push(song);
+    }
+
+    addSongs(songs, offset = 0, name = "UNKNOWN"){
+        this.name = name;
+        //songs.forEach(song => )
+        for (let i = 0; i < (songs ?? []).length; i++) {
+            const song = songs[(i + offset) % songs.length];
+            this.addSong(song);
+        }
+    }
+
+    shuffle(){
+        console.log("shuffle not supported yet")
+    }
+
+    sortBy(column = SongQueueColumn.TIMESTAMP){
+        this.songs.sort((a, b) => {
+            a[column].localeCompare(b[column]);
+        });
+        this.updateDisplay();
+    }
+
+    updateDisplay(){
+        if(!this.display){
+            return;
+        }
+
+        this.display.innerHTML = "";
+        // <h3>Next from: <i class="playlist-title-display">xxx</i></h3>
+        let h3 = document.createElement("h3");
+        h3.innerText = `Next from: ${this.name}`;
+        this.display.appendChild(h3);
+
+        let songlist = document.createElement("div");
+        this.display.appendChild(songlist);
+
+        for (let i = 0; i < Math.min((this.songs ?? []).length, SongQueue.MAX_DISPLAY); i++) {
+            const song = this.songs[i];
+            let songitem = document.createElement("div");
+            songitem.className = "d-flex gap";
+
+            let icon = new Image();
+            icon.className = "thumbnail";
+            icon.alt = "[IMG]";
+            icon.src = thumbnail_full_path(song.thumbnail);
+            songitem.appendChild(icon);
+
+            let textcont = document.createElement("div");
+            textcont.className = "d-block my-auto playlist-song-padding";
+            MusicPlayer.songTitleUIPrepare(song.song, textcont);
+
+            songitem.appendChild(textcont);
+            songlist.appendChild(songitem);
+        }
+    }
+
+    clear(){
+        this.index = 0;
+        this.songs = [];
     }
 }

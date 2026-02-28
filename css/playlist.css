@@ -7,7 +7,10 @@ body{
     display: block;
     max-width: 64rem;
     margin-left: auto;
-    margin-right: auto;    
+    margin-right: auto;
+
+    height: 512px;
+    /*height: calc(100vh - 16px);*/
 }
 
 .playlist-player > header{
@@ -17,8 +20,11 @@ body{
     border-top-right-radius: 3rem;
 }
 
-.playlist-player > article{
-    
+/*.playlist-player > article*/
+#playlist-player-content,
+#next-up-space{
+    height: calc(100vh - 4rem - 2rem - 8.5rem);
+    overflow-y: auto;
 }
 
 .playlist-player > footer{
@@ -74,6 +80,11 @@ body{
     height: 3rem;
 }
 
+.playlist-song-padding,
+.playlist-song-item{
+    padding: 4px;
+}
+
 .playbutton-container{
     cursor: pointer;
     height: 100%;
@@ -102,7 +113,8 @@ body{
     object-fit: cover;
 }
 
-.playlist-song-item img.thumbnail{
+.playlist-song-item img.thumbnail,
+#next-up-space img.thumbnail{
     height: 3rem;
     width: 3rem;
     object-fit: cover;

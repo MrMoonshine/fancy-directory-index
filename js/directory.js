@@ -111,7 +111,7 @@ class DirectoryIndex {
 
         this.songs = this.files.filter(val => val.filetype == File.Types.AUDIO);
         if (this.songs.length > 0) {
-            Preview.musicplayer.setPlaylist(this.songs);
+            Preview.musicplayer.setDirectoryPlaylist(this.songs);
         }
 
         // found files: hide table
