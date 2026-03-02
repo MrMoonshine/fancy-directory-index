@@ -165,6 +165,7 @@
     <script src="/fancy-directory-index/js/common.js"></script>
     <script src="/fancy-directory-index/js/api.js"></script>
     <script src="/fancy-directory-index/js/overlay.js"></script>
+    <script src="/fancy-directory-index/js/toast.js"></script>
     <script src="/fancy-directory-index/js/musicplayer.js"></script>
     <script src="/fancy-directory-index/js/playlist.js"></script>
 </body>

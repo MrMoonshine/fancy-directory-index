@@ -104,10 +104,9 @@ class MusicPlayer {
             Playlist
         */
         this.currentSong = "";
-        this.playlistMenu = new MusicPlaylistManager("Add to Playlist");
-        this.playlistCheckboxes = [];
+        this.playlistMenu = new MusicPlaylistManager();
         this.playlistAdder.addEventListener("click", () => { this.playlistMenuShow() });
-        this.playlistMenuBuild();
+        //this.playlistMenuBuild();
     }
 
     play(file, index = -1, startTime = 0, startImmediately = true) {
@@ -182,7 +181,7 @@ class MusicPlayer {
             console.log(file.thumbnail);
             this.cover.src = file.getMusicThumbnail();
             // Provide Info for System
-            this.setSystemInfo(file);
+            this.setSystemInfo(file.getFileName());
         });
 
         // Go to next song if it finishes
@@ -262,9 +261,13 @@ class MusicPlayer {
             // Set album cover if any
             console.log(thumbnail);
             //this.cover.src = `/nas/web/thumbnails/${thumbnail}`;
-            this.cover.src = thumbnail_full_path(thumbnail);
+            if(thumbnail.startsWith("/")){
+                this.cover.src = thumbnail;
+            }else{
+                this.cover.src = thumbnail_full_path(thumbnail);
+            }
             // Provide Info for System
-            //this.setSystemInfo(file);
+            this.setSystemInfo(songtitle);
         });
 
         // Go to next song if it finishes
@@ -272,16 +275,20 @@ class MusicPlayer {
             this.nextSong();
         });
 
+        this.audio.addEventListener("error", () => {
+            console.error("Failed to load audio " + filename);
+        });
+
         this.source.src = filename;
         this.downloader.href = filename;
         this.downloader.download = filename;
-        this.currentSong = filename;
+        this.currentSong = decodeURI(filename);
     }
 
-    setSystemInfo(file) {
+    setSystemInfo(title) {
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
-                title: file.getFileName(),
+                title: title,
                 artist: "UNKNOWN",
                 album: "UNKNOWN",
                 artwork: [{ src: new URL(this.cover.src), sizes: `${this.cover.width}x${this.cover.height}`, type: 'image/jpeg' }]
@@ -428,69 +435,8 @@ class MusicPlayer {
     }
 
     playlistMenuShow() {
-        this.playlistMenu.show();
-    }
-
-    playlistMenuBuild() {
-        this.playlistMenu.content.classList.add("playlist-add-selection");
-        let counter = 0;
-        api_get((dataall) => {
-            let data = dataall.data ?? [];
-            //console.log(data);
-            data.forEach(playlist => {
-                let formid = "plaf" + counter;
-                let checkbox = document.createElement("input");
-                checkbox.setAttribute("type", "checkbox");
-                checkbox.setAttribute("form", formid);
-                checkbox.name = "add";
-                checkbox.classList.add("d-none");
-                checkbox.id = "plamcb" + counter;
-                this.playlistCheckboxes.push(checkbox);
-
-                let dom = document.createElement("label");
-                dom.setAttribute("for", checkbox.id);
-                dom.className = "playlist-listitem";
-
-                let img = new Image();
-                img.alt = "[IMG]";
-                img.src = playlist.icon;
-
-                let textdiv = document.createElement("div");
-                textdiv.className = "text";
-                textdiv.innerText = playlist.name;
-
-                let form = document.createElement("form");
-                form.id = formid;
-                let hiplaylist = document.createElement("input");
-                hiplaylist.setAttribute("type", "hidden");
-                hiplaylist.name = "playlist";
-                hiplaylist.value = playlist.id;
-
-                form.appendChild(hiplaylist);
-
-                dom.appendChild(img);
-                dom.appendChild(textdiv);
-                dom.appendChild(form);
-                this.playlistMenu.content.appendChild(checkbox);
-                this.playlistMenu.content.appendChild(dom);
-                counter++;
-
-                dom.addEventListener("click", () => {
-                    let url = new URL(window.location);
-
-                    let fd = new FormData(form);
-                    fd.append("resource", "playlists");
-                    fd.append("mode", "modify");
-                    fd.append("path", url.pathname);
-                    fd.append("song", encodeURI(this.currentSong));
-                    console.log(fd);
-
-                    api_modify((data) => {
-
-                    }, "playlist_songs", fd);
-                });
-            });
-        }, "playlists");
+        console.log(`Current song is: ${this.currentSong}`)
+        this.playlistMenu.show(this.currentSong);
     }
 
     static secondsHumanReadable(timeS) {
@@ -544,8 +490,90 @@ class MusicPlayer {
 
 class MusicPlaylistManager extends Overlay{
     //constructor(title = "", content = null, defaulttype = "dialog") {
-    constructor(title = "", content = null, defaulttype = "dialog"){
-        super(title, content);
+    constructor(){
+        super("Add to Playlist");
+        this.build();
+        this.currentSong = null;
+
+        this.toast = new Toast();
+    }
+
+    show(currentSong){
+        this.currentSong = currentSong;
+        super.show();
+    }
+
+    build() {
+        this.content.classList.add("playlist-add-selection");
+        let counter = 0;
+        api_get((dataall) => {
+            let data = dataall.data ?? [];
+            //console.log(data);
+            data.forEach(playlist => {
+                let formid = "plaf" + counter;
+
+                let dom = document.createElement("div");
+                dom.className = "playlist-listitem";
+
+                let img = new Image();
+                img.alt = "[IMG]";
+                img.src = playlist.icon;
+
+                let textdiv = document.createElement("div");
+                textdiv.className = "text";
+                textdiv.innerText = playlist.name;
+
+                let form = document.createElement("form");
+                form.id = formid;
+                let hiplaylist = document.createElement("input");
+                hiplaylist.setAttribute("type", "hidden");
+                hiplaylist.name = "playlist";
+                hiplaylist.value = playlist.id;
+
+                form.appendChild(hiplaylist);
+
+                dom.appendChild(img);
+                dom.appendChild(textdiv);
+                dom.appendChild(form);
+                this.content.appendChild(dom);
+                counter++;
+
+                dom.addEventListener("click", () => {
+                    let url = new URL(window.location);
+
+                    let fd = new FormData(form);
+                    fd.append("resource", "playlists");
+                    fd.append("mode", "modify");
+                    fd.append("add", "on");
+                    fd.append("path", url.pathname);
+                    fd.append("song", encodeURI(this.currentSong));
+                    console.log(fd);
+
+                    api_modify((data) => {
+                        console.log(data);
+                        // show(title, text, timeout = 0, buttonset = Toast.BUTTONS_ALERT, image = "")
+                        this.close();
+                        if((data.errors ?? []).length > 0 || data.status != 0){
+                            this.toast.show(
+                                "Failed to add Song!", 
+                                (data.errors ?? []).length > 0 ? data.errors.join("<br>") : JSON.stringify(data),
+                                5,
+                                Toast.BUTTONS_NONE,
+                                ""
+                            );
+                        }else{
+                            this.toast.show(
+                                "Success!", 
+                                `${decodeURI(this.currentSong)} was added successfully to playlist!`,
+                                5,
+                                Toast.BUTTONS_NONE,
+                                ""
+                            );
+                        }
+                    }, "playlist_songs", fd);
+                });
+            });
+        }, "playlists");
     }
 }
 

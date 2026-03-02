@@ -405,14 +405,26 @@ class DirectoryDB extends SQLite3
     }
 
     public function song_get_id($songname){
-        $pathid = $this->path_get_id($_POST["path"]);
+        $pathname = "";
+        //$songname = urldecode($songname);
+        if(str_contains($songname, "/")){
+            $pathname = dirname($songname)."/";
+            $songname = basename($songname);
+        }else if(isset($_POST["path"])){
+            $pathname = $_POST["path"];
+        }
+        //$songname = urlencode($songname);
+
+        array_push($this->errors, 'Pathname: "'.$pathname.'" ; Songname "'.$songname.'"');
+
+        $pathid = $this->path_get_id($pathname);
         $retval = -1;
         $tries = 0;
         do{
             $retval = $this->querySingleBound(<<<SQL
                 SELECT id FROM songs
                 WHERE path = :path AND song = :song ;
-            SQL, ["path" => intval($pathid), "song" => strval($_POST["song"])]);
+            SQL, ["path" => intval($pathid), "song" => strval($songname)]);
             //array_push($this->errors, "Here 1: ".$retval);
             if($retval != false && $retval != null){
                 break;
@@ -421,7 +433,7 @@ class DirectoryDB extends SQLite3
             $tries++;
             $this->universalDML(<<<SQL
                 INSERT OR IGNORE INTO songs (path, song) VALUES (:path, :song);
-            SQL, ["path" => intval($pathid), "song" => strval($_POST["song"])]);
+            SQL, ["path" => intval($pathid), "song" => strval($songname)]);
         }while($retval < 0 && $tries < 2);
         
         return $retval;
@@ -441,7 +453,7 @@ class DirectoryDB extends SQLite3
         SQL, ["playlist" => intval($playlist), "song" => intval($song)]);
 
         if(($occurances ?? 0) > 0){
-            array_push($this->errors, "Song ".$_POST["song"]." already esxists in this playlist! Thus, not adding!");
+            array_push($this->errors, "Song ".urldecode($_POST["song"])." already esxists in this playlist! Thus, not adding!");
             return false;
         }
 

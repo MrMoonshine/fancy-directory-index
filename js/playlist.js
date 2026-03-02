@@ -12,7 +12,7 @@ function set_theme() {
     console.log(hsv);
     root.style.setProperty("--color-main-hue", `${hsv[0]}`);
     root.style.setProperty("--color-main-sat", `${hsv[1]}%`);
-    console.log(root.style.getPropertyValue("--color-main-hue"))
+    console.log(root.style.getPropertyValue("--color-main-hue"));
 }
 
 class PlaylistCard {
@@ -67,7 +67,7 @@ class PlaylistCard {
 }
 
 class PlaylistSong {
-    constructor(parent, song) {
+    constructor(parent, song, playlisticon = "") {
         this.song = song;
 
         this.dom = document.createElement("div");
@@ -89,8 +89,19 @@ class PlaylistSong {
         let thumbnail = new Image();
         thumbnail.className = "thumbnail";
         thumbnail.alt = "[IMG]";
+        thumbnail.addEventListener("error", () => {
+            if(thumbnail.classList.contains(CSS_IMAGE_UNKNOWN)){
+                return;
+            }
+            thumbnail.src = playlisticon;
+            thumbnail.classList.add(CSS_IMAGE_UNKNOWN);
+        });
+
         if (song.thumbnail) {
             thumbnail.src = `/nas/web/thumbnails/${song.thumbnail}`;
+        }else{
+            thumbnail.src = playlisticon;
+            thumbnail.classList.add(CSS_IMAGE_UNKNOWN);
         }
 
         let title = document.createElement("div");
@@ -101,12 +112,16 @@ class PlaylistSong {
         dateadded.className = "my-auto";
         dateadded.innerText = song.timestamp;
 
+        let optionsbutton = document.createElement("button");
+        optionsbutton.innerText = "...";
+
         this.playbutton.appendChild(playbutton);
         this.playbutton.appendChild(playbuttonSby);
         this.dom.appendChild(this.playbutton);
         this.dom.appendChild(thumbnail);
         this.dom.appendChild(title);
         this.dom.appendChild(dateadded);
+        this.dom.appendChild(optionsbutton);
         parent.appendChild(this.dom);
     }
 }
@@ -131,7 +146,10 @@ class Playlist {
         this.songs = data.songs ?? [];
         for(let i = 0; i < (data.songs ?? []).length; i++){
             let song = data.songs[i];
-            let item = new PlaylistSong(this.dom, song);
+            let item = new PlaylistSong(this.dom, song, data.icon ?? "");
+            if(!song.thumbnail){
+                song.thumbnail = data.icon;
+            }
             item.playbutton.addEventListener("click", () => {
                 console.log(item.song);
                 //this.player.playRaw(item.song.song, item.song.filename, item.song.thumbnail ?? "");

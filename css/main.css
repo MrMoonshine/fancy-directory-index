@@ -181,6 +181,10 @@ code{
     color: var(--color-text-code);
 }
 
+img.UNKNOWN{
+    filter: grayscale(1);
+}
+
 .dirpath{
     display: flex;
     flex-wrap: wrap;

@@ -42,6 +42,6 @@ function api_modify(callback, resource, formData = null){
         }
     });
 
-    req.open("POST", url, false);
+    req.open("POST", url);
     req.send(formData);
 }

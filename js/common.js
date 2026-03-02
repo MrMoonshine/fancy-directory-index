@@ -20,6 +20,8 @@ const COOKIE_HORIZONTAL = "fdi_tile_horizontal";
 const COOKIE_VERTICAL = "fdi_tile_vertical";
 const COOKIE_GALLERY_MODE = "fdi_viewmode";
 
+const CSS_IMAGE_UNKNOWN = "UNKNOWN";
+
 function dom_show(dom, shown) {
     if (shown) {
         dom.classList.remove(CLASS_HIDDEN);
