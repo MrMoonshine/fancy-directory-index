@@ -26,22 +26,31 @@ class Toast {
             "value": Toast.BUTTON_OK
         }],
         [{
-            "label": "Ja",
+            "label": "Yes",
             "highlighted": false,
             "value": Toast.BUTTON_YES
         }, {
-            "label": "Nein",
+            "label": "No",
             "highlighted": true,
             "value": Toast.BUTTON_NO
         }],
         [{
-            "label": "Nein",
+            "label": "No",
             "highlighted": false,
             "value": Toast.BUTTON_NO
         }, {
-            "label": "Ja",
+            "label": "Yes",
             "highlighted": true,
             "value": Toast.BUTTON_YES
+        }],
+        [{
+            "label": "Yes",
+            "highlighted": true,
+            "value": Toast.BUTTON_YES
+        },{
+            "label": "No",
+            "highlighted": false,
+            "value": Toast.BUTTON_NO
         }]
     ];
 

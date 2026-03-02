@@ -1,4 +1,5 @@
 class MusicPlayer {
+    static toast = new Toast();
     /*
         @brief constructor
         @param dom parent
@@ -48,10 +49,11 @@ class MusicPlayer {
             this.prevSong();
         });
 
-
         this.repeat.addEventListener("change", () => {
             this.setLooping(this.repeat.checked);
         });
+
+        this.nextSongTimeout = null;
 
         /*
             Volume Control
@@ -103,10 +105,10 @@ class MusicPlayer {
         /*
             Playlist
         */
-        this.currentSong = "";
+        this.currentSong = "";          // name of current song
+        this.currentSongItem = null;    // represents the song item of a playlist
         this.playlistMenu = new MusicPlaylistManager();
         this.playlistAdder.addEventListener("click", () => { this.playlistMenuShow() });
-        //this.playlistMenuBuild();
     }
 
     play(file, index = -1, startTime = 0, startImmediately = true) {
@@ -197,6 +199,11 @@ class MusicPlayer {
     }
 
     playRaw(songtitle, filename, thumbnail = "", startImmediately = true) {
+        // in case a timeout was set, abort autoplay due to song load error
+        if(this.nextSongTimeout){
+            clearTimeout(this.nextSongTimeout);
+        }
+        // show loaders
         dom_show(this.loader, true);
         dom_show(this.slider, false);
 
@@ -208,14 +215,9 @@ class MusicPlayer {
             this.audio.remove();
         }
 
-        if (this.source) {
-            this.source.remove();
-        }
         // Create new audio element
-        this.audio = document.createElement("audio");
-        this.source = document.createElement("source");
+        this.audio = new Audio();
         this.dom.appendChild(this.audio);
-        this.audio.appendChild(this.source);
 
         if (startImmediately) {
             this.audio.autoplay = true;
@@ -261,9 +263,9 @@ class MusicPlayer {
             // Set album cover if any
             console.log(thumbnail);
             //this.cover.src = `/nas/web/thumbnails/${thumbnail}`;
-            if(thumbnail.startsWith("/")){
+            if (thumbnail.startsWith("/")) {
                 this.cover.src = thumbnail;
-            }else{
+            } else {
                 this.cover.src = thumbnail_full_path(thumbnail);
             }
             // Provide Info for System
@@ -277,11 +279,60 @@ class MusicPlayer {
 
         this.audio.addEventListener("error", () => {
             console.error("Failed to load audio " + filename);
+
+            this.nextSongTimeout = setTimeout(() => {
+                this.nextSong();
+            }, 7000);
+            // Delete item from playlist in case of error
+            if (this.currentSongItem) {
+                if (this.currentSongItem.playlist > 0) {
+                    MusicPlayer.toast.onFinish = (value) => {
+                        console.log(value);
+                        let fd = new FormData();
+                        fd.append("resource", "playlists");
+                        fd.append("mode", "modify");
+                        fd.append("playlist", this.currentSongItem.playlist);
+                        //fd.append("song", encodeURI(this.currentSongItem.song));
+                        fd.append("song", this.currentSongItem.filename);
+                        //console.log(fd);
+
+                        api_modify((data) => {
+                            console.log(data);
+                            //MusicPlayer.toast.onFinish = (value) => {MusicPlayer.toast.hide()};
+                            if ((data.errors ?? []).length > 0 || data.status != 0) {
+                                MusicPlayer.toast.show(
+                                    "Failed to remove Song!",
+                                    (data.errors ?? []).length > 0 ? data.errors.join("<br>") : JSON.stringify(data),
+                                    5,
+                                    Toast.BUTTONS_NONE,
+                                    APACHE_ALIAS + "/assets/dialog-warning.png"
+                                );
+                            } else {
+                                MusicPlayer.toast.show(
+                                    "Success!",
+                                    `${decodeURI(this.currentSong)} was removed successfully from playlist!`,
+                                    5,
+                                    Toast.BUTTONS_NONE,
+                                    APACHE_ALIAS + "/assets/dialog-ok.png"
+                                );
+                            }
+                        }, "playlist_songs", fd);
+                    }
+                    //MusicPlayer.toast.show(title, text, timeout = 0, buttonset = Toast.BUTTONS_ALERT, image = "")
+                    MusicPlayer.toast.show(
+                        "Unable to load song!",
+                        `Song may have been deleted or moved to another directory. Should song ${decodeURI(this.currentSongItem.song)} be removed from this playlist?`,
+                        12,
+                        Toast.BUTTONS_YESNO_PREF_YES,
+                        APACHE_ALIAS + "/assets/dialog-warning.png"
+                    );
+                }
+            }
         });
 
-        this.source.src = filename;
+        this.audio.src = filename;
         this.downloader.href = filename;
-        this.downloader.download = filename;
+        this.downloader.download = decodeURI(songtitle);
         this.currentSong = decodeURI(filename);
     }
 
@@ -317,14 +368,9 @@ class MusicPlayer {
     }
 
     setPlaylist(name, playlist, offset = 0) {
-        /*Array.from(document.querySelectorAll(".playlist-title-display")).forEach(ptd => {
-            console.log(ptd);
-            ptd.innerText = name;
-        });*/
+        //console.log(playlist);
         this.playlist.clear();
         this.playlist.addSongs(playlist, offset, name);
-        //this.playlist = playlist;
-        //console.log(playlist);
     }
 
     setDirectoryPlaylist(playlist) {
@@ -385,22 +431,16 @@ class MusicPlayer {
     }
 
     nextSong() {
-        /*if((this.playlist ?? []).length > 0){
-            //console.log(this.playlist);
-            let song = this.playlist.shift();
-            this.playlist.push(song);
-            this.playRaw(song.song, song.filename, song.thumbnail, true);
-            return;
-        }*/
-       if(this.playlist.songs.length > 0){
-            let song = this.playlist.getNext();
-            if(!song){
+        this.currentSongItem = null;
+        if (this.playlist.songs.length > 0) {
+            this.currentSongItem = this.playlist.getNext();
+            if (!this.currentSongItem) {
                 this.audio.pause();
                 return;
             }
-            this.playRaw(song.song, song.filename, song.thumbnail, true);
+            this.playRaw(this.currentSongItem.song, this.currentSongItem.filename, this.currentSongItem.thumbnail, true);
             return;
-       }
+        }
 
         if (!this.directoryPlaylist) {
             return;
@@ -415,22 +455,16 @@ class MusicPlayer {
     }
 
     prevSong() {
-        /*if((this.playlist ?? []).length > 0){
-            //console.log(this.playlist);
-            let song = this.playlist.pop();
-            this.playlist.unshift(song);
-            this.playRaw(song.song, song.filename, song.thumbnail, true);
-            return;
-        }*/
-       if(this.playlist.songs.length > 0){
-            let song = this.playlist.getPrev();
-            if(!song){
+        if (this.playlist.songs.length > 0) {
+            this.currentSongItem = null;
+            this.currentSongItem = this.playlist.getPrev();
+            if (!this.currentSongItem) {
                 this.audio.pause();
                 return;
             }
-            this.playRaw(song.song, song.filename, song.thumbnail, true);
+            this.playRaw(this.currentSongItem.song, this.currentSongItem.filename, this.currentSongItem.thumbnail, true);
             return;
-       }
+        }
         this.play(null, this.directoryPlaylist.length + this.currentIndex - 1);
     }
 
@@ -452,7 +486,7 @@ class MusicPlayer {
         return num;
     }
 
-    static songTitleNamePrepare(songtitle){
+    static songTitleNamePrepare(songtitle) {
         let decodedtitle = decodeURI(songtitle);
         const extensions = ["mp3", "webm"];
         extensions.forEach(exten => {
@@ -469,7 +503,7 @@ class MusicPlayer {
         try {
             const arr = decodedtitle.split(separator);
             // fallback
-            if(arr.length < 2){
+            if (arr.length < 2) {
                 parent.innerText = decodedtitle;
                 return
             }
@@ -488,9 +522,9 @@ class MusicPlayer {
     }
 }
 
-class MusicPlaylistManager extends Overlay{
+class MusicPlaylistManager extends Overlay {
     //constructor(title = "", content = null, defaulttype = "dialog") {
-    constructor(){
+    constructor() {
         super("Add to Playlist");
         this.build();
         this.currentSong = null;
@@ -498,7 +532,7 @@ class MusicPlaylistManager extends Overlay{
         this.toast = new Toast();
     }
 
-    show(currentSong){
+    show(currentSong) {
         this.currentSong = currentSong;
         super.show();
     }
@@ -553,17 +587,17 @@ class MusicPlaylistManager extends Overlay{
                         console.log(data);
                         // show(title, text, timeout = 0, buttonset = Toast.BUTTONS_ALERT, image = "")
                         this.close();
-                        if((data.errors ?? []).length > 0 || data.status != 0){
+                        if ((data.errors ?? []).length > 0 || data.status != 0) {
                             this.toast.show(
-                                "Failed to add Song!", 
+                                "Failed to add Song!",
                                 (data.errors ?? []).length > 0 ? data.errors.join("<br>") : JSON.stringify(data),
                                 5,
                                 Toast.BUTTONS_NONE,
                                 ""
                             );
-                        }else{
+                        } else {
                             this.toast.show(
-                                "Success!", 
+                                "Success!",
                                 `${decodeURI(this.currentSong)} was added successfully to playlist!`,
                                 5,
                                 Toast.BUTTONS_NONE,
@@ -582,17 +616,16 @@ const SongQueueColumn = {
     TIMESTAMP: "timestamp"
 }
 
-class SongQueue{
+class SongQueue {
     static MAX_DISPLAY = 10;
-    constructor(display = null){
+    constructor(display = null) {
         this.display = display;
         this.songs = [];
         this.name = "UNKNOWN";
-        
     }
 
-    getNext(){
-        if(this.songs.length < 1){
+    getNext() {
+        if (this.songs.length < 1) {
             return null;
         }
         let elem = this.songs.shift();
@@ -601,8 +634,8 @@ class SongQueue{
         return elem;
     }
 
-    getPrev(){
-        if(this.songs.length < 1){
+    getPrev() {
+        if (this.songs.length < 1) {
             return null;
         }
         let elem = this.songs.pop();
@@ -611,11 +644,11 @@ class SongQueue{
         return elem;
     }
 
-    addSong(song){
+    addSong(song) {
         this.songs.push(song);
     }
 
-    addSongs(songs, offset = 0, name = "UNKNOWN"){
+    addSongs(songs, offset = 0, name = "UNKNOWN") {
         this.name = name;
         //songs.forEach(song => )
         for (let i = 0; i < (songs ?? []).length; i++) {
@@ -624,19 +657,19 @@ class SongQueue{
         }
     }
 
-    shuffle(){
+    shuffle() {
         console.log("shuffle not supported yet")
     }
 
-    sortBy(column = SongQueueColumn.TIMESTAMP){
+    sortBy(column = SongQueueColumn.TIMESTAMP) {
         this.songs.sort((a, b) => {
             a[column].localeCompare(b[column]);
         });
         this.updateDisplay();
     }
 
-    updateDisplay(){
-        if(!this.display){
+    updateDisplay() {
+        if (!this.display) {
             return;
         }
 
@@ -669,7 +702,7 @@ class SongQueue{
         }
     }
 
-    clear(){
+    clear() {
         this.index = 0;
         this.songs = [];
     }

@@ -415,7 +415,7 @@ class DirectoryDB extends SQLite3
         }
         //$songname = urlencode($songname);
 
-        array_push($this->errors, 'Pathname: "'.$pathname.'" ; Songname "'.$songname.'"');
+        //array_push($this->errors, 'Pathname: "'.$pathname.'" ; Songname "'.$songname.'"');
 
         $pathid = $this->path_get_id($pathname);
         $retval = -1;
