@@ -322,7 +322,7 @@ button.file{
     border: none;
 }
 
-dialog{
+/*dialog{
     position: relative;
     background-color: var(--color-background-2);
     height: 95vh;
@@ -337,7 +337,7 @@ dialog .modal-body{
     display: grid;
     overflow-x: hidden;
     grid-template-columns: auto var(--preview-info-width);
-}
+}*/
 
 dialog .preview{
     position: relative;

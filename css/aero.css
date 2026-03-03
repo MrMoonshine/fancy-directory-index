@@ -19,8 +19,10 @@ body.aero .playlist-player > header{
 }
 
 .gradient-dull,
+.gradient-dull-hover:hover,
 body.aero .btn,
-body.aero .playlist-player > footer{
+body.aero .playlist-player > footer,
+.playlist-song-item .option:hover{
     background: linear-gradient(to bottom,
             rgba(255, 255, 255, .25) 0,
             rgba(117, 117, 117, .2) 20%,

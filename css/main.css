@@ -243,6 +243,10 @@ nav .masked-icon{
     color: var(--color-text-petite);
 }
 
+.text-nowrap{
+    text-wrap: nowrap;
+}
+
 .justify-content-start{
     justify-content: start;
 }
@@ -285,6 +289,10 @@ nav .masked-icon{
 
 .position-absolute{
     position: absolute;
+}
+
+.overflow-hidden{
+    overflow: hidden;
 }
 
 .mx-auto{

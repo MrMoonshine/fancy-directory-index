@@ -67,6 +67,7 @@ class PlaylistCard {
 }
 
 class PlaylistSong {
+    static songItemIndex = 0;
     constructor(parent, song, playlisticon = "") {
         this.song = song;
 
@@ -90,7 +91,7 @@ class PlaylistSong {
         thumbnail.className = "thumbnail";
         thumbnail.alt = "[IMG]";
         thumbnail.addEventListener("error", () => {
-            if(thumbnail.classList.contains(CSS_IMAGE_UNKNOWN)){
+            if (thumbnail.classList.contains(CSS_IMAGE_UNKNOWN)) {
                 return;
             }
             thumbnail.src = playlisticon;
@@ -99,21 +100,44 @@ class PlaylistSong {
 
         if (song.thumbnail) {
             thumbnail.src = `/nas/web/thumbnails/${song.thumbnail}`;
-        }else{
+        } else {
             thumbnail.src = playlisticon;
             thumbnail.classList.add(CSS_IMAGE_UNKNOWN);
         }
 
         let title = document.createElement("div");
-        title.className = "my-auto";
+        title.className = "my-auto overflow-hidden text-nowrap";
         MusicPlayer.songTitleUIPrepare(song.song ?? "UNKNOWN", title);
 
         let dateadded = document.createElement("div");
-        dateadded.className = "my-auto";
+        dateadded.className = "my-auto d-mobile-none";
         dateadded.innerText = song.timestamp;
 
-        let optionsbutton = document.createElement("button");
-        optionsbutton.innerText = "...";
+        let optionsbuttonContainer = document.createElement("div");
+        optionsbuttonContainer.className = "position-relative";
+        let optionsbutton = document.createElement("label");
+        optionsbutton.className = "gradient-dull playlist-song-options";
+        optionsbutton.innerHTML = "&mldr;";
+        optionsbuttonContainer.appendChild(optionsbutton);
+
+        let enablerID = `sioce${PlaylistSong.songItemIndex++}`;
+        let optionContainerEnabler = document.createElement("input");
+        optionContainerEnabler.type = "radio";
+        optionContainerEnabler.name = "sioce";
+        optionContainerEnabler.className = "option-container-enabler";
+        optionContainerEnabler.id = enablerID;
+        optionsbutton.setAttribute("for", enablerID);
+        optionsbuttonContainer.appendChild(optionContainerEnabler);
+
+        let optionContainer = document.createElement("div");
+        optionContainer.className = "option-container";
+        optionsbuttonContainer.appendChild(optionContainer);
+
+        this.deleter = document.createElement("div");
+        this.deleter.className = "option";
+        this.deleter.innerText = "Remove from Playlist";
+
+        optionContainer.appendChild(this.deleter);
 
         this.playbutton.appendChild(playbutton);
         this.playbutton.appendChild(playbuttonSby);
@@ -121,7 +145,7 @@ class PlaylistSong {
         this.dom.appendChild(thumbnail);
         this.dom.appendChild(title);
         this.dom.appendChild(dateadded);
-        this.dom.appendChild(optionsbutton);
+        this.dom.appendChild(optionsbuttonContainer);
         parent.appendChild(this.dom);
     }
 }
@@ -144,10 +168,10 @@ class Playlist {
         this.titleDom.innerText = this.name;
 
         this.songs = data.songs ?? [];
-        for(let i = 0; i < (data.songs ?? []).length; i++){
+        for (let i = 0; i < (data.songs ?? []).length; i++) {
             let song = data.songs[i];
             let item = new PlaylistSong(this.dom, song, data.icon ?? "");
-            if(!song.thumbnail){
+            if (!song.thumbnail) {
                 song.thumbnail = data.icon;
             }
             item.playbutton.addEventListener("click", () => {
@@ -155,6 +179,21 @@ class Playlist {
                 //this.player.playRaw(item.song.song, item.song.filename, item.song.thumbnail ?? "");
                 this.player.setPlaylist(this.name, this.songs, i);
                 this.player.nextSong();
+            });
+
+            item.deleter.addEventListener("click", () => {
+                console.log(`Remove Song ${item.song.id} from Playlist: ${item.song.playlist}`);
+                Playlist.modify(item.song.playlist, item.song.id, false, () => {
+                    api_get((apidataall) => {
+                        try {
+                            let apidata = apidataall.data;
+                            this.update(apidata[0]);
+                        } catch (error) {
+                            console.error(error);
+                            console.error("Unable to set playlist!");
+                        }
+                    }, "playlists", item.song.playlist);
+                }, "playlists", item.song.playlist);
             });
             this.songItems.push(item);
         }
@@ -166,6 +205,23 @@ class Playlist {
         });
         this.songItems = [];
         this.songs = [];
+    }
+
+    static modify(playlist, song, add = true, callback = null) {
+        let fd = new FormData();
+        fd.append("resource", "playlists");
+        fd.append("mode", "modify");
+        fd.append("playlist", playlist);
+        fd.append("songid", song);
+        api_modify(callback, "playlist_songs", fd);
+    }
+
+    static removeSong(playlist, song) {
+        return Playlist.modify(playlist, song, false);
+    }
+
+    static addSong(playlist, song) {
+        return Playlist.modify(playlist, song, true);
     }
 }
 

@@ -288,13 +288,15 @@ class MusicPlayer {
                 if (this.currentSongItem.playlist > 0) {
                     MusicPlayer.toast.onFinish = (value) => {
                         console.log(value);
+                        MusicPlayer.toast.hide();
+                        if(value != Toast.BUTTON_YES){
+                            return;
+                        }
                         let fd = new FormData();
                         fd.append("resource", "playlists");
                         fd.append("mode", "modify");
                         fd.append("playlist", this.currentSongItem.playlist);
-                        //fd.append("song", encodeURI(this.currentSongItem.song));
                         fd.append("song", this.currentSongItem.filename);
-                        //console.log(fd);
 
                         api_modify((data) => {
                             console.log(data);
@@ -547,7 +549,7 @@ class MusicPlaylistManager extends Overlay {
                 let formid = "plaf" + counter;
 
                 let dom = document.createElement("div");
-                dom.className = "playlist-listitem";
+                dom.className = "playlist-listitem gradient-dull-hover";
 
                 let img = new Image();
                 img.alt = "[IMG]";
@@ -573,6 +575,7 @@ class MusicPlaylistManager extends Overlay {
                 counter++;
 
                 dom.addEventListener("click", () => {
+                    this.hide();
                     let url = new URL(window.location);
 
                     let fd = new FormData(form);
@@ -593,7 +596,7 @@ class MusicPlaylistManager extends Overlay {
                                 (data.errors ?? []).length > 0 ? data.errors.join("<br>") : JSON.stringify(data),
                                 5,
                                 Toast.BUTTONS_NONE,
-                                ""
+                                APACHE_ALIAS + "/assets/dialog-warning.png"
                             );
                         } else {
                             this.toast.show(
@@ -601,7 +604,7 @@ class MusicPlaylistManager extends Overlay {
                                 `${decodeURI(this.currentSong)} was added successfully to playlist!`,
                                 5,
                                 Toast.BUTTONS_NONE,
-                                ""
+                                APACHE_ALIAS + "/assets/dialog-ok.png"
                             );
                         }
                     }, "playlist_songs", fd);

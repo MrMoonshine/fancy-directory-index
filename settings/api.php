@@ -167,7 +167,12 @@ try {
             case "modify":
                 switch ($_POST["resource"]) {
                     case "playlists":
-                        $songid = $ddb->song_get_id($_POST["song"]);
+                        $songid = -1;
+                        if(isset($_POST["songid"])){
+                            $songid = intval($_POST["songid"]);
+                        }else{
+                            $songid = $ddb->song_get_id($_POST["song"]);
+                        }                        
                         $PAYLOAD["songid"] = $songid;
                         $PAYLOAD["data"] = $ddb->playlist_songs_modify($_POST["playlist"], $songid, isset($_POST["add"]));
                         break;

@@ -26,6 +26,7 @@
             </div>
         </header>
         <article>
+            <input type="checkbox" id="next-up-space-show" class="d-none" checked>
             <div class="aero-glass d-flex gap justify-content-around">
                 <div id="playlist-player-content" class="flex-grow-1">
                     <div id="playlist-library">
@@ -37,7 +38,7 @@
                         $playlists = $db->playlist_get();
                         //playlistList($playlists);
                         ?>
-                        <div id="playlist-library-cardspace" class="playlist-selection d-flex gap justify-content-center">
+                        <div id="playlist-library-cardspace" class="playlist-selection gap justify-content-center">
                         </div>
                         <div id="playlist-song-selection" class="playlist-selection d-flex gap justify-content-center">
                             <div class="position-relative">
@@ -133,6 +134,9 @@
                                     style="mask-image: url('/fancy-directory-index/assets/bookmarks.svg')">
                                 </div>
                             </button>
+                            <label for="next-up-space-show" class="cursor-pointer sillouhette-button">
+                                <img class="icon" src="/fancy-directory-index/assets/format-list-unordered.png" alt="queue"/>
+                            </label>
                             <a class="sillouhette-button" id="song-download" download="file.mp3">
                                 <div class="masked-icon" id="img-download"
                                     style="mask-image: url('/fancy-directory-index/assets/download.svg')">

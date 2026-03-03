@@ -79,6 +79,11 @@
     cursor: pointer;
 }
 
+.music-player .sillouhette-button .icon{
+    width: 24px;
+    height: 24px;
+}
+
 .music-player .sillouhette-button .masked-icon {
     background-color: var(--color-text);
     width: 24px;
