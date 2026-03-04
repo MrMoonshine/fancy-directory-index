@@ -20,20 +20,37 @@
 <body class="aero">
     <div class="playlist-player">
         <header>
-            <div class="d-flex gap">
-                <img id="mainicon" alt="[IMG]" src="/fancy-directory-index/assets/musicfile.png">
-                <h2>Playlsits</h2>
+            <div>
+                <span id="button-back" class="d-none cursor-pointer">
+                    <img class="hue-rotate" style="transform: scaleX(-1)" alt="PLAY"
+                        src="/fancy-directory-index/assets/media-playback-playing.png">
+                </span>
+            </div>
+            <h2 id="main-title">Playlsits</h2>
+            <div class="d-flex">
+                <form method="POST" class="d-none" id="form-add">
+                    <input type="text" name="resource" value="playlists">
+                    <input type="text" name="mode" value="add">
+                </form>
+                <button id="button-add" class="btn btn-success my-auto" type="submit" form="form-add">Add +</button>
+                <button id="button-edit" class="btn btn-warning my-auto d-none">Edit</button>
             </div>
         </header>
         <article>
-            <input type="checkbox" id="next-up-space-show" class="d-none" checked>
+            <input type="checkbox" id="next-up-space-show" class="d-none" autocomplete checked>
             <div class="aero-glass d-flex gap justify-content-around">
                 <div id="playlist-player-content" class="flex-grow-1">
                     <div id="playlist-library">
-                        <h3 class="text-center">Library</h3>
                         <?php
                         require("settings/db.php");
+
+                        //var_dump($_POST);
+                        
                         $db = new DirectoryDB("settings/" . DirectoryDB::DB_FILE);
+                        if (($_POST["mode"] ?? "") == "add") {
+                            $db->playlist_create();
+                        }
+
                         $playlists = [];
                         $playlists = $db->playlist_get();
                         //playlistList($playlists);
@@ -41,16 +58,19 @@
                         <div id="playlist-library-cardspace" class="playlist-selection gap justify-content-center">
                         </div>
                         <div id="playlist-song-selection" class="playlist-selection d-flex gap justify-content-center">
-                            <div class="position-relative">
-                                <button class="btn btn-dark  position-absolute d-flex cursor-pointer">
-                                    <img style="height:2rem" class="hue-rotate" alt="&rarr;"
-                                        src="/fancy-directory-index/assets/arrow-left.png">
-                                    <div class="my-auto">
-                                        Back
-                                    </div>
-                                </button>
-                                <h2 class="text-center" id="playlist-title-display">xxx</h2>
+                            <div class="d-flex gap justify-content-center" style="margin-bottom: 8px;">
+                                <img id="playlist-meta-image" alt="[IMG]" src="">
                             </div>
+                            <div class="d-flex gap justify-content-center">
+                                    <button class="btn btn-dull d-flex justify-content-left gap" type="button">
+                                        <img class="my-auto" alt="" src="/fancy-directory-index/assets/edit-rename.png">
+                                        <div class="my-auto">Rename</div>
+                                    </button>
+                                    <button class="btn btn-dull d-flex justify-content-left gap">
+                                        <img class="my-auto" alt="" src="/fancy-directory-index/assets/edit-delete.png">
+                                        <div class="my-auto text-critical">Delete</div>
+                                    </button>
+                                </div>
                             <hr>
                         </div>
                     </div>
@@ -60,7 +80,7 @@
                 </div>
             </div>
             <div>
-                <div class="music-player" id="music-player">
+                <div class="music-player d-none" id="music-player">
                     <div class="d-flex flex-nowrap gap">
                         <img class="albumcover" id="albumcover" alt="cover">
                         <div class="songinfoomini d-flex flex-column justify-content-center">
@@ -135,7 +155,8 @@
                                 </div>
                             </button>
                             <label for="next-up-space-show" class="cursor-pointer sillouhette-button">
-                                <img class="icon" src="/fancy-directory-index/assets/format-list-unordered.png" alt="queue"/>
+                                <img class="icon" src="/fancy-directory-index/assets/format-list-unordered.png"
+                                    alt="queue" />
                             </label>
                             <a class="sillouhette-button" id="song-download" download="file.mp3">
                                 <div class="masked-icon" id="img-download"

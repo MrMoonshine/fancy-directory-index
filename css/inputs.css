@@ -17,8 +17,8 @@
     Buttons
 */
 .btn {
-    border: none;
-    border-radius: var(--input-border-radius);
+    border: 1px solid var(--color-border);
+    /*border-radius: var(--input-border-radius);*/
     box-sizing: border-box;
     /*background-color: var(--color-main);*/
     background-color: var(--color-main);
@@ -37,10 +37,30 @@
     text-decoration: none;
 }
 
+.btn > img{
+    max-height: 1em;
+}
+
 .btn-outline{
     color: var(--color-text-button);
     background-color: transparent;
     border: 1px solid var(--color-text-button);
+}
+
+.btn-dull{
+    background-color: var(--color-background-1) !important;
+}
+
+.btn-success{
+    background-color: green !important;
+}
+
+.btn-warning{
+    background-color: orange !important;
+}
+
+.btn-danger{
+    background-color: crimson !important;
 }
 
 .btn.append,

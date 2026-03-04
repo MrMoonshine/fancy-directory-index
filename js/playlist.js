@@ -28,6 +28,7 @@ class PlaylistCard {
         const img = document.createElement('img');
         img.className = 'icon';
         img.alt = '[IMG]';
+        img.addEventListener("error", image_fallback_favicon);
         img.src = this.data.icon;           // You should validate/sanitize this in real code
 
         // Hidden input
@@ -52,6 +53,7 @@ class PlaylistCard {
                     let apidata = apidataall.data;
                     this.playlistMain.update(apidata[0]);
                 } catch (error) {
+                    console.error(error);
                     console.error("Unable to set playlist!");
                 }
 
@@ -151,6 +153,15 @@ class PlaylistSong {
 }
 
 class Playlist {
+    static mainTitle = document.querySelector("#main-title");
+    static playlistLibrary = document.querySelector("#playlist-library-cardspace");
+    static songSelection = document.querySelector("#playlist-song-selection");
+    static buttonBack = document.querySelector("#button-back");
+    static buttonAdd = document.querySelector("#button-add");
+    static buttonEdit = document.querySelector("#button-edit");
+
+    static metaImage = document.querySelector("#playlist-meta-image");
+
     constructor(dom) {
         this.dom = dom;
         this.songItems = [];
@@ -158,14 +169,23 @@ class Playlist {
         this.name = "";
 
         this.player = new MusicPlayer(document.querySelector("#music-player"));
-        this.titleDom = document.querySelector("#playlist-title-display");
+        //this.titleDom = document.querySelector("#playlist-title-display");
     }
 
     update(data) {
+        dom_show(Playlist.buttonBack, true);
+        dom_show(Playlist.buttonAdd, false);
+        dom_show(Playlist.buttonEdit, true);
+        dom_show(Playlist.songSelection, true);
+        dom_show(Playlist.playlistLibrary, false);
+        
         this.clear();
         console.log(data);
         this.name = data.name ?? "UNKNOWN";
-        this.titleDom.innerText = this.name;
+        //this.titleDom.innerText = this.name;
+        Playlist.mainTitle.innerText = this.name;
+        Playlist.metaImage.src = data.icon ?? "";
+
 
         this.songs = data.songs ?? [];
         for (let i = 0; i < (data.songs ?? []).length; i++) {
@@ -177,8 +197,9 @@ class Playlist {
             item.playbutton.addEventListener("click", () => {
                 console.log(item.song);
                 //this.player.playRaw(item.song.song, item.song.filename, item.song.thumbnail ?? "");
-                this.player.setPlaylist(this.name, this.songs, i);
+                this.player.setPlaylist(this.name, this.songs, i, false);
                 this.player.nextSong();
+                this.player.updatePlaylistOrder();
             });
 
             item.deleter.addEventListener("click", () => {
@@ -187,7 +208,7 @@ class Playlist {
                     api_get((apidataall) => {
                         try {
                             let apidata = apidataall.data;
-                            this.update(apidata[0]);
+                            this.update(apidata[0]);                            
                         } catch (error) {
                             console.error(error);
                             console.error("Unable to set playlist!");
@@ -238,3 +259,15 @@ var playlistMain = new Playlist(playlistSongSelection);
 (PLAYLISTS ?? []).forEach(playlist => {
     let card = new PlaylistCard(playlistLibraryCardspace, playlist, playlistMain);
 });
+
+Playlist.buttonBack.addEventListener("click", () => {
+    Playlist.mainTitle.innerText = "Library";
+        dom_show(Playlist.buttonBack, false);
+        dom_show(Playlist.buttonAdd, true);
+        dom_show(Playlist.buttonEdit, false);
+        dom_show(Playlist.songSelection, false);
+        dom_show(Playlist.playlistLibrary, true);
+});
+
+Playlist.metaImage.addEventListener("error", image_fallback_favicon);
+

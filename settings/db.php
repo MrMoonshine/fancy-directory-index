@@ -373,6 +373,22 @@ class DirectoryDB extends SQLite3
         }
     }
 
+    public function playlist_create(){
+        $SQL = <<<SQL
+            INSERT INTO playlists ("name") VALUES ("New Playlist #" || (SELECT (count(1) + 1) FROM playlists));
+        SQL;
+        $stmt = $this->prepare($SQL);
+        if (!$stmt) {
+            $this->errors_add();
+            return;
+        }
+
+        $stmtresult = $stmt->execute();
+        if (!$stmtresult) {
+            $this->errors_add();
+            return;
+        }
+    }
     public function playlist_get($id = null)
     {
         $retval = [];

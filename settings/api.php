@@ -180,6 +180,15 @@ try {
                         break;
                 }
                 break;
+            /*case "add":
+                switch ($_POST["resource"]) {
+                    case "playlists":
+                        // blabla
+                        break;
+                    default:
+                        break;
+                }
+                break;*/
         }
     }
 

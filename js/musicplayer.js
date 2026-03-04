@@ -59,10 +59,12 @@ class MusicPlayer {
             Volume Control
         */
         this.volumeCache = this.volume.value;
-
+        fancy_range_slider_set(this.volume);
         this.volume.addEventListener("input", () => {
+            //console.log(this.volume.value)
             this.volumeCache = this.volume.value;
             this.mutebutton_icon(this.volume.value == 0);
+            fancy_range_slider_set(this.volume);
             if (!this.audio) {
                 return;
             }
@@ -109,6 +111,10 @@ class MusicPlayer {
         this.currentSongItem = null;    // represents the song item of a playlist
         this.playlistMenu = new MusicPlaylistManager();
         this.playlistAdder.addEventListener("click", () => { this.playlistMenuShow() });
+
+        this.shuffle.addEventListener("change", () => {
+            this.updatePlaylistOrder();
+        });
     }
 
     play(file, index = -1, startTime = 0, startImmediately = true) {
@@ -199,8 +205,9 @@ class MusicPlayer {
     }
 
     playRaw(songtitle, filename, thumbnail = "", startImmediately = true) {
+        this.dom.classList.remove("d-none");
         // in case a timeout was set, abort autoplay due to song load error
-        if(this.nextSongTimeout){
+        if (this.nextSongTimeout) {
             clearTimeout(this.nextSongTimeout);
         }
         // show loaders
@@ -289,7 +296,7 @@ class MusicPlayer {
                     MusicPlayer.toast.onFinish = (value) => {
                         console.log(value);
                         MusicPlayer.toast.hide();
-                        if(value != Toast.BUTTON_YES){
+                        if (value != Toast.BUTTON_YES) {
                             return;
                         }
                         let fd = new FormData();
@@ -340,10 +347,11 @@ class MusicPlayer {
 
     setSystemInfo(title) {
         if ('mediaSession' in navigator) {
+            const components = MusicPlayer.songTitleComponents(MusicPlayer.songTitleNamePrepare(title));
             navigator.mediaSession.metadata = new MediaMetadata({
-                title: title,
-                artist: "UNKNOWN",
-                album: "UNKNOWN",
+                title: components[0] ?? title,
+                artist: components [1] ?? "",
+                album: components[2] ?? "",
                 artwork: [{ src: new URL(this.cover.src), sizes: `${this.cover.width}x${this.cover.height}`, type: 'image/jpeg' }]
             });
 
@@ -369,10 +377,27 @@ class MusicPlayer {
         }
     }
 
-    setPlaylist(name, playlist, offset = 0) {
+    setPlaylist(name, playlist, offset = 0, updateOrder = true) {
         //console.log(playlist);
         this.playlist.clear();
         this.playlist.addSongs(playlist, offset, name);
+
+        if (!updateOrder) {
+            return;
+        }
+        this.updatePlaylistOrder();
+    }
+
+    updatePlaylistOrder() {
+        if (this.playlist.songs.length < 1) {
+            return;
+        }
+
+        if (this.shuffling()) {
+            this.playlist.shuffle();
+        } else {
+            this.playlist.sortBy();
+        }
     }
 
     setDirectoryPlaylist(playlist) {
@@ -498,12 +523,21 @@ class MusicPlayer {
         return decodedtitle;
     }
 
+    static songTitleComponents(decodedtitle) {
+        const separator = " - ";
+        let arr = decodedtitle.split(separator);
+        if(arr.length < 2){
+            return [decodedtitle];
+        }
+        return arr; 
+    }
+
     static songTitleUIPrepare(songtitle, parent) {
         const separator = " - ";
         parent.innerHTML = "";
         let decodedtitle = MusicPlayer.songTitleNamePrepare(songtitle);
         try {
-            const arr = decodedtitle.split(separator);
+            const arr = MusicPlayer.songTitleComponents(decodedtitle);
             // fallback
             if (arr.length < 2) {
                 parent.innerText = decodedtitle;
@@ -530,6 +564,7 @@ class MusicPlaylistManager extends Overlay {
         super("Add to Playlist");
         this.build();
         this.currentSong = null;
+        this.content.classList.add("overflow-y-auto");
 
         this.toast = new Toast();
     }
@@ -575,7 +610,7 @@ class MusicPlaylistManager extends Overlay {
                 counter++;
 
                 dom.addEventListener("click", () => {
-                    this.hide();
+                    this.close();
                     let url = new URL(window.location);
 
                     let fd = new FormData(form);
@@ -660,8 +695,24 @@ class SongQueue {
         }
     }
 
-    shuffle() {
-        console.log("shuffle not supported yet")
+    shuffle(keeplast = true) {
+        let lastitem = this.songs.pop();
+        let currentIndex = this.songs.length;
+
+        // While there remain elements to shuffle...
+        while (currentIndex > 0) {
+
+            // Pick a remaining element...
+            let randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+
+            // And swap it with the current element.
+            [this.songs[currentIndex], this.songs[randomIndex]] = [
+                this.songs[randomIndex], this.songs[currentIndex]];
+        }
+        this.songs.push(lastitem);
+        this.updateDisplay();
+        //console.log("shuffle not supported yet")
     }
 
     sortBy(column = SongQueueColumn.TIMESTAMP) {

@@ -397,68 +397,6 @@ dialog .info img.mimeicon{
     margin: auto;
 }
 
-dialog .actions{
-    display: block;
-    padding: 12px;
-}
-
-dialog .action:first-child{
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-}
-
-dialog .action:last-child{
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-bottom: 2px solid var(--color-text);
-}
-
-dialog .action{
-    display: flex;
-    width: 100%;
-    padding: 12px 24px;
-    box-sizing: border-box;
-
-    cursor: pointer;
-
-    color: var(--color-text);
-    background-color: var(--color-background-2);
-    border: 2px solid var(--color-text);
-    border-bottom: none;
-
-    text-decoration: none;
-}
-
-dialog .action:not([disabled]):hover{
-    background-color: var(--color-background-1);
-}
-
-dialog .action:disabled{
-    text-align: left;
-    font-weight: bold;
-    cursor: unset;
-}
-
-dialog .action img{
-    height: 1rem;
-    width: 1rem;
-    object-fit: scale-down;
-}
-
-dialog .action .sillouhette-img{
-    width: 24px;
-    height: 24px;
-}
-
-dialog .action .sillouhette-img .masked-icon{
-    background-color: var(--color-text);
-    width: 24px;
-    height: 24px;
-    mask-size: 100%, 100%, contain;
-    mask-position: center;
-    mask-repeat: no-repeat; 
-}
-
 dialog .preview .prev,
 dialog .preview .next{
     position: absolute;

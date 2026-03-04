@@ -26,8 +26,18 @@ body.aero .playlist-player > footer,
     background: linear-gradient(to bottom,
             rgba(255, 255, 255, .25) 0,
             rgba(117, 117, 117, .2) 20%,
-            rgba(92, 92, 92, .2) 50%, rgba(43, 43, 43, .3) 50%,
+            rgba(92, 92, 92, .2) 50%, 
+            rgba(43, 43, 43, .3) 50%,
             rgba(161, 161, 161, .3) 100%);
+}
+
+body.aero .btn:hover{
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, .25) 0,
+            rgba(117, 117, 117, .2) 20%,
+            rgba(92, 92, 92, .2) 50%, 
+            rgba(78, 78, 78, 0.418) 50%,
+            rgba(161, 161, 161, 0.493) 100%);
 }
 
 .aero-glass{
