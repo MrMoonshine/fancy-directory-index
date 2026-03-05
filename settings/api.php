@@ -11,7 +11,7 @@ $PAYLOAD = [
     "data" => []
 ];
 
-function thumbnail_dir2path($db, $dir)
+/*function thumbnail_dir2path($db, $dir)
 {
     // Is it on default document root?
     if (str_starts_with($dir, $_SERVER["DOCUMENT_ROOT"])) {
@@ -22,7 +22,7 @@ function thumbnail_dir2path($db, $dir)
         return "/" . $dir;
     }
     return $db->alias_resolve($dir, true);
-}
+}*/
 
 function thumbnail_leftovers($newtns, $oldtns)
 {
@@ -49,8 +49,9 @@ try {
     //var_dump($_POST);
 
     if (isset($_POST['solicitation'])) {
-        $PAYLOAD["path"] = thumbnail_dir2path($ddb, $OPTIONS['thumbnaildir']);
-        file_put_contents("/tmp/test.txt", $_POST['solicitation']);
+        //$PAYLOAD["path"] = thumbnail_dir2path($ddb, $OPTIONS['thumbnaildir']);
+        $PAYLOAD["path"] = $ddb->thumbnail_dir2path($OPTIONS['thumbnaildir']);
+        //file_put_contents("/tmp/test.txt", $_POST['solicitation']);
         $jstr = base64_decode($_POST['solicitation']);
 
 
@@ -156,6 +157,8 @@ try {
         switch ($_GET["resource"]) {
             case "playlists":
                 $PAYLOAD["data"] = $ddb->playlist_get($_GET["id"] ?? null);
+                $options = $ddb->options_get();
+                $PAYLOAD["thumbnailpath"] = $ddb->thumbnail_dir2path($options['thumbnaildir'])."playlists/";
                 break;
             default:
                 break;

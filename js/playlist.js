@@ -29,7 +29,9 @@ class PlaylistCard {
         img.className = 'icon';
         img.alt = '[IMG]';
         img.addEventListener("error", image_fallback_favicon);
-        img.src = this.data.icon;           // You should validate/sanitize this in real code
+        let thumbnailURI = Playlist.thumbnailURI(this.data.icon);;           // You should validate/sanitize this in real code
+        console.log(thumbnailURI);
+        img.src = thumbnailURI;
 
         // Hidden input
         const hiddenInput = document.createElement('input');
@@ -158,9 +160,19 @@ class Playlist {
     static songSelection = document.querySelector("#playlist-song-selection");
     static buttonBack = document.querySelector("#button-back");
     static buttonAdd = document.querySelector("#button-add");
-    static buttonEdit = document.querySelector("#button-edit");
-
+    //static buttonEdit = document.querySelector("#button-edit");
+    static buttonRename = document.querySelector("#button-rename");
+    static buttonDelete = document.querySelector("#button-delete");
     static metaImage = document.querySelector("#playlist-meta-image");
+
+    static renameOverlay = new Overlay("Rename Playlist", null, "POST");
+    static renameName = document.createElement("input");
+    static renamePlaylist = document.createElement("input");
+
+    static deletePlaylist = document.querySelector("#input-delete-id");
+    static imagePlaylist = document.querySelector("#input-image-id");
+
+    static thumbnailpath = JSON.parse(document.getElementById('playlist-thumbnailpath').dataset.json) + "playlists/";
 
     constructor(dom) {
         this.dom = dom;
@@ -175,24 +187,31 @@ class Playlist {
     update(data) {
         dom_show(Playlist.buttonBack, true);
         dom_show(Playlist.buttonAdd, false);
-        dom_show(Playlist.buttonEdit, true);
+        //dom_show(Playlist.buttonEdit, true);
         dom_show(Playlist.songSelection, true);
         dom_show(Playlist.playlistLibrary, false);
-        
+
         this.clear();
         console.log(data);
         this.name = data.name ?? "UNKNOWN";
+
+        let thumbnailURI = Playlist.thumbnailURI(data.icon);
+        console.log(thumbnailURI);
         //this.titleDom.innerText = this.name;
+        Playlist.renamePlaylist.value = data.id ?? -1;
+        Playlist.imagePlaylist.value = data.id ?? -1;
+        Playlist.deletePlaylist.value = data.id ?? -1;
         Playlist.mainTitle.innerText = this.name;
-        Playlist.metaImage.src = data.icon ?? "";
+        Playlist.metaImage.classList.remove(CSS_IMAGE_UNKNOWN);
+        Playlist.metaImage.src = thumbnailURI;
 
 
         this.songs = data.songs ?? [];
         for (let i = 0; i < (data.songs ?? []).length; i++) {
             let song = data.songs[i];
-            let item = new PlaylistSong(this.dom, song, data.icon ?? "");
+            let item = new PlaylistSong(this.dom, song, thumbnailURI);
             if (!song.thumbnail) {
-                song.thumbnail = data.icon;
+                song.thumbnail = thumbnailURI;
             }
             item.playbutton.addEventListener("click", () => {
                 console.log(item.song);
@@ -208,7 +227,7 @@ class Playlist {
                     api_get((apidataall) => {
                         try {
                             let apidata = apidataall.data;
-                            this.update(apidata[0]);                            
+                            this.update(apidata[0]);
                         } catch (error) {
                             console.error(error);
                             console.error("Unable to set playlist!");
@@ -244,6 +263,14 @@ class Playlist {
     static addSong(playlist, song) {
         return Playlist.modify(playlist, song, true);
     }
+
+    static thumbnailURI(filename){
+        let tnuri = Playlist.thumbnailpath + filename;
+        if((filename ?? "").startsWith("http") || (filename ?? "").startsWith("/")){
+            tnuri = filename;
+        }
+        return tnuri;
+    }
 }
 
 set_theme();
@@ -262,12 +289,50 @@ var playlistMain = new Playlist(playlistSongSelection);
 
 Playlist.buttonBack.addEventListener("click", () => {
     Playlist.mainTitle.innerText = "Library";
-        dom_show(Playlist.buttonBack, false);
-        dom_show(Playlist.buttonAdd, true);
-        dom_show(Playlist.buttonEdit, false);
-        dom_show(Playlist.songSelection, false);
-        dom_show(Playlist.playlistLibrary, true);
+    dom_show(Playlist.buttonBack, false);
+    dom_show(Playlist.buttonAdd, true);
+    //dom_show(Playlist.buttonEdit, false);
+    dom_show(Playlist.songSelection, false);
+    dom_show(Playlist.playlistLibrary, true);
 });
 
 Playlist.metaImage.addEventListener("error", image_fallback_favicon);
 
+
+let renameSubmit = document.createElement("input");
+renameSubmit.type = "submit";
+renameSubmit.className = "btn d-block";
+Playlist.renameOverlay.modalFooter.appendChild(renameSubmit);
+
+Playlist.renameName.type = "text";
+Playlist.renameName.name = "name";
+Playlist.renameOverlay.content.appendChild(Playlist.renameName);
+
+Playlist.renamePlaylist.type = "hidden";
+Playlist.renamePlaylist.name = "rename";
+Playlist.renameOverlay.content.appendChild(Playlist.renamePlaylist);
+
+Playlist.buttonRename.addEventListener("click", () => {
+    Playlist.renameOverlay.show();
+});
+
+let deleteToast = new Toast();
+deleteToast.onFinish = (option) => {
+    if(option != Toast.BUTTON_YES){
+        deleteToast.hide();
+        return;
+    }
+    
+    let deleteform = document.querySelector("#form-delete");
+    deleteform.submit();
+}
+
+Playlist.buttonDelete.addEventListener("click", () => {
+    deleteToast.show(
+        "Failed to remove Song!",
+        "Would you realy like to delete the playlist?",
+        12,
+        Toast.BUTTONS_YESNO_PREF_NO,
+        APACHE_ALIAS + "/assets/dialog-warning.png"
+    );
+});

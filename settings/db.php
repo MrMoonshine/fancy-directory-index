@@ -1,4 +1,5 @@
 <?php
+require("upload.php");
 //const DEFAULT_DOCUMENT_ROOT = "/var/www/html/";
 const DEFAULT_THUMBNAIL_DIR = "/fancy-directory-index/settings/data/";
 class DirectoryDB extends SQLite3
@@ -8,11 +9,12 @@ class DirectoryDB extends SQLite3
     const DB_FILE = DirectoryDB::WORKDIR . "fancydirindex.sqlite3";
     const DDL_FILE = "DDL.sql";
 
-    public function __construct($filename) {
-        try{
+    public function __construct($filename)
+    {
+        try {
             parent::__construct($filename);
         } catch (\Throwable $th) {
-            echo($th->getMessage());
+            echo ($th->getMessage());
             //throw $th;
         }
     }
@@ -373,7 +375,8 @@ class DirectoryDB extends SQLite3
         }
     }
 
-    public function playlist_create(){
+    public function playlist_create()
+    {
         $SQL = <<<SQL
             INSERT INTO playlists ("name") VALUES ("New Playlist #" || (SELECT (count(1) + 1) FROM playlists));
         SQL;
@@ -389,12 +392,75 @@ class DirectoryDB extends SQLite3
             return;
         }
     }
+
+    public function playlist_delete($id)
+    {
+        $results = $this->universalDML("DELETE FROM playlist_songs WHERE playlist = :id", ["id" => intval($id)]);
+        $results = $this->universalDML("DELETE FROM playlists WHERE id = :id", ["id" => intval($id)]);
+        if (!$results) {
+            $this->errors_add();
+            return;
+        }
+    }
+
+    public function playlist_rename($id, $name)
+    {
+        if (strlen($name) < 1) {
+            array_push($this->errors, "Name is invalid!");
+            return;
+        }
+        $SQL = <<<SQL
+            UPDATE playlists SET
+                name = :name
+            WHERE
+            id = :id;
+        SQL;
+
+        $results = $this->universalDML($SQL, ["name" => $name, "id" => intval($id)]);
+        if (!$results) {
+            $this->errors_add();
+            return;
+        }
+    }
+
+    public function playlist_image($id)
+    {
+        $options = $this->options_get();
+        $target_dir = $options["thumbnaildir"] . "playlists/";
+        if (!is_dir($target_dir)) {
+            if (!mkdir($target_dir)) {
+                array_push($this->errors, "Failed to find or create target directory: " . $target_dir . " !");
+                return;
+            }
+        }
+
+        $exten = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
+        $_FILES["image"]["name"] = "tn_" . strval(time()) . "." . $exten;
+        $uploadresult = uploadFile("image", $target_dir);
+        if ($uploadresult["status"] != 0) {
+            array_push($this->errors, "Failed to upload file!");
+            return;
+        }
+        $SQL = <<<SQL
+            UPDATE playlists SET
+                icon = :image
+            WHERE
+            id = :id;
+        SQL;
+
+        $results = $this->universalDML($SQL, ["image" => $_FILES["image"]["name"], "id" => intval($id)]);
+        if (!$results) {
+            $this->errors_add();
+            return;
+        }
+    }
+
     public function playlist_get($id = null)
     {
         $retval = [];
         $params = [];
         $filters = "WHERE 1=1 ";
-        if($id){
+        if ($id) {
             $filters .= " AND id = :id ";
             $params["id"] = intval($id);
         }
@@ -407,9 +473,9 @@ class DirectoryDB extends SQLite3
             ORDER BY name ASC
         SQL, $params);
         while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
-            if(!$id){
+            if (!$id) {
                 array_push($retval, $row);
-                continue;    
+                continue;
             }
             $row["songs"] = $this->queryArrayBound(<<<SQL
                 SELECT * FROM v_playlist_songs WHERE playlist = :playlist ;
@@ -420,13 +486,14 @@ class DirectoryDB extends SQLite3
         return $retval;
     }
 
-    public function song_get_id($songname){
+    public function song_get_id($songname)
+    {
         $pathname = "";
         //$songname = urldecode($songname);
-        if(str_contains($songname, "/")){
-            $pathname = dirname($songname)."/";
+        if (str_contains($songname, "/")) {
+            $pathname = dirname($songname) . "/";
             $songname = basename($songname);
-        }else if(isset($_POST["path"])){
+        } else if (isset($_POST["path"])) {
             $pathname = $_POST["path"];
         }
         //$songname = urlencode($songname);
@@ -436,13 +503,13 @@ class DirectoryDB extends SQLite3
         $pathid = $this->path_get_id($pathname);
         $retval = -1;
         $tries = 0;
-        do{
+        do {
             $retval = $this->querySingleBound(<<<SQL
                 SELECT id FROM songs
                 WHERE path = :path AND song = :song ;
             SQL, ["path" => intval($pathid), "song" => strval($songname)]);
             //array_push($this->errors, "Here 1: ".$retval);
-            if($retval != false && $retval != null){
+            if ($retval != false && $retval != null) {
                 break;
             }
             $retval = -1;
@@ -450,13 +517,14 @@ class DirectoryDB extends SQLite3
             $this->universalDML(<<<SQL
                 INSERT OR IGNORE INTO songs (path, song) VALUES (:path, :song);
             SQL, ["path" => intval($pathid), "song" => strval($songname)]);
-        }while($retval < 0 && $tries < 2);
-        
+        } while ($retval < 0 && $tries < 2);
+
         return $retval;
     }
 
-    public function playlist_songs_modify($playlist, $song, $add = false){
-        if(!$add){
+    public function playlist_songs_modify($playlist, $song, $add = false)
+    {
+        if (!$add) {
             // Deleting
             $occurances = $this->querySingleBound(<<<SQL
                 delete from playlist_songs where playlist = :playlist and song = :song;
@@ -468,8 +536,8 @@ class DirectoryDB extends SQLite3
                 select count(1) from playlist_songs where playlist = :playlist and song = :song;
         SQL, ["playlist" => intval($playlist), "song" => intval($song)]);
 
-        if(($occurances ?? 0) > 0){
-            array_push($this->errors, "Song ".urldecode($_POST["song"])." already esxists in this playlist! Thus, not adding!");
+        if (($occurances ?? 0) > 0) {
+            array_push($this->errors, "Song " . urldecode($_POST["song"]) . " already esxists in this playlist! Thus, not adding!");
             return false;
         }
 
@@ -547,9 +615,10 @@ class DirectoryDB extends SQLite3
     public function universalDML($sql, $params = [])
     {
         $stmt = $this->universalStatement($sql, $params);
-        if(!$stmt){
+        if (!$stmt) {
             return false;
         }
+        //array_push($this->errors, $stmt->getSQL(true));
         $result = $stmt->execute();
         if (!$result) {
             array_push($this->errors, $this->lastErrorMsg());
@@ -560,7 +629,7 @@ class DirectoryDB extends SQLite3
     public function querySingleBound($query, $params = [], $entireRow = false)
     {
         $stmt = $this->universalStatement($query, $params);
-        if(!$stmt){
+        if (!$stmt) {
             return false;
         }
         return parent::querySingle($stmt->getSQL(true), $entireRow);
@@ -570,15 +639,28 @@ class DirectoryDB extends SQLite3
     {
         $retval = [];
         $stmt = $this->universalStatement($query, $params);
-        if(!$stmt){
+        if (!$stmt) {
             return false;
         }
-        
+
         $results = $this->universalDML($query, $params);
         while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
             array_push($retval, $row);
         }
         return $retval;
+    }
+
+    public function thumbnail_dir2path($dir)
+    {
+        // Is it on default document root?
+        if (str_starts_with($dir, $_SERVER["DOCUMENT_ROOT"])) {
+            $dir = str_replace($_SERVER["DOCUMENT_ROOT"], "", $dir);
+            if (str_starts_with($dir, "/")) {
+                return $dir;
+            }
+            return "/" . $dir;
+        }
+        return $this->alias_resolve($dir, true);
     }
 
     static function create_if_not_exists($base = "./")

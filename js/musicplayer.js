@@ -588,7 +588,12 @@ class MusicPlaylistManager extends Overlay {
 
                 let img = new Image();
                 img.alt = "[IMG]";
-                img.src = playlist.icon;
+                img.addEventListener("error", image_fallback_favicon);
+                let tnuri = dataall["thumbnailpath"] + playlist.icon;
+                if((playlist.icon ?? "").startsWith("http") || (playlist.icon ?? "").startsWith("/")){
+                    tnuri = playlist.icon;
+                }
+                img.src = tnuri;
 
                 let textdiv = document.createElement("div");
                 textdiv.className = "text";

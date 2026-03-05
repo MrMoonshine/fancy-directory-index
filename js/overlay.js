@@ -4,11 +4,11 @@ class Overlay {
     this.overlay = document.createElement("dialog");
     this.overlay.classList.add("modal");
     // This element prevents the dialog from being closed
-    let modalDialog = document.createElement("form");
-    modalDialog.setAttribute("method", defaulttype);
+    this.modalDialog = document.createElement("form");
+    this.modalDialog.setAttribute("method", defaulttype);
 
-    modalDialog.classList.add("modal-dialog");
-    modalDialog.role = "document";
+    this.modalDialog.classList.add("modal-dialog");
+    this.modalDialog.role = "document";
 
     // Title
     this.title = document.createElement("h2");
@@ -36,10 +36,10 @@ class Overlay {
     this.modalFooter.classList.add("modal-footer")
 
     document.body.appendChild(this.overlay);
-    modalDialog.appendChild(modalHeader);
-    modalDialog.appendChild(this.content)
-    modalDialog.appendChild(this.modalFooter);
-    this.overlay.appendChild(modalDialog);
+    this.modalDialog.appendChild(modalHeader);
+    this.modalDialog.appendChild(this.content)
+    this.modalDialog.appendChild(this.modalFooter);
+    this.overlay.appendChild(this.modalDialog);
   }
 
   appendChild(child) {

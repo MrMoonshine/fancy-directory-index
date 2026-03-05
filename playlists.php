@@ -45,28 +45,52 @@
                         require("settings/db.php");
 
                         //var_dump($_POST);
+                        //var_dump($_FILES);
                         
                         $db = new DirectoryDB("settings/" . DirectoryDB::DB_FILE);
                         if (($_POST["mode"] ?? "") == "add") {
                             $db->playlist_create();
+                        }else if (isset($_POST["rename"])) {
+                            $db->playlist_rename($_POST["rename"] ?? -1, $_POST["name"] ?? "");
+                        }else if (isset($_POST["delete"])) {
+                            $db->playlist_delete($_POST["delete"] ?? -1);
+                        }else if(isset($_POST["playlist"]) && isset($_FILES["image"])){
+                            $db->playlist_image($_POST["playlist"]);
+                        }
+
+                        if(count($db->errors) > 0){
+                            echo("<h3>Errors</h3>");
+                            var_dump($db->errors);
                         }
 
                         $playlists = [];
                         $playlists = $db->playlist_get();
+
+                        $options = $db->options_get();
+                        $thumbnailpath = $db->thumbnail_dir2path($options['thumbnaildir']);
+                        $db->close();
                         //playlistList($playlists);
                         ?>
                         <div id="playlist-library-cardspace" class="playlist-selection gap justify-content-center">
                         </div>
-                        <div id="playlist-song-selection" class="playlist-selection d-flex gap justify-content-center">
+                        <div id="playlist-song-selection" class="playlist-selection d-flex gap justify-content-center d-none">
+                            <form id="form-image" method="POST" enctype="multipart/form-data">
+                                <input id="input-image-id" name="playlist" type="number">
+                                <input id="input-image" name="image" type="file">
+                                <input type="submit">
+                            </form>
                             <div class="d-flex gap justify-content-center" style="margin-bottom: 8px;">
                                 <img id="playlist-meta-image" alt="[IMG]" src="">
                             </div>
+                            <form id="form-delete" method="POST">
+                                <input id="input-delete-id" name="delete" type="hidden">
+                            </form>
                             <div class="d-flex gap justify-content-center">
-                                    <button class="btn btn-dull d-flex justify-content-left gap" type="button">
+                                    <button class="btn btn-dull d-flex justify-content-left gap" type="button" id="button-rename">
                                         <img class="my-auto" alt="" src="/fancy-directory-index/assets/edit-rename.png">
                                         <div class="my-auto">Rename</div>
                                     </button>
-                                    <button class="btn btn-dull d-flex justify-content-left gap">
+                                    <button class="btn btn-dull d-flex justify-content-left gap" id="button-delete">
                                         <img class="my-auto" alt="" src="/fancy-directory-index/assets/edit-delete.png">
                                         <div class="my-auto text-critical">Delete</div>
                                     </button>
@@ -185,8 +209,11 @@
         </article>
         <footer></footer>
     </div>
+    <div id="playlist-thumbnailpath"
+        data-json="<?= htmlspecialchars(json_encode($thumbnailpath, JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8') ?>"></div>
     <div id="playlist-data"
         data-json="<?= htmlspecialchars(json_encode($playlists, JSON_UNESCAPED_UNICODE), ENT_QUOTES, 'UTF-8') ?>"></div>
+
     <script src="/fancy-directory-index/js/common.js"></script>
     <script src="/fancy-directory-index/js/api.js"></script>
     <script src="/fancy-directory-index/js/overlay.js"></script>
