@@ -284,7 +284,8 @@ class MusicPlayer {
             this.nextSong();
         });
 
-        this.audio.addEventListener("error", () => {
+        this.audio.addEventListener("error", (evt) => {
+            console.error(evt.target.error.code + " vs " + evt.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED);
             console.error("Failed to load audio " + filename);
 
             this.nextSongTimeout = setTimeout(() => {
@@ -327,10 +328,18 @@ class MusicPlayer {
                             }
                         }, "playlist_songs", fd);
                     }
+                    let errmsg = "";
+                    const mediaError = event.target.error;
+                    if (mediaError.code === 2) { // MEDIA_ERR_NETWORK
+                        // Handle the error (e.g., show user message)
+                        errmsg = "Network Error";
+                    } else if (mediaError.code === 4) {
+                        errmsg = "Unsupported audio format";
+                    }
                     //MusicPlayer.toast.show(title, text, timeout = 0, buttonset = Toast.BUTTONS_ALERT, image = "")
                     MusicPlayer.toast.show(
                         "Unable to load song!",
-                        `Song may have been deleted or moved to another directory. Should song ${decodeURI(this.currentSongItem.song)} be removed from this playlist?`,
+                        `${errmsg}: Song may have been deleted or moved to another directory. Should song ${decodeURI(this.currentSongItem.song)} be removed from this playlist?`,
                         12,
                         Toast.BUTTONS_YESNO_PREF_YES,
                         APACHE_ALIAS + "/assets/dialog-warning.png"
@@ -350,7 +359,7 @@ class MusicPlayer {
             const components = MusicPlayer.songTitleComponents(MusicPlayer.songTitleNamePrepare(title));
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: components[0] ?? title,
-                artist: components [1] ?? "",
+                artist: components[1] ?? "",
                 album: components[2] ?? "",
                 artwork: [{ src: new URL(this.cover.src), sizes: `${this.cover.width}x${this.cover.height}`, type: 'image/jpeg' }]
             });
@@ -526,10 +535,10 @@ class MusicPlayer {
     static songTitleComponents(decodedtitle) {
         const separator = " - ";
         let arr = decodedtitle.split(separator);
-        if(arr.length < 2){
+        if (arr.length < 2) {
             return [decodedtitle];
         }
-        return arr; 
+        return arr;
     }
 
     static songTitleUIPrepare(songtitle, parent) {
@@ -590,7 +599,7 @@ class MusicPlaylistManager extends Overlay {
                 img.alt = "[IMG]";
                 img.addEventListener("error", image_fallback_favicon);
                 let tnuri = dataall["thumbnailpath"] + playlist.icon;
-                if((playlist.icon ?? "").startsWith("http") || (playlist.icon ?? "").startsWith("/")){
+                if ((playlist.icon ?? "").startsWith("http") || (playlist.icon ?? "").startsWith("/")) {
                     tnuri = playlist.icon;
                 }
                 img.src = tnuri;

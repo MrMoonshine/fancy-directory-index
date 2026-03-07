@@ -26,7 +26,7 @@
                         src="/fancy-directory-index/assets/media-playback-playing.png">
                 </span>
             </div>
-            <h2 id="main-title">Playlsits</h2>
+            <h2 id="main-title" class="overflow-hidden">Playlsits</h2>
             <div class="d-flex">
                 <form method="POST" class="d-none" id="form-add">
                     <input type="text" name="resource" value="playlists">
@@ -75,7 +75,7 @@
                         </div>
                         <div id="playlist-song-selection" class="playlist-selection d-flex gap justify-content-center d-none">
                             <form id="form-image" method="POST" enctype="multipart/form-data">
-                                <input id="input-image-id" name="playlist" type="number">
+                                <input id="input-image-id" name="playlist" type="hidden">
                                 <input id="input-image" name="image" type="file">
                                 <input type="submit">
                             </form>

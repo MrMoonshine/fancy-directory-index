@@ -248,4 +248,8 @@ body {
     #next-up-space {
         height: calc(100vh - 26rem);
     }
+
+    #main-title{
+        font-size: 1rem;
+    }
 }
