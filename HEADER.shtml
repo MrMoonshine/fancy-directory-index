@@ -57,12 +57,77 @@
 		</div>
 	</div>-->
 	<div class="dashboard">
-		<div id="sortingButtons">
-			<div class="placeholder"></div>
+		<input id="radio-page-preview" type="radio" name="dashboard-pages" value="1">
+		<div class="dashboard-page">
+			<figure>
+				<video controls="" class="filedisplay d-none"></video>
+				<pre class="filedisplay d-none"></pre>
+				<img class="filedisplay d-none">
+				<img class="filedisplay d-none">
+				<embed class="pdf filedisplay d-none">
+				<img class="filedisplay d-none">
+				<figcaption>Russian Female Butt Slap Contest.mp4</figcaption>
+			</figure>
+			<hr>
+			<div class="info">
+				<figure>
+					<img class="mimeicon" alt="[IMG]"
+						src="https://alpakagott/fdi-icon-theme/mimetypes/64/video-x-generic.svg">
+					<figcaption>
+						<div class="caption">Russian Female Butt Slap Contest.mp4</div>
+						<div class="caption"></div>
+						<div class="caption"></div>
+					</figcaption>
+				</figure>
+				<div class="actions">
+					<button class="action" disabled="true">Actions:</button>
+					<button class="action d-flex justify-content-left gap d-none" type="button">
+						<div class="sillouhette-img">
+							<div class="masked-icon"
+								style="mask-image: url(&quot;/fancy-directory-index/assets/share.svg&quot;);">
+
+							</div>
+						</div>
+						<div>Share</div>
+					</button>
+					<button class="action d-flex justify-content-left gap">
+						<div class="sillouhette-img">
+							<div class="masked-icon"
+								style="mask-image: url(&quot;/fancy-directory-index/assets/edit-copy.svg&quot;);"></div>
+						</div>
+						<div>Copy Link</div>
+					</button>
+					<a class="action d-flex justify-content-left gap" target="_blank"
+						href="Russian Female Butt Slap Contest.mp4">
+						<div class="sillouhette-img">
+							<div class="masked-icon"
+								style="mask-image: url(&quot;/fancy-directory-index/assets/newtab.svg&quot;);"></div>
+						</div>
+						<div>Open in new tab</div>
+					</a>
+					<a class="action d-flex justify-content-left gap" href="Russian Female Butt Slap Contest.mp4"
+						download="Russian Female Butt Slap Contest.mp4">
+						<div class="sillouhette-img">
+							<div class="masked-icon"
+								style="mask-image: url(&quot;/fancy-directory-index/assets/download.svg&quot;);"></div>
+						</div>
+						<div>Download</div>
+					</a>
+				</div>
+				<hr class="d-mobile">
+				<div class="actions">
+					<button class="action">Close</button>
+				</div>
+			</div>
 		</div>
-		<div class="widget widget-gallery" id="widget-gallery">
-			<article id="gallery"></article>
-		</div>
-		<div class="d-none d-block flex-grow-1" id="widget-details">
-			<div class="widget widget-filelist">
-				<article id="filelist">
+		<input id="radio-page-gallery" type="radio" name="dashboard-pages" value="0" checked>
+		<div class="dashboard-page">
+			<div id="sortingButtons">
+				<div class="placeholder"></div>
+			</div>
+			<div class="widget widget-gallery" id="widget-gallery">
+				<article id="gallery"></article>
+			</div>
+			<div class="d-none d-block flex-grow-1" id="widget-details">
+				<div class="widget widget-filelist">
+					<article id="filelist">
