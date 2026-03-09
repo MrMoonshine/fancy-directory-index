@@ -13,6 +13,8 @@ const ICON_DOWNLOAD = APACHE_ALIAS + "assets/download.svg";
 const ICON_SHARE = APACHE_ALIAS + "assets/share.svg";
 const ICON_COPY = APACHE_ALIAS + "assets/edit-copy.svg";
 
+const ICON_DIR_HUE_OFFSET = 160; // For blue folders from breeze theme
+
 const COOKIE_COLOR = "fdi_color";
 const COOKIE_PAGEICON = "fdi_page_icon";
 const COOKIE_BACKGROUND = "fdi_background_img";
@@ -37,6 +39,7 @@ function fancy_range_slider_set(slider) {
     const tempSliderValue = slider.value;
     const progress = (tempSliderValue / slider.max) * 100;
     //console.log("Progress is " + progress + " - oida - " + slider.max);
+    //slider.style.background = `linear-gradient(to right, var(--color-main) 0%, var(--color-main) ${progress - 3}%, white ${progress}%, var(--color-background-1) ${progress}%)`;
     slider.style.background = `linear-gradient(to right, var(--color-main) ${progress}%, var(--color-background-1) ${progress}%)`;
 }
 

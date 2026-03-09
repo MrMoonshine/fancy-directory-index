@@ -47,12 +47,6 @@ class File {
         } catch (error) {
 
         }
-        /*let lasttd = tds[tds.length - 1];
-        this.size = document.createElement("div");
-        if(lasttd){
-            this.size.innerHTML = lasttd.innerHTML;
-        }*/
-        //this.img = table_row.getElementsByTagName("img")[0];
 
         let links = table_row.getElementsByTagName("a");
         let filelink = links[links.length - 1];
@@ -99,8 +93,8 @@ class File {
                 let a = document.createElement("a");
                 a.href = this.item.href;
                 a.appendChild(this.img);
-                this.item.appendChild(a);
                 a.classList.add("folder-link");
+                this.item.appendChild(a);
                 break;
             default:
                 this.item.appendChild(this.img);
@@ -191,6 +185,10 @@ class File {
             }
         }
         return this.getMimeIcon();
+    }
+
+    isDirectory() {
+        return this.filetype == File.Types.FOLDER;
     }
 
     static fetchFromHTML(table, viewer) {

@@ -3,7 +3,8 @@ const THEME_TILES_Y = localStorage.getItem(COOKIE_VERTICAL) ?? 4;
 
 function set_theme_from_cookies() {
     let root = document.documentElement;
-    root.style.setProperty("--color-main", localStorage.getItem(COOKIE_COLOR) ?? "teal");
+    const colorMain = localStorage.getItem(COOKIE_COLOR);
+    root.style.setProperty("--color-main", colorMain ?? "teal");
     root.style.setProperty("--gallery-tiles-x", THEME_TILES_X);
     root.style.setProperty("--gallery-tiles-y", THEME_TILES_Y);
     let bg = localStorage.getItem(COOKIE_BACKGROUND) ?? "none";
@@ -34,6 +35,13 @@ function set_theme_from_cookies() {
         favicon.src = src;
     });
     favicon.src = ".directory";
+
+    // hue rotation for directories:
+    if(!colorMain){
+        return;
+    }
+    hsv = color_hex_to_hsv(colorMain);
+    root.style.setProperty("--hue-rotate-directory", `${hsv[0] + ICON_DIR_HUE_OFFSET}deg`);
 }
 
 class DirectoryLinks {

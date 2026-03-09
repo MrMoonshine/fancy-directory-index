@@ -17,68 +17,73 @@
     Buttons
 */
 .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     border: 1px solid var(--color-border);
-    /*border-radius: var(--input-border-radius);*/
     box-sizing: border-box;
-    /*background-color: var(--color-main);*/
     background-color: var(--color-main);
     color: var(--color-text-button);
-    padding: var(--input-padding-y) var(--input-padding-x);
+    padding: 2px;
     cursor: pointer;
 
-    font-size: 16px;
-    font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
 
     transition: 200ms ease;
-    text-decoration: none;
+
+    font-size: 12pt;
 }
 
-.btn > img{
+a.btn:hover{
+    text-decoration: underline;
+}
+
+.btn>img {
     max-height: 1em;
 }
 
-.btn-outline{
+.btn-outline {
     color: var(--color-text-button);
     background-color: transparent;
     border: 1px solid var(--color-text-button);
 }
 
-.btn-dull{
+.btn-dull {
     background-color: var(--color-background-1) !important;
 }
 
-.btn-success{
+.btn-success {
     background-color: green !important;
 }
 
-.btn-warning{
+.btn-warning {
     background-color: orange !important;
 }
 
-.btn-danger{
+.btn-danger {
     background-color: crimson !important;
 }
 
 .btn.append,
-.btn.center{
+.btn.center {
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
     border-right: none;
 }
 
 .btn.prepend,
-.btn.center{
+.btn.center {
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
     border-left: none;
 }
 
 .btn-outline:hover,
-input:checked + .btn-outline{
+input:checked+.btn-outline {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -97,7 +102,7 @@ input[type=text],
 input[type=number],
 input[type=search],
 input[type=url],
-input[type=color]{
+input[type=color] {
     color: var(--color-text);
     outline: none;
     transition: 200ms ease;
@@ -108,11 +113,11 @@ input[type=color]{
     background-color: var(--color-background-2);
 }
 
-input[type=color]:hover{
+input[type=color]:hover {
     cursor: pointer;
 }
 
-nav input[type="search"]::placeholder{
+nav input[type="search"]::placeholder {
     color: grey;
 }
 
@@ -176,6 +181,7 @@ nav input[type="search"]::placeholder{
     -ms-transform: translateX(calc(var(--input-switch-size) - var(--input-switch-padding)));
     transform: translateX(calc(var(--input-switch-size) - var(--input-switch-padding)));
 }
+
 
 /*
     Range Sliders

@@ -162,6 +162,7 @@ class Playlist {
     static buttonAdd = document.querySelector("#button-add");
     //static buttonEdit = document.querySelector("#button-edit");
     static buttonRename = document.querySelector("#button-rename");
+    static buttonChangeImage = document.querySelector("#button-change-image");
     static buttonDelete = document.querySelector("#button-delete");
     static metaImage = document.querySelector("#playlist-meta-image");
 
@@ -171,6 +172,9 @@ class Playlist {
 
     static deletePlaylist = document.querySelector("#input-delete-id");
     static imagePlaylist = document.querySelector("#input-image-id");
+    static imageInput = document.querySelector("#input-image");
+
+    static formChangeImage = document.querySelector("#form-image");
 
     static thumbnailpath = JSON.parse(document.getElementById('playlist-thumbnailpath').dataset.json) + "playlists/";
 
@@ -335,4 +339,12 @@ Playlist.buttonDelete.addEventListener("click", () => {
         Toast.BUTTONS_YESNO_PREF_NO,
         APACHE_ALIAS + "/assets/dialog-warning.png"
     );
+});
+
+Playlist.buttonChangeImage.addEventListener("click", () => {
+    Playlist.imageInput.click();
+});
+
+Playlist.imageInput.addEventListener("change", () => {
+    Playlist.formChangeImage.submit();
 });

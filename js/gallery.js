@@ -148,6 +148,9 @@ class Polaroid extends PaginationItem {
                 iconDir.alt = this.file.img.alt ?? "[DIR]";
                 iconDir.src = this.file.img.src;
                 iconDir.classList.add("icon");
+                // This css class allows the folders to be hue-rotated to the theme color
+                iconDir.classList.add("directory");
+                
                 this.iconContainer.appendChild(iconDir);
                 break;
             default:

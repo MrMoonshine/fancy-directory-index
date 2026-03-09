@@ -1,0 +1,6 @@
+DIR_INSTALL: /data/www       # fancy-directory-index directory is in here
+CONFIG_APACHE_SITE: /etc/apache2/sites-available/fancy-directory-index.conf  # Site Config
+
+DIR_THEME: oxygen
+DIR_THEMES: /usr/share/icons  # (optional) location of theme. (default: /usr/share/icons/)
+

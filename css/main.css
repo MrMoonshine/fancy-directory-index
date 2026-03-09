@@ -2,6 +2,7 @@
     --color-main: teal;
     --color-background-1: #323232;
     --color-background-2: #222222;
+    --color-background-3: #424242;
     --color-background-translucent: rgba(34, 34, 34, .7);
     --color-text: white;
     --color-text-button: var(--color-text);
@@ -9,6 +10,10 @@
     --color-text-petite: lightgrey;
     --color-autoshadow: transparent;
     --color-autoshadow-text: inherit;
+    --color-border: #4b4b4b;
+    --color-border-petite: #0f0f0f;
+
+    --hue-rotate-directory: 160deg;
 
     --background-image: none;
     
@@ -16,7 +21,8 @@
     --color-warning: orange;
     --color-critical: #da4453;
 
-    --gap-dashboard: 12px;
+    --gap-dashboard: 8px;
+    --corner-radius-dashboard: 1rem;
 
     --preview-info-width: 20rem;
     --gallery-tiles-x: 5;
@@ -26,16 +32,19 @@
 /* Light mode */
 @media (prefers-color-scheme: light) {
     :root {
-        --color-background-2: #dfdfdf;
         --color-background-1: #cfcfcf;
+        --color-background-2: #dfdfdf;
+        --color-background-3: #afafaf;
         --color-background-intense: white;
         --color-background-translucent: rgba(223,223,223,.7);
         --color-text-button: white;
         --color-text: black;
         --color-text-petite: rgb(53, 53, 53);
         --color-text-code: purple;
-
         --color-autoshadow-themed: rgba(255,255,255, 0.7);
+
+        --color-border: #4b4b4b;
+        --color-border-petite: #bbb;
     }
 }
 
@@ -61,19 +70,29 @@ body{
     gap: var(--gap-dashboard);
 
     color: var(--color-text);
+    background-color: var(--color-main);
+
+    margin: 0;
+    padding: var(--gap-dashboard);
+    padding-top: 0px;
+    height: 100vh;
+    box-sizing: border-box;
+
+    font-family:Arial, Helvetica, sans-serif;
+    overflow-y: hidden;
+}
+
+.dashboard{
     background-image: var(--background-image);
-    background-color: var(--color-background-2);
     background-repeat: no-repeat;
     background-position: 50% 0%;
     background-attachment: fixed;
     background-size: cover;
 
-    margin: 0;
-    padding: 0;
-    height: 100vh;
+    background-color: var(--color-background-2);
+    border-radius: var(--corner-radius-dashboard);
+    padding: 8px 0px;
 
-    font-family:Arial, Helvetica, sans-serif;
-    overflow-y: hidden;
 }
 
 .widget{
@@ -91,9 +110,7 @@ h1 {
 
 nav {
     height: 56px;
-    padding: 0px 4px;
-    background-color: var(--color-main);
-    box-shadow: 2px 2px 8px black;
+    padding: 0px;
     
     display: flex;
     flex-wrap: wrap;
@@ -212,6 +229,24 @@ nav .masked-icon{
 
 #masked-icon-gallery{
     mask-image: url("/fancy-directory-index/assets/view-list-icons.svg");
+}
+
+.icon-frame {
+    display: block;
+    width: 128px;
+    height: 128px;
+    padding: 8px;
+    border: 1px solid var(--color-border-petite);
+    border-radius: 10px;
+    /* Outer shadow */
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.icon-frame img {
+    object-fit: cover;
+    border: 1px solid var(--color-border);
 }
 
 .actions{
@@ -389,4 +424,15 @@ nav .masked-icon{
 
 .w-unset{
     width: unset !important;
+}
+
+@media only screen and (max-width: 700px){
+    :root{
+        --gap-dashboard: 4px;
+    }
+
+    body{
+        height: 100dvh;
+        padding: 4px;
+    }
 }

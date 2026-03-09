@@ -1,8 +1,6 @@
 :root {
     --color-main-hue: 180;
     --color-main-sat: 64%;
-    --color-border: #4b4b4b;
-    --color-border-petite: #0f0f0f;
 }
 
 .gradient-main,
@@ -41,8 +39,9 @@ body.aero .btn:hover{
 }
 
 .aero-glass{
-    /*background-image: url("/fancy-directory-index/assets/aero_glass.png");*/
     background-image: url("/fancy-directory-index/assets/aero_glass.png"), linear-gradient(var(--color-background-translucent), var(--color-background-translucent), var(--color-background-translucent));
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .border,

@@ -267,6 +267,11 @@ button.file{
     min-height: 4rem;
     height: calc(100% - 2rem);
     object-fit: scale-down;
+    z-index: 1;
+}
+
+.polaroid img.icon.directory{
+    filter: hue-rotate(var(--hue-rotate-directory));
 }
 
 .polaroid img.videoicon{
@@ -291,6 +296,7 @@ button.file{
 }
 
 .polaroid .filename{
+    z-index: 10;
     position: absolute;
     bottom: 4px;
     left: 10%;
@@ -312,6 +318,7 @@ button.file{
 }
 
 .polaroid .folder-icon{
+    z-index: 5;
     position: absolute;
     top: 0;
     left: 0;
@@ -462,10 +469,6 @@ nav form {
 }
 
 @media only screen and (max-width: 700px){
-    body{
-        height: 100dvh;
-    }
-
     .d-mobile{
         display: block !important;
     }

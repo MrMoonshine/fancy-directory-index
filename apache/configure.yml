@@ -1,0 +1,12 @@
+#
+# ansible-playbook configure.yml
+#
+- name: Build Apache Config
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Fill File
+      template:
+        src: apachesite.conf.j2
+        dest: out.conf
