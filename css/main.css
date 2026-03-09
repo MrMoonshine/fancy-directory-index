@@ -242,6 +242,10 @@ input[name="dashboard-pages"]:checked + .dashboard-page{
     display: unset;
 }
 
+.dashboard-page.gallery{
+    height: 100%;
+}
+
 .actions{
     display: block;
     padding: 12px;

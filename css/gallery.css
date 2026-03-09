@@ -24,6 +24,11 @@
     /*max-height: (100% - 10rem);*/
 }
 
+#sortingButtons{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
 .file{
     display: grid;
 
@@ -117,6 +122,7 @@ button.file{
 .widget.widget-gallery{
     width: 98vw;
     max-width: 64rem;
+    height: calc(100% - 3rem);
 
     display: block;
     flex-grow: 1;
@@ -434,8 +440,8 @@ dialog .info img.mimeicon{
     margin: auto;
 }
 
-dialog .preview .prev,
-dialog .preview .next{
+.preview .prev,
+.preview .next{
     position: absolute;
     top: 45vh;
     left: 0;
@@ -451,10 +457,10 @@ dialog .preview .next{
     color: var(--color-text);
     border: none;
     cursor: pointer;
-    opacity: 0.3;
+    opacity: 0.5;
 }
 
-dialog .preview .next{
+.preview .next{
     left: unset;
     right: 0;
 
@@ -462,15 +468,15 @@ dialog .preview .next{
     border-bottom-left-radius: 8px;
 }
 
-dialog .preview .prev{
+.preview .prev{
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
 }
 
-dialog .preview .prev:hover,
-dialog .preview .next:hover{
+.preview .prev:hover,
+.preview .next:hover{
     /*background-color: rgba(var(--color-background-intense), 0.6);*/
-    opacity: 0.7;
+    opacity: 0.9;
 }
 
 nav form {

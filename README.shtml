@@ -4,7 +4,7 @@
 </div>
 </div>
 <div class="d-block">
-    <div class="music-player" id="music-player">
+    <div class="music-player d-none" id="music-player">
         <div class="d-flex flex-nowrap gap">
             <img class="albumcover" id="albumcover" alt="cover">
             <div class="songinfoomini d-flex flex-column justify-content-center">

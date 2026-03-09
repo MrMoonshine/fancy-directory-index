@@ -93,6 +93,15 @@ class Preview{
         });*/
 
         // Buttons for next & prev item
+        this.prevbutton = document.querySelector("#preview-prev");
+        this.prevbutton.addEventListener("click", () => {
+            this.show_prev();
+        });
+
+        this.nextbutton = document.querySelector("#preview-next");
+        this.nextbutton.addEventListener("click", () => {
+            this.show_next();
+        });
         /*this.prevbutton = document.createElement("button");
         this.prevbutton.setAttribute("type", "button");
         this.prevbutton.classList.add("prev");
@@ -131,8 +140,8 @@ class Preview{
         });
         this.stop_video();
         // hide prev & next button in case no prev or next exists
-        /*dom_show(this.prevbutton, Boolean(this.file.prev));
-        dom_show(this.nextbutton, Boolean(this.file.next));*/
+        dom_show(this.prevbutton, Boolean(this.file.prev));
+        dom_show(this.nextbutton, Boolean(this.file.next));
 
         this.figcaption.innerText = file.getFileName();
         //this.mimeFigcaption.innerText = file.getFileName();
@@ -202,6 +211,7 @@ class Preview{
     }
 
     close(){
+        this.stop_video();
         Preview.radioGallery.click();
         document.querySelector("#dashboard").classList.add("wallpaper");
     }
@@ -215,12 +225,8 @@ class Preview{
     }
 
     stop_video() {
-        //this.previewVideo.remove();
-        //this.previewAudio.remove();
-        /*let sources = Array.from(this.previewVideo.getElementsByTagName("source"));
-        sources.forEach(source => {
-            source.remove();
-        });*/
+        this.previewVideo.pause();
+        this.previewVideo.removeAttribute("src");
     }
 
     text_preview_load(url) {

@@ -64,11 +64,12 @@
 				<video id="preview-fd-video" controls="" class="filedisplay d-none">
 					Your browser does not support this Video
 				</video>
-				<!--<pre id="preview-fd-text" class="filedisplay d-none"></pre>-->
 				<iframe id="preview-fd-text" src="" title="File Preview"></iframe> 
 				<img id="preview-fd-image" class="filedisplay d-none">
 				<embed id="preview-fd-pdf" class="pdf filedisplay d-none">
 				<figcaption id="preview-figcaption">FILENAME</figcaption>
+				<button id="preview-prev" class="prev">&#8249;</button>
+				<button id="preview-next" class="next">&#8250;</button>
 			</figure>
 			<hr class="d-mobile">
 			<div class="info">
@@ -121,7 +122,7 @@
 			</div>
 		</div>
 		<input id="radio-page-gallery" type="radio" name="dashboard-pages" value="0" autocomplete="off" checked>
-		<div class="dashboard-page">
+		<div class="dashboard-page gallery">
 			<div id="sortingButtons">
 				<div class="placeholder"></div>
 			</div>
