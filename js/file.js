@@ -6,6 +6,7 @@ class File {
         FOLDER: "folder",
         AUDIO: "audio",
         TEXT: "text",
+        WEB: "web",
         PDF: "pdf"
     };
 
@@ -66,9 +67,10 @@ class File {
                 this.filetype = File.Types.TEXT;
             } else if (originalicon[0].alt == "[IMG]" || filelink.href.toUpperCase().endsWith(".WEBP")) {
                 this.filetype = File.Types.IMAGE;
-            }
-            else if (originalicon[0].alt == "[PDF]") {
+            }else if (originalicon[0].alt == "[PDF]") {
                 this.filetype = File.Types.PDF;
+            }else if(File.matchMimetypes(filelink.href, ["html", "php"])){
+                this.filetype = File.Types.WEB;
             }
         } else {
             this.img.src = "";
@@ -95,6 +97,13 @@ class File {
                 a.appendChild(this.img);
                 a.classList.add("folder-link");
                 this.item.appendChild(a);
+                break;
+            case File.Types.WEB:
+                let a2 = document.createElement("a");
+                a2.href = filelink.href;
+                a2.appendChild(this.img);
+                a2.classList.add("folder-link");
+                this.item.appendChild(a2);
                 break;
             default:
                 this.item.appendChild(this.img);
@@ -189,6 +198,15 @@ class File {
 
     isDirectory() {
         return this.filetype == File.Types.FOLDER;
+    }
+
+    static matchMimetypes(filename, types){
+        types.forEach(element => {
+            if(filename.toUpperCase().endsWith("." + element.toUpperCase())){
+                return true;
+            }
+        });
+        return false;
     }
 
     static fetchFromHTML(table, viewer) {

@@ -1,53 +1,3 @@
-img, video{
-    max-width: 95vw;
-    max-height: 70vh;
-}
-
-.preview figure{
-    padding: 8px 4px;
-}
-
-figure .filedisplay{
-    height: 80vh;
-}
-
-figure img.filedisplay,
-figure video.filedisplay{
-    display: block;
-    margin: 0px auto;
-    max-width: calc(95vw - 8px - var(--preview-info-width));
-    border-radius: 8px;
-    object-fit: scale-down;
-}
-
-figure .pdf.filedisplay{
-    width: calc(95vw - 8px - var(--preview-info-width));
-}
-
-.preview audio.filedisplay{
-    display: block;
-    width: 100%;
-    border-top: 4px solid var(--color-main);
-    border-radius: 0px;
-}
-
-figure pre.filedisplay{
-    overflow-y: auto;
-    font-family: monospace;
-}
-
-figure video.filedisplay{
-    background-color: black;
-}
-
-figure audio.filedisplay{
-    height: unset;
-}
-
-figure figcaption{
-    padding: 4px 0px;
-}
-
 #filelist{
     display: block;
     margin: auto;
@@ -346,33 +296,113 @@ dialog .modal-body{
     grid-template-columns: auto var(--preview-info-width);
 }*/
 
-dialog .preview{
-    position: relative;
+.preview{
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    max-width: calc(100vw - var(--preview-info-width));
-
-    height: 100%;
-    overflow-y: auto;
+    justify-content: center;
+    gap: var(--gap-dashboard);
 }
 
-dialog .preview figure{
+.preview .icon{
+    max-width: var(--preview-info-width);
+}
+
+.preview figure{
     margin: auto;
     display: block;
 
     flex-grow: 1;
 }
 
-dialog figure img{
+.preview figcaption{
+    text-align: center;
+    overflow-x: hidden;
+    text-wrap: wrap;
+    word-break: break-word;
+}
+
+#preview-mimefigcaption{
+    max-width: calc(var(--preview-info-width) - 2rem);
+}
+
+.preview figure img{
     display: block;
     margin: auto;
-    
-    max-width: calc(100% - var(--gap-dashboard));
-    max-height: calc(100% - var(--gap-dashboard));
+    object-fit: scale-down;
+}
 
+#preview-figure img{
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain !important;
     cursor: zoom-in;
 }
+
+#preview-figure img,
+#preview-figure video{
+    max-height: calc(100vh - 64px - 4rem);
+}
+
+#preview-figure embed,
+#preview-figure iframe{
+    height: calc(100vh - 64px - 4rem);
+}
+
+#preview-figure video,
+#preview-figure iframe,
+#preview-figure img.zoom{
+    width: calc(100vw - 2*var(--gap-dashboard) - var(--preview-info-width));
+}
+
+#preview-figure img.zoom{
+    max-height: unset !important;
+    cursor: zoom-out;
+}
+
+#preview-figure video{
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+figure img.filedisplay,
+figure video.filedisplay{
+    display: block;
+    margin: 0px auto;
+    object-fit: scale-down;
+}
+
+figure .pdf.filedisplay{
+    width: calc(95vw - 8px - var(--preview-info-width));
+}
+
+.preview audio.filedisplay{
+    display: block;
+    width: 100%;
+    border-top: 4px solid var(--color-main);
+    border-radius: 0px;
+}
+
+figure pre.filedisplay{
+    overflow-y: auto;
+    font-family: monospace;
+}
+
+figure video.filedisplay{
+    background-color: black;
+}
+
+figure audio.filedisplay{
+    height: unset;
+}
+
+figure figcaption{
+    padding: 4px 0px;
+}
+
+iframe{
+    background-color: white;
+}
+
 
 .unset-max-height{
     max-height: unset !important;
@@ -491,16 +521,14 @@ nav form {
         overflow-y: auto;
     }
 
-    dialog .preview{
+    .preview{
         max-width: unset;
         height: unset;
 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        display: block;
     }
 
-    dialog .info{
+    .info{
         height: unset !important;
     }
 

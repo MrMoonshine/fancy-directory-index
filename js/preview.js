@@ -1,67 +1,40 @@
-class Preview extends Overlay {
+class Preview{
     static musicplayer = new MusicPlayer(document.getElementById("music-player"));
+    static radioPreview = document.querySelector("#radio-page-preview");
+    static radioGallery = document.querySelector("#radio-page-gallery");
 
     constructor() {
-        super();
         this.file = null;
 
-        /*this.domPreview = dom.querySelector(".preview") ?? dom;
-        this.domInfo = dom.querySelector(".info") ?? dom;*/
-        this.domPreview = document.createElement("div");
-        this.domPreview.classList.add("preview");
-        this.domInfo = document.createElement("div");
-        this.domInfo.classList.add("info");
-
-        this.figure = document.createElement("figure");
-        this.figcaption = document.createElement("figcaption");
+        this.figure = document.querySelector("#preview-figure");
+        this.figcaption = document.querySelector("#preview-figcaption");
 
         this.previews = [];
-        this.previewText = document.createElement("pre");
+        this.previewText = document.querySelector("#preview-fd-text");
         this.previews.push(this.previewText);
-        this.previewImage = new Image();
+        this.previewImage = document.querySelector("#preview-fd-image");
         this.previews.push(this.previewImage);
-        this.previewVideo = document.createElement("video");
+        this.previewVideo = document.querySelector("#preview-fd-video");
         this.previews.push(this.previewVideo);
         this.previewVideo.innerText = "Your browser does not support the video tag";
 
-        this.previewAudio = document.createElement("audio");
-        this.previewAudio.classList.add("filedisplay");
-        this.previewAudioThumbnail = new Image();
-        this.previews.push(this.previewAudioThumbnail);
-        //this.previewAudioThumbnail.classList.add("d-desktop");
-
-        this.previewPDF = document.createElement("embed");
-        this.previewPDF.classList.add("pdf");
+        this.previewPDF = document.querySelector("#preview-fd-pdf");
         this.previews.push(this.previewPDF);
-        this.previewNone = new Image();
-        this.previews.push(this.previewNone);
 
-        this.previews.forEach((preview) => {
-            this.figure.appendChild(preview);
-            preview.classList.add("filedisplay");
-        });
+        this.mimeIcon = document.querySelector("#preview-mimeicon");
+        this.mimeFigure = document.querySelector("#preview-mimefigure");
+        this.mimeFigcaption = document.querySelector("#preview-mimefigcaption");
 
-        this.domPreview.appendChild(this.previewAudio);
-        this.previews.push(this.previewAudio);
+        this.actionShare = document.querySelector("#preview-a-share");
+        this.actionCopy = document.querySelector("#preview-a-copy");
+        this.actionOpen = document.querySelector("#preview-a-open");
+        this.actionDownload = document.querySelector("#preview-a-download");
+        this.actionClose = document.querySelector("#preview-a-close");
 
-        this.figure.appendChild(this.figcaption);
-        this.domPreview.appendChild(this.figure);
+        /*this.actionOpen = Preview.action_create("Open in new tab", ICON_NEW_TAB);
+        this.actionOpen.setAttribute("target", "_blank");*/
 
-        this.mimeicon = new Image();
-        this.mimeicon.classList.add("mimeicon");
-        this.mimeicon.alt = "[IMG]";
-
-        this.actions = document.createElement("div");
-        this.actions.classList.add("actions");
-
-        let actiontitle = Preview.action_create("Actions:", "", "button");
-        actiontitle.setAttribute("disabled", true);
-        this.actions.appendChild(actiontitle);
-
-        this.actionnewtab = Preview.action_create("Open in new tab", ICON_NEW_TAB);
-        this.actionnewtab.setAttribute("target", "_blank");
-
-        this.actionShare = Preview.action_create("Share", ICON_SHARE, "button", () => {
+        this.actionShare.addEventListener("click", () => {
             try {
                 let url = new URL(window.location);
                 url.pathname += this.file.getFileName();
@@ -75,10 +48,8 @@ class Preview extends Overlay {
                 console.error(`Error: ${err}`);
             }
         });
-        this.actionShare.setAttribute("type", "button");
-        this.actions.appendChild(this.actionShare);
 
-        this.actionCopy = Preview.action_create("Copy Link", ICON_COPY, "button", () => {
+        this.actionCopy.addEventListener("click", () => {
             let copycontent = new URL(this.file.getFileLink());
             //copycontent.pathname += this.file.getFileLink();
             let promise = navigator.clipboard.writeText(copycontent);
@@ -98,37 +69,17 @@ class Preview extends Overlay {
                 console.log("Unable to copy to clipboard");
             })
         });
-        //this.actionCopy.setAttribute("type", "button");
-        this.actions.appendChild(this.actionCopy);
 
-        this.actions.appendChild(this.actionnewtab);
-        this.actiondownload = Preview.action_create("Download", ICON_DOWNLOAD);
-        this.actions.appendChild(this.actiondownload);
-
-        let closeactions = document.createElement("div");
-        closeactions.classList.add("actions");
-        //closeactions.classList.add("d-mobile");
-        closeactions.appendChild(Preview.action_create("Close", "", "button", () => {
+        this.actionClose.addEventListener("click", () => {
             this.close();
-        }));
-
-        let mimefigure = document.createElement("figure");
-        this.mimefigcaption = document.createElement("figcaption");
-        mimefigure.appendChild(this.mimeicon);
-        mimefigure.appendChild(this.mimefigcaption);
-        this.domInfo.appendChild(mimefigure);
-        this.domInfo.appendChild(this.actions);
-        let hr = document.createElement("hr");
-        hr.classList.add("d-mobile");
-        this.domInfo.appendChild(hr);
-        this.domInfo.appendChild(closeactions);
+        });
 
         // Captions
         let captions = [];
         for (let i = 0; i < 3; i++) {
             let caption = document.createElement("div");
             caption.classList.add("caption");
-            this.mimefigcaption.appendChild(caption);
+            this.mimeFigcaption.appendChild(caption);
             captions.push(caption);
         }
         this.captionFilename = captions[0];
@@ -136,13 +87,13 @@ class Preview extends Overlay {
         this.captionSize = captions[2];
 
         // Write Image DImensions
-        this.previewImage.addEventListener("load", () => {
+        /*this.previewImage.addEventListener("load", () => {
             this.captionDimensions.innerText = `${this.previewImage.naturalWidth}x${this.previewImage.naturalHeight}`;
             this.captionDimensions.classList.remove(CLASS_HIDDEN);
-        });
+        });*/
 
         // Buttons for next & prev item
-        this.prevbutton = document.createElement("button");
+        /*this.prevbutton = document.createElement("button");
         this.prevbutton.setAttribute("type", "button");
         this.prevbutton.classList.add("prev");
         this.prevbutton.classList.add("d-desktop");
@@ -160,15 +111,12 @@ class Preview extends Overlay {
         this.nextbutton.addEventListener("click", () => {
             this.show_next();
         });
-        this.domPreview.appendChild(this.nextbutton);
+        this.domPreview.appendChild(this.nextbutton);*/
 
         // Image zoom
         this.previewImage.addEventListener("click", () => {
             this.image_toggle_height_limit();
         });
-
-        this.content.appendChild(this.domPreview);
-        this.content.appendChild(this.domInfo);
     }
 
     show(file) {
@@ -183,17 +131,17 @@ class Preview extends Overlay {
         });
         this.stop_video();
         // hide prev & next button in case no prev or next exists
-        dom_show(this.prevbutton, Boolean(this.file.prev));
-        dom_show(this.nextbutton, Boolean(this.file.next));
+        /*dom_show(this.prevbutton, Boolean(this.file.prev));
+        dom_show(this.nextbutton, Boolean(this.file.next));*/
 
         this.figcaption.innerText = file.getFileName();
-        //this.mimefigcaption.innerText = file.getFileName();
+        //this.mimeFigcaption.innerText = file.getFileName();
         this.captionFilename.innerText = file.getFileName();
-        this.mimeicon.src = file.getMimeIcon();
+        this.mimeIcon.src = file.getMimeIcon();
 
-        this.actionnewtab.href = file.getFileName();
-        this.actiondownload.href = file.getFileName();
-        this.actiondownload.setAttribute("download", file.getFileName());
+        this.actionOpen.href = file.getFileName();
+        this.actionDownload.href = file.getFileName();
+        this.actionDownload.setAttribute("download", file.getFileName());
 
         /*if(navigator.canShare){
             console.log("Can share")
@@ -239,15 +187,23 @@ class Preview extends Overlay {
                 break;
             default:
                 dom_show(this.previewText, true);
-                this.previewText.innerText = "";
+                this.previewText.src = file.getFileLink();
+                /*this.previewText.innerText = "";
                 // Limit for filedisplay is 100K
                 if (file.getSize() <= 100 * Math.pow(10, 3)) {
                     this.text_preview_load(file.getFileLink());
-                }
+                }*/
                 break;
         }
-        this.title.innerText = file.getFileName();
-        this.overlay.showModal();
+        //this.title.innerText = file.getFileName();
+        
+        Preview.radioPreview.click();
+        document.querySelector("#dashboard").classList.remove("wallpaper");
+    }
+
+    close(){
+        Preview.radioGallery.click();
+        document.querySelector("#dashboard").classList.add("wallpaper");
     }
 
     show_prev() {
@@ -259,8 +215,8 @@ class Preview extends Overlay {
     }
 
     stop_video() {
-        this.previewVideo.remove();
-        this.previewAudio.remove();
+        //this.previewVideo.remove();
+        //this.previewAudio.remove();
         /*let sources = Array.from(this.previewVideo.getElementsByTagName("source"));
         sources.forEach(source => {
             source.remove();
@@ -282,7 +238,7 @@ class Preview extends Overlay {
     }
 
     image_toggle_height_limit() {
-        const CLASS_UNSET = "unset-max-height";
+        const CLASS_UNSET = "zoom";
         if (this.previewImage.classList.contains(CLASS_UNSET)) {
             this.previewImage.classList.remove(CLASS_UNSET);
         } else {

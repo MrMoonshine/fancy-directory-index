@@ -24,7 +24,7 @@
     --gap-dashboard: 8px;
     --corner-radius-dashboard: 1rem;
 
-    --preview-info-width: 20rem;
+    --preview-info-width: 15rem;
     --gallery-tiles-x: 5;
     --gallery-tiles-y: 4;
 }
@@ -83,7 +83,6 @@ body{
 }
 
 .dashboard{
-    background-image: var(--background-image);
     background-repeat: no-repeat;
     background-position: 50% 0%;
     background-attachment: fixed;
@@ -91,8 +90,11 @@ body{
 
     background-color: var(--color-background-2);
     border-radius: var(--corner-radius-dashboard);
-    padding: 8px 0px;
+    padding: 0px;
+}
 
+.dashboard.wallpaper{
+    background-image: var(--background-image);
 }
 
 .widget{
@@ -231,22 +233,13 @@ nav .masked-icon{
     mask-image: url("/fancy-directory-index/assets/view-list-icons.svg");
 }
 
-.icon-frame {
-    display: block;
-    width: 128px;
-    height: 128px;
-    padding: 8px;
-    border: 1px solid var(--color-border-petite);
-    border-radius: 10px;
-    /* Outer shadow */
-    box-shadow:
-        0 3px 8px rgba(0, 0, 0, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+.dashboard-page,
+input[name="dashboard-pages"]{
+    display: none;
 }
 
-.icon-frame img {
-    object-fit: cover;
-    border: 1px solid var(--color-border);
+input[name="dashboard-pages"]:checked + .dashboard-page{
+    display: unset;
 }
 
 .actions{

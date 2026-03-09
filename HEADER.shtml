@@ -56,48 +56,47 @@
 			<div class="info"></div>
 		</div>
 	</div>-->
-	<div class="dashboard">
-		<input id="radio-page-preview" type="radio" name="dashboard-pages" value="1">
+	<div id="dashboard" class="dashboard wallpaper">
+		<input id="radio-page-preview" type="radio" name="dashboard-pages" value="1" autocomplete="off">
 		<div class="dashboard-page">
-			<figure>
-				<video controls="" class="filedisplay d-none"></video>
-				<pre class="filedisplay d-none"></pre>
-				<img class="filedisplay d-none">
-				<img class="filedisplay d-none">
-				<embed class="pdf filedisplay d-none">
-				<img class="filedisplay d-none">
-				<figcaption>Russian Female Butt Slap Contest.mp4</figcaption>
+			<div class="preview">
+			<figure id="preview-figure">
+				<video id="preview-fd-video" controls="" class="filedisplay d-none">
+					Your browser does not support this Video
+				</video>
+				<!--<pre id="preview-fd-text" class="filedisplay d-none"></pre>-->
+				<iframe id="preview-fd-text" src="" title="File Preview"></iframe> 
+				<img id="preview-fd-image" class="filedisplay d-none">
+				<embed id="preview-fd-pdf" class="pdf filedisplay d-none">
+				<figcaption id="preview-figcaption">FILENAME</figcaption>
 			</figure>
-			<hr>
+			<hr class="d-mobile">
 			<div class="info">
 				<figure>
-					<img class="mimeicon" alt="[IMG]"
-						src="https://alpakagott/fdi-icon-theme/mimetypes/64/video-x-generic.svg">
-					<figcaption>
-						<div class="caption">Russian Female Butt Slap Contest.mp4</div>
-						<div class="caption"></div>
-						<div class="caption"></div>
+					<img id="preview-mimeicon" class="mimeicon" alt="[IMG]"
+						src="/fdi-icon-theme/mimetypes/64/video-x-generic.svg">
+					<figcaption id="preview-mimefigcaption">
+						<!--<div class="caption">FILENAME</div>-->
 					</figcaption>
 				</figure>
 				<div class="actions">
 					<button class="action" disabled="true">Actions:</button>
-					<button class="action d-flex justify-content-left gap d-none" type="button">
+					<button id="preview-a-share" class="action d-flex justify-content-left gap d-none" type="button">
 						<div class="sillouhette-img">
 							<div class="masked-icon"
 								style="mask-image: url(&quot;/fancy-directory-index/assets/share.svg&quot;);">
-
 							</div>
 						</div>
 						<div>Share</div>
 					</button>
-					<button class="action d-flex justify-content-left gap">
+					<button id="preview-a-copy" class="action d-flex justify-content-left gap">
 						<div class="sillouhette-img">
 							<div class="masked-icon"
 								style="mask-image: url(&quot;/fancy-directory-index/assets/edit-copy.svg&quot;);"></div>
 						</div>
 						<div>Copy Link</div>
 					</button>
-					<a class="action d-flex justify-content-left gap" target="_blank"
+					<a id="preview-a-open" class="action d-flex justify-content-left gap" target="_blank"
 						href="Russian Female Butt Slap Contest.mp4">
 						<div class="sillouhette-img">
 							<div class="masked-icon"
@@ -105,7 +104,7 @@
 						</div>
 						<div>Open in new tab</div>
 					</a>
-					<a class="action d-flex justify-content-left gap" href="Russian Female Butt Slap Contest.mp4"
+					<a id="preview-a-download" class="action d-flex justify-content-left gap" href="Russian Female Butt Slap Contest.mp4"
 						download="Russian Female Butt Slap Contest.mp4">
 						<div class="sillouhette-img">
 							<div class="masked-icon"
@@ -116,11 +115,12 @@
 				</div>
 				<hr class="d-mobile">
 				<div class="actions">
-					<button class="action">Close</button>
+					<button id="preview-a-close" class="action">Close</button>
 				</div>
 			</div>
+			</div>
 		</div>
-		<input id="radio-page-gallery" type="radio" name="dashboard-pages" value="0" checked>
+		<input id="radio-page-gallery" type="radio" name="dashboard-pages" value="0" autocomplete="off" checked>
 		<div class="dashboard-page">
 			<div id="sortingButtons">
 				<div class="placeholder"></div>

@@ -10,8 +10,9 @@ class Polaroid extends PaginationItem {
     // file is of type class File
     constructor(file) {
         let isDirectory = file.filetype == File.Types.FOLDER;
+        let isWebpage = file.filetype == File.Types.WEB;
         // Call PaginationItem constructer with base div
-        super(document.createElement(isDirectory ? "a" : "div"));
+        super(document.createElement(isDirectory || isWebpage ? "a" : "div"));
         this.item.classList.add("polaroid");
         this.loaded = false;
         //this.generateThumbnail = false;
@@ -150,6 +151,15 @@ class Polaroid extends PaginationItem {
                 iconDir.classList.add("icon");
                 // This css class allows the folders to be hue-rotated to the theme color
                 iconDir.classList.add("directory");
+                
+                this.iconContainer.appendChild(iconDir);
+                break;
+            case File.Types.WEB:
+                this.item.href = this.file.item.href
+                let iconWeb = new Image();
+                iconWeb.alt = this.file.img.alt ?? "";
+                iconWeb.src = this.file.img.src;
+                iconWeb.classList.add("icon");
                 
                 this.iconContainer.appendChild(iconDir);
                 break;
