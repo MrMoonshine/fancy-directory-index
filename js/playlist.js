@@ -81,15 +81,15 @@ class PlaylistSong {
         this.playbutton = document.createElement("div");
         this.playbutton.className = "playbutton-container";
 
-        let playbuttonSby = document.createElement("img");
+        /*let playbuttonSby = document.createElement("img");
         playbuttonSby.className = "playbutton standby my-auto";
         playbuttonSby.alt = "PLAY";
-        playbuttonSby.src = "/fancy-directory-index/assets/media-playback-playing-dull.png";
+        playbuttonSby.src = "/fdi-icon-theme/actions/22/media-playback-start.svg";
 
         let playbutton = document.createElement("img");
         playbutton.className = "playbutton active hue-rotate my-auto";
         playbutton.alt = ">";
-        playbutton.src = "/fancy-directory-index/assets/media-playback-playing.png";
+        playbutton.src = "/fancy-directory-index/assets/media-playback-playing.png";*/
 
         let thumbnail = new Image();
         thumbnail.className = "thumbnail";
@@ -111,6 +111,7 @@ class PlaylistSong {
 
         let title = document.createElement("div");
         title.className = "my-auto overflow-hidden text-nowrap";
+
         MusicPlayer.songTitleUIPrepare(song.song ?? "UNKNOWN", title);
 
         let dateadded = document.createElement("div");
@@ -118,9 +119,9 @@ class PlaylistSong {
         dateadded.innerText = song.timestamp;
 
         let optionsbuttonContainer = document.createElement("div");
-        optionsbuttonContainer.className = "position-relative";
+        optionsbuttonContainer.className = "position-relative d-flex";
         let optionsbutton = document.createElement("label");
-        optionsbutton.className = "gradient-dull playlist-song-options";
+        optionsbutton.className = "playlist-song-options my-auto";
         optionsbutton.innerHTML = "&mldr;";
         optionsbuttonContainer.appendChild(optionsbutton);
 
@@ -143,8 +144,8 @@ class PlaylistSong {
 
         optionContainer.appendChild(this.deleter);
 
-        this.playbutton.appendChild(playbutton);
-        this.playbutton.appendChild(playbuttonSby);
+        /*this.playbutton.appendChild(playbutton);
+        this.playbutton.appendChild(playbuttonSby);*/
         this.dom.appendChild(this.playbutton);
         this.dom.appendChild(thumbnail);
         this.dom.appendChild(title);

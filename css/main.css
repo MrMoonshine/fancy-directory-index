@@ -97,6 +97,10 @@ body{
     background-image: var(--background-image);
 }
 
+.text-background{
+    padding: 4px;
+}
+
 .widget{
     display: block;
     margin: auto;

@@ -24,7 +24,9 @@
     box-sizing: border-box;
     background-color: var(--color-main);
     color: var(--color-text-button);
-    padding: 2px;
+    border: none;
+    border-radius: 6px;
+    padding: 6px;
     cursor: pointer;
 
     white-space: nowrap;
@@ -41,6 +43,9 @@ a.btn:hover{
     text-decoration: underline;
 }
 
+.btn:hover{
+    filter: brightness(0.9);
+}
 .btn>img {
     max-height: 1em;
 }
