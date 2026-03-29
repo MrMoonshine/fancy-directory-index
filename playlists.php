@@ -28,6 +28,9 @@
             <h2 id="main-title" class="overflow-hidden my-auto">Playlsits</h2>
             <div class="d-flex gap">
                 <div class="nav-flex-column">
+                    <form method="POST" id="form-add" class="d-none">
+                        <input type="hidden" name="mode" value="add">
+                    </form>
                     <button id="button-add"  type="submit" form="form-add" class="btn btn-outline big">
                         <div class="masked-icon" style="mask-image: url('/fdi-icon-theme/actions/22/bookmark-new-list.svg')">
                         </div>
