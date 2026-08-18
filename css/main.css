@@ -243,6 +243,22 @@ nav .btn.big .masked-icon {
     height: 32px;
 }
 
+.directory-info{
+    background-color: var(--color-background-2);
+    border-radius: var(--corner-radius-dashboard);
+    padding: 0.5rem;
+}
+
+.directory-info .dirname{
+    font-size: large;
+}
+
+.directory-info img{
+    height: 3rem;
+    width: 3rem;
+    object-fit: scale-down;
+}
+
 code {
     color: var(--color-text-code);
 }
@@ -370,6 +386,10 @@ input[name="dashboard-pages"]:checked+.dashboard-page {
 
 .d-flex {
     display: flex;
+}
+
+.align-items-center{
+    align-items: center;
 }
 
 .text-center {

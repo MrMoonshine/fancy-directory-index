@@ -55,13 +55,21 @@
 			</div>
 		</div>
 	</nav>
-	<!--<div class="overlay d-none" id="overlay">
-		<button class="close d-desktop"></button>
-		<div class="grid">
-			<div class="preview"></div>
-			<div class="info"></div>
+	<div class="directory-info d-flex justify-content-between align-items-center">
+		<div class="d-flex justify-content-between align-items-center gap">
+			<img class="favicon unknown" id="directory-info-icon" alt="Icon" src="/favicon.ico">
+			<div>
+				<div class="dirname" id="directory-info-name"></div>
+				<div class="text-petite d-flex gap">
+					<div id="directory-info-count"></div>
+					<hr>
+					<div title="Non-recursive" id="directory-info-size"></div>
+				</div>
+			</div>
 		</div>
-	</div>-->
+		<div>
+		</div>
+	</div>
 	<div id="dashboard" class="dashboard wallpaper">
 		<input id="radio-page-preview" type="radio" name="dashboard-pages" value="1" autocomplete="off">
 		<div class="dashboard-page">

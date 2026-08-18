@@ -135,6 +135,46 @@ function image_fallback_favicon(evt) {
     img.src = "/favicon.ico";
 }
 
+function image_fallback_hide(evt) {
+    let img = evt.target;
+    if (img.classList.contains(CSS_IMAGE_UNKNOWN)) {
+        return;
+    }
+    img.classList.add(CSS_IMAGE_UNKNOWN);
+    img.classList.add(CLASS_HIDDEN);
+}
+
+function directory_index_size_to_B(value) {
+    try{
+        const match = String(value).trim().match(/^(\d+(?:\.\d+)?)\s*([KMGT]?)$/i);
+
+        if (!match) {
+            throw new Error(`Invalid byte value: ${value}`);
+        }
+
+        const number = parseFloat(match[1]);
+        const unit = match[2].toUpperCase();
+
+        const multipliers = {
+            "": 1,
+            K: 1024,
+            M: 1024 ** 2,
+            G: 1024 ** 3,
+            T: 1024 ** 4,
+        };
+
+        return number * multipliers[unit];
+    } catch (error) {
+        return 0;
+    }
+}
+
+function bytes_human_radable(bytes){
+    var s = ['bytes', 'kiB', 'MiB', 'GiB', 'TiB', 'PiB'];
+    var e = Math.floor(Math.log(bytes) / Math.log(1024));
+    return (bytes / Math.pow(1024, e)).toFixed(2) + " " + s[e];
+}
+
 function set_theme_from_cookies() {
     let root = document.documentElement;
     root.style.setProperty("--gallery-tiles-x", THEME_TILES_X);

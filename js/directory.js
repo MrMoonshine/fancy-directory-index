@@ -1,101 +1,3 @@
-/*
-function set_theme_from_cookies() {
-    let root = document.documentElement;
-    root.style.setProperty("--gallery-tiles-x", THEME_TILES_X);
-    root.style.setProperty("--gallery-tiles-y", THEME_TILES_Y);
-
-    let theme_modes_all = ["default", "light", "dark"];
-    let basic_cookies = ["color_main_default", "color_main_dark", "color_main_light"];
-
-    let wallpaper_position = localStorage.getItem("wallpaper_position");
-    if (wallpaper_position != null) {
-        document.getElementById("dashboard").style.backgroundPosition = `${wallpaper_position}`;
-    }
-
-    basic_cookies.forEach(basic_cookie => {
-        let css_var = `--${basic_cookie.replaceAll("_", "-")}`;
-        switch (basic_cookie) {
-            case "color_main":
-                css_var += "-default";
-                break;
-            default:
-                break;
-        }
-        let ci = localStorage.getItem(basic_cookie);
-        console.log(`${basic_cookie} -> ${css_var}`);
-        console.log(ci);
-        if (ci == null) {
-            return;
-        }
-        root.style.setProperty(css_var, ci);
-        if (!css_var.includes("color")) {
-            return;
-        }
-        theme_modes_all.forEach(theme_mode => {
-            if (!css_var.includes(theme_mode)) {
-                return;
-            }
-            hsv = color_hex_to_hsv(ci);
-            root.style.setProperty(`--hue-rotate-directory-${theme_mode}`, `${hsv[0] + ICON_DIR_HUE_OFFSET}deg`);
-        });
-    });
-
-    let theme_modes = ["light", "dark"];
-    let orientation_modes = ["", "landscape", "portrait"];
-    let js_css_vars = [""];
-
-    theme_modes.forEach(tmode => {
-        orientation_modes.forEach(omode => {
-            if (omode.length > 0) {
-                js_css_vars.push([tmode, omode].join("_"));
-                return;
-            }
-            js_css_vars.push(tmode);
-        });
-    });
-
-    js_css_vars.forEach(js_css_var => {
-        let cookie_var_name_arr = ["wallpaper"];
-        let css_var_name_arr = ["wallpaper"];
-        if (js_css_var.length > 0) {
-            css_var_name_arr.push(js_css_var.replaceAll("_", "-"));
-            cookie_var_name_arr.push(js_css_var);
-        }
-        let css_var = "--" + css_var_name_arr.join("-");
-        let cookie = cookie_var_name_arr.join("_");
-
-        let bg = localStorage.getItem(cookie);
-        if (bg != null) {
-            console.log(`${cookie} -> ${css_var}`);
-            console.log(bg);
-            root.style.setProperty(css_var, `url("/theme/wallpapers/${bg}")`);
-        }
-    });
-
-    root.style.setProperty("--color-autoshadow", `var(--color-autoshadow-themed)`);
-
-    let favicon = document.getElementById("pageicon");
-    if (!favicon) {
-        return;
-    }
-
-    favicon.addEventListener("error", () => {
-        if (favicon.classList.contains(CLASS_UNKNOWN)) {
-            return;
-        }
-        favicon.classList.add(CLASS_UNKNOWN);
-
-        let src = localStorage.getItem(COOKIE_PAGEICON) ?? "";
-        console.log(src);
-        if (src.length < 1) {
-            src = "/favicon.ico";
-        }
-        favicon.src = src;
-    });
-    favicon.src = ".directory";
-}
-*/
-
 class DirectoryLinks {
     constructor(dom) {
         this.dom = dom;
@@ -105,9 +7,16 @@ class DirectoryLinks {
         this.addLink(fullink, "Home");
 
         let items = this.url.pathname.split("/");
+    
+        let dir_info_name = document.getElementById("directory-info-name");
+
         while (items.length > 0) {
             let item = items.shift();
             if (item.length < 1) {
+                continue;
+            }
+            if(items.length == 1){
+                dir_info_name.innerHTML = decodeURI(item);
                 continue;
             }
 
@@ -121,6 +30,10 @@ class DirectoryLinks {
         }
         //console.log(this.url.pathname);
         //console.log(items);
+
+        let dir_info_icon = document.getElementById("directory-info-icon");
+        dir_info_icon.addEventListener("error", image_fallback_hide);
+        dir_info_icon.src = ".directory";
     }
 
     addLink(link, name) {
@@ -184,8 +97,11 @@ class DirectoryIndex {
         this.filelist.appendChild(container);
         container.classList.add("container");
 
+        let totalSize = 0;
+
         this.files.forEach(element => {
             container.appendChild(element.item);
+            totalSize += directory_index_size_to_B(element.size.innerText);
         });
 
         var searches = document.querySelectorAll("input[type='search']");
@@ -201,6 +117,12 @@ class DirectoryIndex {
                 });
             });
         });
+
+        let dir_info_count = document.getElementById("directory-info-count");
+        dir_info_count.innerText = `${this.files.length - 1} Files`; // -1 because of ..
+
+        let dir_info_size = document.getElementById("directory-info-size");
+        dir_info_size.innerText = `${bytes_human_radable(totalSize)}`; // -1 because of ..
     }
 
     createGalery() {
