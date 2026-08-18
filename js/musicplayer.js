@@ -753,7 +753,7 @@ class SongQueue {
         for (let i = 0; i < Math.min((this.songs ?? []).length, SongQueue.MAX_DISPLAY); i++) {
             const song = this.songs[i];
             let songitem = document.createElement("div");
-            songitem.className = "d-flex gap";
+            songitem.className = "d-flex gap queue-song-item";
 
             let icon = new Image();
             icon.className = "thumbnail";

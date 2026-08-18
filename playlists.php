@@ -132,6 +132,7 @@
             </div>
             <div id="next-up-space">
                 <h3>Next from: <i class="playlist-title-display">xxx</i></h3>
+                <hr>
             </div>
         </div>
     </article>

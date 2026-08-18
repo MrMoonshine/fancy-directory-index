@@ -171,6 +171,9 @@ function directory_index_size_to_B(value) {
 
 function bytes_human_radable(bytes){
     var s = ['bytes', 'kiB', 'MiB', 'GiB', 'TiB', 'PiB'];
+    if(bytes == 0){
+        return `0 ${s[0]}`;
+    }
     var e = Math.floor(Math.log(bytes) / Math.log(1024));
     return (bytes / Math.pow(1024, e)).toFixed(2) + " " + s[e];
 }
