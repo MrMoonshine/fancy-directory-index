@@ -1,5 +1,9 @@
 :root {
-    --color-main: teal;
+    --color-main-default: #008080;
+    --color-main-dark: var(--color-main-default);
+    --color-main-light: var(--color-main-default);
+    --color-main: var(--color-main-default);
+
     --color-background-1: #323232;
     --color-background-2: #222222;
     --color-background-3: #424242;
@@ -13,10 +17,13 @@
     --color-border: #4b4b4b;
     --color-border-petite: #0f0f0f;
 
-    --hue-rotate-directory: 160deg;
+    --hue-rotate-directory-default: 160deg;
+    --hue-rotate-directory-dark: var(--hue-rotate-directory-default);
+    --hue-rotate-directory-liht: var(--hue-rotate-directory-default);
+    --hue-rotate-directory: var(--hue-rotate-directory-default);
 
     --background-image: none;
-    
+
     --color-ok: #27ae60;
     --color-warning: orange;
     --color-critical: #da4453;
@@ -27,30 +34,70 @@
     --preview-info-width: 15rem;
     --gallery-tiles-x: 5;
     --gallery-tiles-y: 4;
+
+    --wallpaper: none;
+
+    --wallpaper-dark: var(--wallpaper);
+    --wallpaper-light: var(--wallpaper);
+
+    --wallpaper-dark-landscape: var(--wallpaper-dark);
+    --wallpaper-dark-portrait: var(--wallpaper-dark);
+    --wallpaper-light-landscape: var(--wallpaper-light);
+    --wallpaper-light-portrait: var(--wallpaper-light);
+}
+
+@media (orientation: landscape) {
+    .dashboard.wallpaper {
+        background-image: var(--wallpaper-dark-landscape);
+    }
+}
+
+@media (orientation: portrait) {
+    .dashboard.wallpaper {
+        background-image: var(--wallpaper-dark-portrait);
+    }
 }
 
 /* Light mode */
 @media (prefers-color-scheme: light) {
     :root {
+        --color-main: var(--color-main-light);
+        --hue-rotate-directory: var(--hue-rotate-directory-light);
+
         --color-background-1: #cfcfcf;
         --color-background-2: #dfdfdf;
         --color-background-3: #afafaf;
         --color-background-intense: white;
-        --color-background-translucent: rgba(223,223,223,.7);
+        --color-background-translucent: rgba(223, 223, 223, .7);
         --color-text-button: white;
         --color-text: black;
         --color-text-petite: rgb(53, 53, 53);
         --color-text-code: purple;
-        --color-autoshadow-themed: rgba(255,255,255, 0.7);
+        --color-autoshadow-themed: rgba(255, 255, 255, 0.7);
 
         --color-border: #4b4b4b;
         --color-border-petite: #bbb;
+    }
+
+    @media (orientation: landscape) {
+        .dashboard.wallpaper {
+            background-image: var(--wallpaper-light-landscape);
+        }
+    }
+
+    @media (orientation: portrait) {
+        .dashboard.wallpaper {
+            background-image: var(--wallpaper-light-portrait);
+        }
     }
 }
 
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
     :root {
+        --color-main: var(--color-main-dark);
+        --hue-rotate-directory: var(--hue-rotate-directory-dark);
+
         --color-background-1: #323232;
         --color-background-2: #222222;
         --color-background-intense: black;
@@ -62,7 +109,7 @@
     }
 }
 
-body{
+body {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -78,11 +125,11 @@ body{
     height: 100vh;
     box-sizing: border-box;
 
-    font-family:Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     overflow-y: hidden;
 }
 
-.dashboard{
+.dashboard {
     background-repeat: no-repeat;
     background-position: 50% 0%;
     background-attachment: fixed;
@@ -93,15 +140,11 @@ body{
     padding: 0px;
 }
 
-.dashboard.wallpaper{
-    background-image: var(--background-image);
-}
-
-.text-background{
+.text-background {
     padding: 4px;
 }
 
-.widget{
+.widget {
     display: block;
     margin: auto;
     max-height: calc(100vh - 56px - (3rem));
@@ -117,14 +160,14 @@ h1 {
 nav {
     height: 56px;
     padding: 0px;
-    
+
     display: flex;
     flex-wrap: wrap;
-    justify-content:start;
+    justify-content: start;
     position: relative;
 }
 
-nav div.navbar-collapse{
+nav div.navbar-collapse {
     min-width: 60%;
     display: flex;
     flex-wrap: nowrap;
@@ -133,61 +176,61 @@ nav div.navbar-collapse{
     gap: 1rem;
 }
 
-nav ~ button {
+nav~button {
     display: none;
 }
 
-nav ul{
+nav ul {
     list-style: none;
     padding: 0;
 }
 
-nav ul li{
+nav ul li {
     display: inline;
     padding: 0.25rem 0.5rem;
 }
 
-nav a{
+nav a {
     color: var(--color-text-button);
     background-color: transparent;
     padding: 0.3rem;
     border-radius: 0.3rem;
 }
 
-nav a img{
+nav a img {
     height: 1rem;
     width: 1rem;
     object-fit: scale-down;
 }
 
-nav form{
+nav form {
     flex-wrap: nowrap;
 }
 
 nav form input,
 nav form button,
-nav form .btn{
+nav form .btn {
     margin: 0.5rem 0.2rem;
 }
 
-nav img.favicon{
+nav img.favicon {
     height: 32px;
     max-width: 12em;
 }
 
 .flex-vertical-center,
-.nav-flex-column{
+.nav-flex-column {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     justify-content: space-around;
 }
 
-.nav-flex-column{
+.nav-flex-column {
     height: 56px;
 }
 
-nav .btn.big{
+nav .btn.big {
     height: 32px;
     width: 32px;
     padding: 4px;
@@ -195,78 +238,78 @@ nav .btn.big{
 }
 
 nav .btn.big img,
-nav .btn.big .masked-icon{
+nav .btn.big .masked-icon {
     width: 32px;
     height: 32px;
 }
 
-code{
+code {
     color: var(--color-text-code);
 }
 
-img.UNKNOWN{
+img.UNKNOWN {
     filter: grayscale(1);
 }
 
-.dirpath{
+.dirpath {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
     /*margin: calc((56px - 1rem)/2) 0px;*/
 }
 
-.dirpath a{
+.dirpath a {
     display: flex;
     padding: 0px;
     height: 1rem;
 }
 
-.dirpath .slash{
+.dirpath .slash {
     color: grey;
 }
 
-nav .masked-icon{
+nav .masked-icon {
     background-color: var(--color-text-button);
 }
 
-#masked-icon-details{
+#masked-icon-details {
     mask-image: url("/fancy-directory-index/assets/view-list-details.svg");
 }
 
-#masked-icon-gallery{
+#masked-icon-gallery {
     mask-image: url("/fancy-directory-index/assets/view-list-icons.svg");
 }
 
 .dashboard-page,
-input[name="dashboard-pages"]{
+input[name="dashboard-pages"] {
     display: none;
 }
 
-input[name="dashboard-pages"]:checked + .dashboard-page{
+input[name="dashboard-pages"]:checked+.dashboard-page {
     display: unset;
 }
 
-.dashboard-page.gallery{
+.dashboard-page.gallery {
     height: 100%;
 }
 
-.actions{
+.actions {
     display: block;
     padding: 12px;
 }
 
-.action:first-child{
+.action:first-child {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
 }
 
-.action:last-child{
+.action:last-child {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     border-bottom: 2px solid var(--color-text);
 }
 
-.action{
+.action {
     display: flex;
     width: 100%;
     padding: 12px 24px;
@@ -282,157 +325,157 @@ input[name="dashboard-pages"]:checked + .dashboard-page{
     text-decoration: none;
 }
 
-.action:not([disabled]):hover{
+.action:not([disabled]):hover {
     background-color: var(--color-background-1);
 }
 
-.action:disabled{
+.action:disabled {
     text-align: left;
     font-weight: bold;
     cursor: unset;
 }
 
-.action img{
+.action img {
     height: 1rem;
     width: 1rem;
     object-fit: scale-down;
 }
 
-.action .sillouhette-img{
+.action .sillouhette-img {
     width: 24px;
     height: 24px;
 }
 
-.action .sillouhette-img .masked-icon{
+.action .sillouhette-img .masked-icon {
     background-color: var(--color-text);
     width: 24px;
     height: 24px;
     mask-size: 100%, 100%, contain;
     mask-position: center;
-    mask-repeat: no-repeat; 
+    mask-repeat: no-repeat;
 }
 
-.gap{
+.gap {
     gap: var(--gap-dashboard)
 }
 
-.d-block{
+.d-block {
     display: block !important;
 }
 
 .d-none,
-.d-mobile{
+.d-mobile {
     display: none !important;
 }
 
-.d-flex{
+.d-flex {
     display: flex;
 }
 
-.text-center{
+.text-center {
     text-align: center;
 }
 
-.text-small{
+.text-small {
     font-size: small;
 }
 
-.text-petite{
+.text-petite {
     color: var(--color-text-petite);
 }
 
-.text-bold{
+.text-bold {
     font-weight: bold;
 }
 
-.text-critical{
+.text-critical {
     color: var(--color-critical);
 }
 
-.text-nowrap{
+.text-nowrap {
     text-wrap: nowrap;
 }
 
-.justify-content-start{
+.justify-content-start {
     justify-content: start;
 }
 
-.justify-content-end{
+.justify-content-end {
     justify-content: end;
 }
 
-.justify-content-center{
+.justify-content-center {
     justify-content: center;
 }
 
-.justify-content-between{
+.justify-content-between {
     justify-content: space-between;
 }
 
-.justify-content-around{
+.justify-content-around {
     justify-content: space-around;
 }
 
-.flex-column{
+.flex-column {
     flex-direction: column;
 }
 
-.flex-nowrap{
+.flex-nowrap {
     flex-wrap: nowrap;
 }
 
-.flex-grow-1{
+.flex-grow-1 {
     flex-grow: 1;
 }
 
-.cursor-pointer{
+.cursor-pointer {
     cursor: pointer;
 }
 
-.position-relative{
+.position-relative {
     position: relative;
 }
 
-.position-absolute{
+.position-absolute {
     position: absolute;
 }
 
-.overflow-hidden{
+.overflow-hidden {
     overflow: hidden;
 }
 
-.overflow-y-auto{
+.overflow-y-auto {
     overflow-y: auto;
 }
 
-.mx-auto{
+.mx-auto {
     margin-left: auto;
     margin-right: auto;
 }
 
-.my-auto{
+.my-auto {
     margin-top: auto;
     margin-bottom: auto;
 }
 
-.h-100{
+.h-100 {
     height: 100%;
 }
 
-.w-100{
+.w-100 {
     width: 100%;
 }
 
-.w-unset{
+.w-unset {
     width: unset !important;
 }
 
-@media only screen and (max-width: 700px){
-    :root{
+@media only screen and (max-width: 700px) {
+    :root {
         --gap-dashboard: 4px;
     }
 
-    body{
+    body {
         height: 100dvh;
         padding: 4px;
     }

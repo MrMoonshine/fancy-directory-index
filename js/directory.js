@@ -1,20 +1,78 @@
-const THEME_TILES_X = localStorage.getItem(COOKIE_HORIZONTAL) ?? 5;
-const THEME_TILES_Y = localStorage.getItem(COOKIE_VERTICAL) ?? 4;
-
+/*
 function set_theme_from_cookies() {
     let root = document.documentElement;
-    const colorMain = localStorage.getItem(COOKIE_COLOR);
-    root.style.setProperty("--color-main", colorMain ?? "teal");
     root.style.setProperty("--gallery-tiles-x", THEME_TILES_X);
     root.style.setProperty("--gallery-tiles-y", THEME_TILES_Y);
-    let bg = localStorage.getItem(COOKIE_BACKGROUND) ?? "none";
-    if (bg.length < 1) {
-        bg = "none";
+
+    let theme_modes_all = ["default", "light", "dark"];
+    let basic_cookies = ["color_main_default", "color_main_dark", "color_main_light"];
+
+    let wallpaper_position = localStorage.getItem("wallpaper_position");
+    if (wallpaper_position != null) {
+        document.getElementById("dashboard").style.backgroundPosition = `${wallpaper_position}`;
     }
-    let backgroundAvailable = bg != "none";
-    root.style.setProperty("--background-image", backgroundAvailable ? `url("${bg}")` : bg);
-    root.style.setProperty("--color-autoshadow", backgroundAvailable ? `var(--color-autoshadow-themed)` : "transparent");
-    //root.style.setProperty("--color-autoshadow-text", backgroundAvailable ? `white` : "inherit");
+
+    basic_cookies.forEach(basic_cookie => {
+        let css_var = `--${basic_cookie.replaceAll("_", "-")}`;
+        switch (basic_cookie) {
+            case "color_main":
+                css_var += "-default";
+                break;
+            default:
+                break;
+        }
+        let ci = localStorage.getItem(basic_cookie);
+        console.log(`${basic_cookie} -> ${css_var}`);
+        console.log(ci);
+        if (ci == null) {
+            return;
+        }
+        root.style.setProperty(css_var, ci);
+        if (!css_var.includes("color")) {
+            return;
+        }
+        theme_modes_all.forEach(theme_mode => {
+            if (!css_var.includes(theme_mode)) {
+                return;
+            }
+            hsv = color_hex_to_hsv(ci);
+            root.style.setProperty(`--hue-rotate-directory-${theme_mode}`, `${hsv[0] + ICON_DIR_HUE_OFFSET}deg`);
+        });
+    });
+
+    let theme_modes = ["light", "dark"];
+    let orientation_modes = ["", "landscape", "portrait"];
+    let js_css_vars = [""];
+
+    theme_modes.forEach(tmode => {
+        orientation_modes.forEach(omode => {
+            if (omode.length > 0) {
+                js_css_vars.push([tmode, omode].join("_"));
+                return;
+            }
+            js_css_vars.push(tmode);
+        });
+    });
+
+    js_css_vars.forEach(js_css_var => {
+        let cookie_var_name_arr = ["wallpaper"];
+        let css_var_name_arr = ["wallpaper"];
+        if (js_css_var.length > 0) {
+            css_var_name_arr.push(js_css_var.replaceAll("_", "-"));
+            cookie_var_name_arr.push(js_css_var);
+        }
+        let css_var = "--" + css_var_name_arr.join("-");
+        let cookie = cookie_var_name_arr.join("_");
+
+        let bg = localStorage.getItem(cookie);
+        if (bg != null) {
+            console.log(`${cookie} -> ${css_var}`);
+            console.log(bg);
+            root.style.setProperty(css_var, `url("/theme/wallpapers/${bg}")`);
+        }
+    });
+
+    root.style.setProperty("--color-autoshadow", `var(--color-autoshadow-themed)`);
 
     let favicon = document.getElementById("pageicon");
     if (!favicon) {
@@ -35,14 +93,8 @@ function set_theme_from_cookies() {
         favicon.src = src;
     });
     favicon.src = ".directory";
-
-    // hue rotation for directories:
-    if(!colorMain){
-        return;
-    }
-    hsv = color_hex_to_hsv(colorMain);
-    root.style.setProperty("--hue-rotate-directory", `${hsv[0] + ICON_DIR_HUE_OFFSET}deg`);
 }
+*/
 
 class DirectoryLinks {
     constructor(dom) {
@@ -180,6 +232,15 @@ class DirectoryIndex {
             elem => {
                 fbox.appendChild(elem.dom());
                 //elem.show();
+
+                if (elem.file.filetype == File.Types.AUDIO) {
+                    elem.playlistButton.addEventListener("click", (event) => {
+                        console.log("Bookmark button oida!");
+                        if (event && event.stopPropagation) event.stopPropagation();
+
+                        Preview.musicplayer.playlistMenu.show(elem.file.getFileName());
+                    });
+                }
             }
         );
         gallery.append(fbox);
@@ -268,7 +329,7 @@ class DirectoryIndex {
         }
         //console.log(Thumbnail.TODO.length + " Thumbnails left to generate...");
         // Set Todo max. Length as max on the bar
-        if(Thumbnail.TODO.length > Thumbnail.PROGRESS_BAR.getAttribute("max")){
+        if (Thumbnail.TODO.length > Thumbnail.PROGRESS_BAR.getAttribute("max")) {
             Thumbnail.PROGRESS_BAR.setAttribute("max", Thumbnail.TODO.length);
         }
         Thumbnail.PROGRESS_BAR.setAttribute("value", Thumbnail.PROGRESS_BAR.getAttribute("max") - Thumbnail.TODO.length);
@@ -281,10 +342,10 @@ class DirectoryIndex {
         );
         setTimeout(() => {
             element.createThumbnail(Thumbnail.DIRECTORY, () => {
-            DirectoryIndex.thumbnailHelper();
-        })
+                DirectoryIndex.thumbnailHelper();
+            })
         }, THUMBNAIL_CREATE_RATE_LIMIT);
-        
+
     }
 
     static matchFilename(fn1, fn2) {

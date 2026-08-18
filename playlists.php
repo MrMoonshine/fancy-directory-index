@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="de"
-    style="--color-main: #780c45; --color-background-translucent: color-mix(in srgb, var(--color-background-2) 70%, transparent);">
-
+<html lang="de">
 <head>
     <meta charset="utf-8">
     <meta lang="de_AT">
@@ -45,7 +43,7 @@
             </div>
         </div>
     </nav>
-    <article class="dashboard wallpaper">
+    <article id="dashboard" class="dashboard wallpaper">
         <input type="checkbox" id="next-up-space-show" class="d-none" autocomplete="off" checked>
         <div class="d-flex gap justify-content-around">
             <div id="playlist-player-content" class="flex-grow-1">

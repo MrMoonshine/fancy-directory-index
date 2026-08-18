@@ -1,4 +1,7 @@
+/*var toast = new Toast()*/
+
 const APACHE_ALIAS = "/fancy-directory-index/";
+const APACHE_ICON_ALIAS = "/fdi-icon-theme/";
 const API_ENDPOINT = APACHE_ALIAS + "settings/api.php";
 
 const THUMBNAIL_ENABLE = true;
@@ -12,6 +15,7 @@ const ICON_COPY_LINK = APACHE_ALIAS + "assets/edit-copy.svg";
 const ICON_DOWNLOAD = APACHE_ALIAS + "assets/download.svg";
 const ICON_SHARE = APACHE_ALIAS + "assets/share.svg";
 const ICON_COPY = APACHE_ALIAS + "assets/edit-copy.svg";
+const ICON_ADD_TO_PLAYLIST = APACHE_ICON_ALIAS + "actions/22/bookmarks.svg";
 
 const ICON_DIR_HUE_OFFSET = 160; // For blue folders from breeze theme
 
@@ -23,6 +27,9 @@ const COOKIE_VERTICAL = "fdi_tile_vertical";
 const COOKIE_GALLERY_MODE = "fdi_viewmode";
 
 const CSS_IMAGE_UNKNOWN = "UNKNOWN";
+
+const THEME_TILES_X = localStorage.getItem(COOKIE_HORIZONTAL) ?? 5;
+const THEME_TILES_Y = localStorage.getItem(COOKIE_VERTICAL) ?? 4;
 
 function dom_show(dom, shown) {
     if (shown) {
@@ -58,6 +65,7 @@ function fancy_range_sliders() {
  * @returns {[number, number, number]} [hue 0–360, saturation 0–100, value 0–100]
  */
 function color_hex_to_hsv(hex) {
+    try {
     // Remove # and normalize short hex
     hex = hex.replace(/^#/, '').toLowerCase();
     if (hex.length === 3) {
@@ -106,6 +114,11 @@ function color_hex_to_hsv(hex) {
     }
 
     return [Math.round(h), s, v];
+
+    } catch (error) {
+        console.warn(`Failed to convert "${hex}" into HSV`);
+        return [180, 100, 25]; // Teal
+    }
 }
 
 function thumbnail_full_path(thumbnail) {
@@ -120,6 +133,102 @@ function image_fallback_favicon(evt) {
     img.classList.add(CSS_IMAGE_UNKNOWN);
 
     img.src = "/favicon.ico";
+}
+
+function set_theme_from_cookies() {
+    let root = document.documentElement;
+    root.style.setProperty("--gallery-tiles-x", THEME_TILES_X);
+    root.style.setProperty("--gallery-tiles-y", THEME_TILES_Y);
+
+    let theme_modes_all = ["default", "light", "dark"];
+    let basic_cookies = ["color_main_default", "color_main_dark", "color_main_light"];
+
+    let wallpaper_position = localStorage.getItem("wallpaper_position");
+    if (wallpaper_position != null) {
+        document.getElementById("dashboard").style.backgroundPosition = `${wallpaper_position}`;
+    }
+
+    basic_cookies.forEach(basic_cookie => {
+        let css_var = `--${basic_cookie.replaceAll("_", "-")}`;
+        switch (basic_cookie) {
+            case "color_main":
+                css_var += "-default";
+                break;
+            default:
+                break;
+        }
+        let ci = localStorage.getItem(basic_cookie);
+        console.log(`${basic_cookie} -> ${css_var}`);
+        console.log(ci);
+        if (ci == null) {
+            return;
+        }
+        root.style.setProperty(css_var, ci);
+        if (!css_var.includes("color")) {
+            return;
+        }
+        theme_modes_all.forEach(theme_mode => {
+            if (!css_var.includes(theme_mode)) {
+                return;
+            }
+            hsv = color_hex_to_hsv(ci);
+            root.style.setProperty(`--hue-rotate-directory-${theme_mode}`, `${hsv[0] + ICON_DIR_HUE_OFFSET}deg`);
+        });
+    });
+
+    let theme_modes = ["light", "dark"];
+    let orientation_modes = ["", "landscape", "portrait"];
+    let js_css_vars = [""];
+
+    theme_modes.forEach(tmode => {
+        orientation_modes.forEach(omode => {
+            if (omode.length > 0) {
+                js_css_vars.push([tmode, omode].join("_"));
+                return;
+            }
+            js_css_vars.push(tmode);
+        });
+    });
+
+    js_css_vars.forEach(js_css_var => {
+        let cookie_var_name_arr = ["wallpaper"];
+        let css_var_name_arr = ["wallpaper"];
+        if (js_css_var.length > 0) {
+            css_var_name_arr.push(js_css_var.replaceAll("_", "-"));
+            cookie_var_name_arr.push(js_css_var);
+        }
+        let css_var = "--" + css_var_name_arr.join("-");
+        let cookie = cookie_var_name_arr.join("_");
+
+        let bg = localStorage.getItem(cookie);
+        if (bg != null) {
+            console.log(`${cookie} -> ${css_var}`);
+            console.log(bg);
+            root.style.setProperty(css_var, `url("/theme/wallpapers/${bg}")`);
+        }
+    });
+
+    root.style.setProperty("--color-autoshadow", `var(--color-autoshadow-themed)`);
+
+    let favicon = document.getElementById("pageicon");
+    if (!favicon) {
+        return;
+    }
+
+    favicon.addEventListener("error", () => {
+        if (favicon.classList.contains(CLASS_UNKNOWN)) {
+            return;
+        }
+        favicon.classList.add(CLASS_UNKNOWN);
+
+        let src = localStorage.getItem(COOKIE_PAGEICON) ?? "";
+        console.log(src);
+        if (src.length < 1) {
+            src = "/favicon.ico";
+        }
+        favicon.src = src;
+    });
+    favicon.src = ".directory";
 }
 
 class DirectoryView {

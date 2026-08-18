@@ -1,5 +1,7 @@
 const POLAROID_COPY_IMAGE = ICON_COPY_LINK;
 const POLAROID_NEW_TAB_IMAGE = ICON_NEW_TAB;
+const POLAROID_PLAYLIST_IMAGE = ICON_ADD_TO_PLAYLIST;
+
 try {
     var POLAROID_TOAST = new Toast();
 } catch (error) {
@@ -34,11 +36,19 @@ class Polaroid extends PaginationItem {
         let copybutton = document.createElement("button");
         copybutton.classList.add("copy");
 
+        this.playlistButton = document.createElement("button");
+        this.playlistButton.classList.add("playlist-add");
+
         if (showbuttons) {
             let cpyimg = new Image();
             cpyimg.src = POLAROID_COPY_IMAGE;
             cpyimg.alt = "copy";
             copybutton.appendChild(cpyimg);
+
+            let plimg = new Image();
+            plimg.src = POLAROID_PLAYLIST_IMAGE;
+            plimg.alt = "Playlist-Add";
+            this.playlistButton.appendChild(plimg);
 
             copybutton.addEventListener("click", (event) => {
                 // prevent overlay event
@@ -84,6 +94,11 @@ class Polaroid extends PaginationItem {
         if (showbuttons) {
             fbtop.appendChild(newtabbutton);
             fbtop.appendChild(copybutton);
+
+            if(this.file.filetype == File.Types.AUDIO){
+                fbtop.appendChild(this.playlistButton);
+            }
+
             //fbtop.appendChild(maximizebutton);
             this.item.appendChild(fbtop);
         }
