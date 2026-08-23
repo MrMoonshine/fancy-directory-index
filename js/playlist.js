@@ -138,10 +138,15 @@ class PlaylistSong {
         optionContainer.className = "option-container";
         optionsbuttonContainer.appendChild(optionContainer);
 
+        this.btn_add_to_queue = document.createElement("div");
+        this.btn_add_to_queue.className = "option";
+        this.btn_add_to_queue.innerText = "Add to Queue";
+
         this.deleter = document.createElement("div");
         this.deleter.className = "option";
         this.deleter.innerText = "Remove from Playlist";
 
+        optionContainer.appendChild(this.btn_add_to_queue);
         optionContainer.appendChild(this.deleter);
 
         /*this.playbutton.appendChild(playbutton);
