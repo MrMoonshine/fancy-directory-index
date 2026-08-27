@@ -142,6 +142,7 @@ class Polaroid extends PaginationItem {
             case File.Types.IMAGE:
                 this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.getFileLink())}")`;
                 this.item.classList.add("frame");
+                this.item.classList.add("border-color");
                 break;
             case File.Types.VIDEO:
                 //image = ".thumbnail." + this.filename + ".jpg";

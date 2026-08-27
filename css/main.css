@@ -597,6 +597,5 @@ input[name="dashboard-pages"]:checked+.dashboard-page {
 
     body {
         height: 100dvh;
-        padding: 4px;
     }
 }

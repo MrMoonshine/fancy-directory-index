@@ -266,11 +266,11 @@ class File {
             if (sorturl.searchParams.get("C").includes("O=A")) {
                 a.classList.add("ascending");
                 arrow.alt = "[A-Z]";
-                arrow.src = ICON_ARROW_UP;
+                arrow.src = ICON_ARROW_DOWN;
             } else if (sorturl.searchParams.get("C").includes("O=D")) {
                 a.classList.add("descending");
                 arrow.alt = "[Z-A]";
-                arrow.src = ICON_ARROW_DOWN;
+                arrow.src = ICON_ARROW_UP;
             }
             a.appendChild(textdiv);
             a.appendChild(arrow);
