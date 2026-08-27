@@ -82,6 +82,7 @@ button.file{
     box-sizing: border-box;
     height: calc(1.5rem);
     max-width: 40rem;
+    margin: 0px 8px;
 
     display: grid;
     gap: 4px;
@@ -168,6 +169,10 @@ button.file{
     background-color: var(--color-main);
 }
 
+#gallery .icon-container img{
+    object-fit: contain;
+}
+
 .polaroids{
     flex-grow: 1;
     /*max-height: calc(100vh - var(--gap-dashboard) - 8.4rem - 56px);*/
@@ -235,9 +240,9 @@ button.file{
     z-index: 1;
 }
 
-.polaroid img.icon.directory{
+/*.polaroid img.icon.directory{
     filter: hue-rotate(var(--hue-rotate-directory));
-}
+}*/
 
 .polaroid img.videoicon{
     width: 64px;

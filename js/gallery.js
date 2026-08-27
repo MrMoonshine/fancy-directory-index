@@ -113,6 +113,7 @@ class Polaroid extends PaginationItem {
         this.item.appendChild(this.iconContainer);
         //maximizebutton.addEventListener("click", this.file.showPreview.bind(this.file));
         if (isDirectory) {
+            //this.iconContainer.classList.add("hue-rotate-auto");
             if (!this.file.img.alt.includes("PARENT")) {
                 this.setFolderIcon();
             }
@@ -166,6 +167,7 @@ class Polaroid extends PaginationItem {
                 iconDir.classList.add("icon");
                 // This css class allows the folders to be hue-rotated to the theme color
                 iconDir.classList.add("directory");
+                iconDir.classList.add("hue-rotate-auto");
                 
                 this.iconContainer.appendChild(iconDir);
                 break;
@@ -193,7 +195,6 @@ class Polaroid extends PaginationItem {
         if (term.length == 0) {
             return true;
         }
-        //console.log("Check if " + this.filename + " includes " + term + " | result: " + this.filename.includes(term));
         return this.filename.toUpperCase().includes(term.toUpperCase());
     }
 

@@ -22,10 +22,6 @@ class DirectoryLinks {
             fullink += item + "/";
             this.addLink(fullink, item);
         }
-
-        let dir_info_icon = document.getElementById("directory-info-icon");
-        dir_info_icon.addEventListener("error", image_fallback_hide);
-        dir_info_icon.src = ".directory";
     }
 
     addLink(link, name) {
