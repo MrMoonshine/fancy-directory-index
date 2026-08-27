@@ -11,25 +11,19 @@
 	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/musicplayer.css">
 	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/inputs.css">
 	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/toast.css">
-	<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/aero.css">
+	<!--<link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/aero.css">-->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body>
-	<nav class="d-flex flex-nowrap justify-content-between">
-		<div class="d-flex">
-			<div class="nav-flex-column">
+<body class="wallpaper">
+	<nav>
+		<div class="d-flex flex-nowrap justify-content-between align-items-center nav-container">
+			<div class="d-flex align-items-center">
 				<img class="favicon" id="pageicon" alt="Icon" />
-			</div>
-			<div class="nav-flex-column">
 				<div class="dirpath" id="dirpath"></div>
 			</div>
-		</div>
-		<div class="d-flex gap">
-			<div class="nav-flex-column">
+			<div class="d-flex gap align-items-center">
 				<input type="search" placeholder="Search...">
-			</div>
-			<div class="nav-flex-column">
 				<div class="input-group">
 					<input value="0" type="radio" id="radio-gallery" name="radio-view" checked="" hidden>
 					<label class="btn btn-outline big append" for="radio-gallery">
@@ -40,37 +34,28 @@
 						<div class="masked-icon" id="masked-icon-details"></div>
 					</label>
 				</div>
-			</div>
-			<div class="nav-flex-column">
 				<a href="/fancy-directory-index/playlists.php" class="btn btn-outline big">
 					<div class="masked-icon" style="mask-image: url('/fdi-icon-theme/actions/22/view-media-playlist.svg')">
 					</div>
 				</a>
-			</div>
-			<div class="nav-flex-column">
-				<a href="/fancy-directory-index/settings" class="btn btn-outline big">
+				<a href="/fancy-directory-index/settings" class="btn big">
 					<div class="masked-icon" style="mask-image: url('/fdi-icon-theme/actions/22/configure.svg')">
 					</div>
 				</a>
 			</div>
 		</div>
-	</nav>
-	<div class="directory-info d-flex justify-content-between align-items-center">
-		<div class="d-flex justify-content-between align-items-center gap">
-			<img class="favicon unknown" id="directory-info-icon" alt="Icon" src="/favicon.ico">
-			<div>
-				<div class="dirname" id="directory-info-name"></div>
-				<div class="text-petite d-flex gap">
+		<div class="d-flex gap justify-content-center border-top">
+			<div id="sortingButtons"></div>
+			<div class="d-flex align-items-center">
+				<div class="text-petite d-flex gap justify-content-center">
 					<div id="directory-info-count"></div>
 					<hr>
 					<div title="Non-recursive" id="directory-info-size"></div>
 				</div>
 			</div>
 		</div>
-		<div>
-		</div>
-	</div>
-	<div id="dashboard" class="dashboard wallpaper">
+	</nav>
+	<div id="dashboard" class="dashboard">
 		<input id="radio-page-preview" type="radio" name="dashboard-pages" value="1" autocomplete="off">
 		<div class="dashboard-page">
 			<div class="preview">
@@ -137,9 +122,6 @@
 		</div>
 		<input id="radio-page-gallery" type="radio" name="dashboard-pages" value="0" autocomplete="off" checked>
 		<div class="dashboard-page gallery">
-			<div id="sortingButtons">
-				<div class="placeholder"></div>
-			</div>
 			<div class="widget widget-gallery" id="widget-gallery">
 				<article id="gallery"></article>
 			</div>

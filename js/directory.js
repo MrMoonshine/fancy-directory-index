@@ -7,16 +7,10 @@ class DirectoryLinks {
         this.addLink(fullink, "Home");
 
         let items = this.url.pathname.split("/");
-    
-        let dir_info_name = document.getElementById("directory-info-name");
 
         while (items.length > 0) {
             let item = items.shift();
             if (item.length < 1) {
-                continue;
-            }
-            if(items.length == 1){
-                dir_info_name.innerHTML = decodeURI(item);
                 continue;
             }
 
@@ -28,8 +22,6 @@ class DirectoryLinks {
             fullink += item + "/";
             this.addLink(fullink, item);
         }
-        //console.log(this.url.pathname);
-        //console.log(items);
 
         let dir_info_icon = document.getElementById("directory-info-icon");
         dir_info_icon.addEventListener("error", image_fallback_hide);

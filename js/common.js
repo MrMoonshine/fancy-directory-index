@@ -15,6 +15,8 @@ const ICON_COPY_LINK = APACHE_ALIAS + "assets/edit-copy.svg";
 const ICON_DOWNLOAD = APACHE_ALIAS + "assets/download.svg";
 const ICON_SHARE = APACHE_ALIAS + "assets/share.svg";
 const ICON_COPY = APACHE_ALIAS + "assets/edit-copy.svg";
+const ICON_ARROW_UP = APACHE_ALIAS + "assets/go-up.png";
+const ICON_ARROW_DOWN = APACHE_ALIAS + "assets/go-down.png";
 const ICON_ADD_TO_PLAYLIST = APACHE_ICON_ALIAS + "actions/22/bookmarks.svg";
 
 const ICON_DIR_HUE_OFFSET = 160; // For blue folders from breeze theme
@@ -178,6 +180,39 @@ function bytes_human_radable(bytes){
     return (bytes / Math.pow(1024, e)).toFixed(2) + " " + s[e];
 }
 
+function rgb_to_hsl(color) {
+  if (!((color ?? "").match(/(#|)[0-9a-fA-F]{6}/g))) {
+    return [0, 0, 0];
+  }
+
+  var r = parseInt(color.substr(1, 2), 16); // Grab the hex representation of red (chars 1-2) and convert to decimal (base 10).
+  var g = parseInt(color.substr(3, 2), 16);
+  var b = parseInt(color.substr(5, 2), 16);
+
+  r /= 255, g /= 255, b /= 255;
+  var max = Math.max(r, g, b), min = Math.min(r, g, b);
+  var h, s, l = (max + min) / 2;
+
+  if (max == min) {
+    h = s = 0; // achromatic
+  } else {
+    var d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+
+  return [
+    Math.round(h * 360),
+    Math.round(s * 100),
+    Math.round(l * 100)
+  ];
+}
+
 function set_theme_from_cookies() {
     let root = document.documentElement;
     root.style.setProperty("--gallery-tiles-x", THEME_TILES_X);
@@ -252,6 +287,17 @@ function set_theme_from_cookies() {
     });
 
     root.style.setProperty("--color-autoshadow", `var(--color-autoshadow-themed)`);
+
+    ["default", "light", "dark"].forEach(tmode => {
+    let hexcolor = root.style.getPropertyValue("--color-main-" + tmode);
+    //console.log("--color-main-" + tmode, hexcolor);
+    if (hexcolor.length > 0) {
+      let hsl = rgb_to_hsl(hexcolor);
+      /*console.log(hexcolor)
+      console.log(hsl)*/
+      root.style.setProperty("--color-main-hue-" + tmode, hsl[0]);
+    }
+  });
 
     let favicon = document.getElementById("pageicon");
     if (!favicon) {

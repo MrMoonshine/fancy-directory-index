@@ -3,9 +3,12 @@
     --color-main-sat: 64%;
 }
 
+nav.main .nav-container,
+.widget header,
 .gradient-main,
-body.aero .playlist-player > header{
-    color: var(--color-text-button);
+.styled-containers header,
+table th{
+    color: var(--color-text-title);
     background-color: var(--color-main);
     background: linear-gradient(to bottom,
             hsl(var(--color-main-hue), var(--color-main-sat), 75%) 0%,
@@ -14,6 +17,14 @@ body.aero .playlist-player > header{
             hsl(var(--color-main-hue), var(--color-main-sat), 45%) 60%,
             hsl(var(--color-main-hue), var(--color-main-sat), 60%) 90%,
             hsl(var(--color-main-hue), var(--color-main-sat), 70%) 100%);
+}
+
+.glass-background,
+nav,
+.widget,
+.icon-frame{
+    background-color: var(--color-background-translucent);
+    background-image: url("/assets/aero_glass.png");
 }
 
 .gradient-dull,
@@ -60,4 +71,10 @@ body.aero .hue-rotate{
 body.aero .btn.btn-dark{
     background-color: var(--color-background-2);
     border: 1px solid var(--color-border);
+}
+
+.hue-rotate-auto,
+.hue-rotate-auto.red{
+    /*filter: hue-rotate(var(--color-main-hue));*/
+    filter: hue-rotate(90deg);
 }

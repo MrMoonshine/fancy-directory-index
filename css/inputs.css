@@ -91,38 +91,67 @@ input:checked+.btn-outline {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-/*nav input[type="search"]{
-    height: 32px;
-    padding: 4px;
-    font-size: 16px;
-    background-color: var(--color-background-2);
-    border-radius: var(--input-border-radius);
-    border: 1px solid var(--color-text-button);
-    outline: none;
-    color: var(--color-text-button);
-}*/
+/* Hide Number input arrows*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide Number input arrows */
+input[type=number] {
+  -moz-appearance: textfield;
+}
 
 input[type=text],
 input[type=number],
 input[type=search],
+input[type=tel],
 input[type=url],
-input[type=color] {
+input[type=week],
+input[type=password],
+input[type=month],
+input[type=email],
+input[type=date],
+input[type=datetime-local],
+input[type=time],
+textarea,
+select,
+.input-group .sidecar{
     color: var(--color-text);
-    outline: none;
     transition: 200ms ease;
 
     padding: var(--input-padding-y) var(--input-padding-x);
-    border-radius: var(--input-border-radius);
-    border: 2px solid var(--color-background-1);
+
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, .25) 0,
+            rgba(117, 117, 117, .2) 20%,
+            rgba(92, 92, 92, .2) 50%, 
+            rgba(43, 43, 43, .3) 50%,
+            rgba(161, 161, 161, .3) 100%);
     background-color: var(--color-background-2);
+
+    border: 2px solid var(--color-border);
+    border-left: 2px solid var(--color-border-petite);
+    border-top: 2px solid var(--color-border-petite);
+
+    border-radius: 8px;
 }
 
-input[type=color]:hover {
-    cursor: pointer;
+.input-group input{
+    margin: 0px;
 }
 
-nav input[type="search"]::placeholder {
-    color: grey;
+.input-group{
+    display: flex;
+    justify-content: left;
+}
+
+input:focus{
+    outline: none;
+    border: 2px solid hsl(var(--color-main-hue), var(--color-main-sat), 45%);
+    border-left: 2px solid hsl(var(--color-main-hue), var(--color-main-sat), 75%);
+    border-top: 2px solid hsl(var(--color-main-hue), var(--color-main-sat), 75%);
 }
 
 /*------------------------------------------

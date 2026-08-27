@@ -249,18 +249,31 @@ class File {
         for (let i = 0; i < links.length; i++) {
             //console.log(links[i].href);
             let a = document.createElement("a");
-            a.classList.add("input-group-append");
+            a.className = "d-flex nowrap gap";
             //a.classList.add("btn");
             //a.classList.add("ascending");
             a.href = links[i].href;
             a.innerHTML = links[i].innerHTML;
 
+            let arrow = new Image();
+            arrow.className = "hue-rotate-auto blue";
+
+            let textdiv = document.createElement("div");
+            textdiv.innerHTML = String(a.innerHTML);
+            a.innerHTML = "";
+
             let sorturl = new URL(a.href);
             if (sorturl.searchParams.get("C").includes("O=A")) {
                 a.classList.add("ascending");
+                arrow.alt = "[A-Z]";
+                arrow.src = ICON_ARROW_UP;
             } else if (sorturl.searchParams.get("C").includes("O=D")) {
                 a.classList.add("descending");
+                arrow.alt = "[Z-A]";
+                arrow.src = ICON_ARROW_DOWN;
             }
+            a.appendChild(textdiv);
+            a.appendChild(arrow);
 
             button_group.appendChild(a);
         }
