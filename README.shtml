@@ -5,12 +5,16 @@
 </div>
 <div class="d-block">
     <div class="music-player d-none" id="music-player">
-        <div class="d-flex flex-nowrap gap">
-            <img class="albumcover" id="albumcover" alt="cover">
-            <div class="songinfoomini d-flex flex-column justify-content-center">
-                <div id="songtitle">UNKNOWN</div>
-                <!--<div id="songartist">UNKNOWN</div>-->
-            </div>
+        <input id="cover-container-big-checkbox" type="checkbox">
+        <div id="cover-container-big">
+            <label for="cover-container-big-checkbox" class="cursor-pointer d-block mx-auto current-album position-relative">
+              <img src="/fancy-directory-index/assets/jewel_case.png" alt="Jewel Case" id="jewelCase">
+              <img src="" id="albumCover" title="Toggle CD">
+              <img src="/fancy-directory-index/assets/cd.png" id="spinningDisk" alt="Spinning disk">
+            </label>
+        </div>
+        <div class="d-block mx-auto">
+            <div id="songtitle">UNKNOWN</div>
         </div>
         <div class="d-block">
             <div class="musicbuttons d-flex flex-nowrap flex-grow-1 justify-content-center gap">

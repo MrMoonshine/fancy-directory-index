@@ -6,7 +6,11 @@
     color: var(--color-text);
     background-color: var(--color-background-2);
 
-    border-radius: var(--corner-radius-dashboard);
+    /*border-radius: var(--corner-radius-dashboard);*/
+    box-sizing: border-box;
+    border: 1px solid var(--color-border);
+
+    position: relative;
 }
 
 .music-player .options-flex {
@@ -31,6 +35,87 @@
     flex-direction: row;
     flex-wrap: nowrap;
 }*/
+
+.current-album {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 25px;
+    position: relative;
+
+    width: 206px;
+    height: 190px;
+    margin-bottom: 8px;
+}
+
+.current-album img{
+    position: absolute;
+}
+
+#cover-container-big{
+    /*background-color: red;*/
+    width: 206px;
+    height: 190px;
+
+    position: absolute;
+    right: 1rem;
+    top: calc(-225px - 1rem);
+    z-index: 20;
+
+    transition: right 0.5s ease;
+}
+
+#cover-container-big-checkbox:checked ~ #cover-container-big{
+    right: calc(-1rem - 216px);
+}
+
+#jewelCase {
+    width: 206px;
+    height: 190px;
+    top: -4px;
+    margin-left: 3px;
+
+    z-index: 1;
+}
+
+#spinningDisk {
+    background: 0 0 !important;
+    animation-play-state: running;
+    animation: animate .9s linear infinite;
+    width: 185px;
+    transition-duration: 1s;
+    margin-right: -5px;
+
+    margin-left: -65px;
+
+    z-index: 0;
+}
+
+#albumCover {
+    background-color: white;
+    width: 185px;
+    height: 185px;
+    border-radius: 2px;
+    margin-left: 18px;
+    box-shadow: rgba(0, 0, 0, .3) 0 14px 28px, rgba(0, 0, 0, .3) 0 10px 10px;
+    z-index: 2;
+
+    object-fit: cover;
+}
+
+#songtitle{
+    text-align: center;
+}
+
+@keyframes animate {
+    0% {
+        transform: rotate(0)
+    }
+
+    100% {
+        transform: rotate(359deg)
+    }
+}
 
 .music-player .playercontrol {
     border-radius: 100%;

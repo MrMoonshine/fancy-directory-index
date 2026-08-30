@@ -14,7 +14,7 @@ class MusicPlayer {
 
         this.title = document.getElementById("songtitle");
         //this.artist = document.getElementById("songartist");
-        this.cover = document.getElementById("albumcover");
+        this.cover = document.getElementById("albumCover");
 
         this.loader = document.getElementById("music-load-indicator");
         this.slider = document.getElementById("music-progress");
