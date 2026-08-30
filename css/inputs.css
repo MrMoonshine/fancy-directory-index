@@ -224,46 +224,47 @@ input[type="range"]{
   -webkit-appearance: none;
   appearance: none; 
   /* creating a custom design */
-  width: 100%;
-  cursor: pointer;
-  outline: none;
-  border-radius: 15px;
-  /*  overflow: hidden;  remove this line*/
-  
-  /* New additions */
-  height: 6px;
-  background: var(--color-background-1);
+  background:linear-gradient(to bottom,#3b3b3b 10%,#242424 100%);
+  border:1px solid #000;
+  position:relative;
+  overflow:hidden;
+
+  height: 10px;
+  box-sizing: border-box;
+  /*width:200px;*/
+  border-radius:0
 }
 
 /* Thumb: webkit */
 input[type="range"]::-webkit-slider-thumb {
-  /* removing default appearance */
-  -webkit-appearance: none;
-  appearance: none; 
-  /* creating a custom design */
-  height: 15px;
-  width: 15px;
-  background-color: var(--color-text);
-  background: linear-gradient(-45deg, grey, white);
-  border-radius: 50%;
-  border: 2px solid white;
-
-  /* box-shadow: -407px 0 0 400px var(--color-main); emove this line */
-  transition: .2s ease-in-out;
+  background:linear-gradient(
+    to left,
+    hsl(var(--color-main-hue), var(--color-main-sat), 90%) 20%,
+    var(--color-main) 100%
+    );
+  border:none;
+  border-right:1px solid #000;
+  height:8px;
+  width:15px;
+  border-radius:0!important;
+  box-shadow:-350px 0 0 350px var(--color-main);
+  box-sizing:border-box
 }
 
 /* Thumb: Firefox */
 input[type="range"]::-moz-range-thumb{
-  /* creating a custom design */
-  height: 15px;
-  width: 15px;
-  background-color: var(--color-text);
-  background: linear-gradient(-45deg, grey, white);
-  border-radius: 50%;
-  border: 2px solid white;
-
-  /* box-shadow: -407px 0 0 400px var(--color-main); emove this line */
-  transition: .2s ease-in-out;
+  background:linear-gradient(
+    to left,
+    hsl(var(--color-main-hue), var(--color-main-sat), 90%) 20%,
+    var(--color-main) 100%
+    );
+  border:none;
+  border-right:1px solid #000;
+  height:8px;
+  width:15px;
+  border-radius:0!important;
+  box-shadow:-350px 0 0 350px var(--color-main);
+  box-sizing:border-box
 }
 
 input[type="range"]::-webkit-slider-thumb:hover,
@@ -278,17 +279,6 @@ input[type="range"]:focus::-moz-range-thumb {
 /*=============
 Aesthetics 
 =========================*/
-
-.fancy-range {
-    height: 2rem;
-  /*display: flex;
-  align-items: center;
-  gap: 1rem;
-  max-width: 500px;
-  margin: 0 auto;
-  height: 4rem;
-  padding: 0px 10px;*/
-}
 
 progress[value] {
   width: 100%;

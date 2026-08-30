@@ -4,8 +4,8 @@
     --color-main-light: var(--color-main-default);
     --color-main: var(--color-main-default);
 
-    --color-background-1: #323232;
-    --color-background-2: #222222;
+    --color-background-1: #010101;
+    --color-background-2: #111111;
     --color-background-3: #424242;
     --color-background-translucent: rgba(34, 34, 34, .7);
     --color-text: white;
@@ -59,7 +59,7 @@
     --gradient-transparent: linear-gradient(to bottom,
             rgba(255, 255, 255, .25) 0,
             rgba(117, 117, 117, .2) 20%,
-            rgba(92, 92, 92, .2) 50%, 
+            rgba(92, 92, 92, .2) 50%,
             rgba(43, 43, 43, .3) 50%,
             rgba(161, 161, 161, .3) 100%);
 
@@ -107,6 +107,10 @@
         --color-border-petite: #bbb;
     }
 
+    .text-main {
+        color: hsl(var(--color-main-hue), var(--color-main-sat), 25%);
+    }
+
     @media (orientation: landscape) {
         .wallpaper {
             background-image: var(--wallpaper-light-landscape);
@@ -137,6 +141,10 @@
 
         --color-autoshadow-themed: rgba(0, 0, 0, 0.7);
     }
+
+    .text-main {
+        color: hsl(var(--color-main-hue), var(--color-main-sat), 75%);
+    }
 }
 
 body {
@@ -161,7 +169,7 @@ body {
     overflow-y: hidden;
 }
 
-.wallpaper{
+.wallpaper {
     background-repeat: no-repeat;
     background-position: 50% 0%;
     background-attachment: fixed;
@@ -172,6 +180,7 @@ body {
     border-radius: var(--corner-radius-dashboard);
     padding: 0px;
 }
+
 
 .text-background {
     padding: 4px;
@@ -204,7 +213,7 @@ nav {
     gap: var(--gap-dashboard);
 }
 
-.nav-container{
+.nav-container {
     display: flex;
     gap: 4px;
     align-items: center;
@@ -232,10 +241,10 @@ nav div.navbar-collapse {
     gap: 1rem;
 }
 
-nav .btn.big{
+nav .btn.big {
     border-radius: 512px;
     background-color: var(--color-main);
-    background: radial-gradient(circle,var(--color-background-3) 0%, var(--color-background-1) 100%);
+    background: radial-gradient(circle, var(--color-background-3) 0%, var(--color-background-1) 100%);
     border: 1px solid var(--color-border);
 }
 
@@ -306,54 +315,58 @@ nav .btn.big .masked-icon {
     height: 24px;
 }
 
+.gradient-transparent {
+    background: var(--gradient-transparent);
+}
+
 .glass-background,
 nav,
-.icon-frame{
+.icon-frame {
     background-color: var(--color-background-translucent);
     background-image: url("/assets/aero_glass.png");
 }
 
 nav .nav-container,
 .border-color,
-table th{
+table th {
     border: 2px solid hsl(var(--color-main-hue), var(--color-main-sat), 45%);
     border-left: 2px solid hsl(var(--color-main-hue), var(--color-main-sat), 75%);
     border-top: 2px solid hsl(var(--color-main-hue), var(--color-main-sat), 75%);
 }
 
-.border-top{
+.border-top {
     border-top: 1px solid var(--color-border);
 }
 
 .hue-rotate-auto,
-.hue-rotate-auto.red{
+.hue-rotate-auto.red {
     filter: hue-rotate(calc(var(--color-main-hue) * 1deg));
 }
 
 .hue-rotate-auto,
-.hue-rotate-auto.red{
+.hue-rotate-auto.red {
     filter: hue-rotate(calc(var(--color-main-hue) * 1deg));
 }
 
-.hue-rotate-auto.green{
+.hue-rotate-auto.green {
     filter: hue-rotate(calc((var(--color-main-hue) * 1deg) - 120deg));
 }
 
-.hue-rotate-auto.blue{
+.hue-rotate-auto.blue {
     filter: hue-rotate(calc((var(--color-main-hue) * 1deg) - 200deg));
 }
 
-.directory-info{
+.directory-info {
     background-color: var(--color-background-2);
     border-radius: var(--corner-radius-dashboard);
     padding: 0.5rem;
 }
 
-.directory-info .dirname{
+.directory-info .dirname {
     font-size: large;
 }
 
-.directory-info img{
+.directory-info img {
     height: 3rem;
     width: 3rem;
     object-fit: scale-down;
@@ -475,6 +488,10 @@ input[name="dashboard-pages"]:checked+.dashboard-page {
     gap: var(--gap-dashboard)
 }
 
+.wide{
+    grid-column: 2 span;
+}
+
 .d-block {
     display: block !important;
 }
@@ -488,7 +505,7 @@ input[name="dashboard-pages"]:checked+.dashboard-page {
     display: flex;
 }
 
-.align-items-center{
+.align-items-center {
     align-items: center;
 }
 
@@ -538,6 +555,10 @@ input[name="dashboard-pages"]:checked+.dashboard-page {
 
 .flex-column {
     flex-direction: column;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
 }
 
 .flex-nowrap {
