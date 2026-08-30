@@ -7,7 +7,7 @@
     background-color: var(--color-background-2);
 
     width: 100vw;
-    overflow: hidden;
+    /*overflow: hidden;*/
     box-sizing: border-box;
     position: relative;
 }
@@ -90,8 +90,7 @@
 
 #spinningDisk {
     background: 0 0 !important;
-    animation-play-state: running;
-    animation: animate .9s linear infinite;
+    animation-play-state: paused;
     width: 185px;
     transition-duration: 1s;
     margin-right: -5px;
@@ -99,6 +98,11 @@
     margin-left: -65px;
 
     z-index: 0;
+}
+
+#spinningDisk.spinning{
+    animation-play-state: running;
+    animation: cd_animation .9s linear infinite;
 }
 
 #albumCover {
@@ -118,7 +122,7 @@
     /*color: var(--color-main);*/
 }
 
-@keyframes animate {
+@keyframes cd_animation {
     0% {
         transform: rotate(0)
     }

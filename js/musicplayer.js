@@ -21,6 +21,7 @@ class MusicPlayer {
         this.playButton = document.getElementById("play");
         this.skipFwd = document.getElementById("skip-fwd");
         this.skipBck = document.getElementById("skip-bck");
+        this.cd = document.getElementById("spinningDisk");
 
         this.volume = document.getElementById("volume");
         this.mutebutton = document.getElementById("mute");
@@ -147,6 +148,7 @@ class MusicPlayer {
         if (startImmediately) {
             this.audio.autoplay = true;
             this.playButton.checked = false;
+            this.cd.classList.add("spinning");
         }
 
         this.audio.loop = this.looping;
@@ -157,9 +159,11 @@ class MusicPlayer {
             if (!this.playButton.checked) {
                 this.audio.play();
                 console.log("Playing...");
+                this.cd.classList.add("spinning");
             } else {
                 this.audio.pause();
                 console.log("Paused!");
+                this.cd.classList.remove("spinning");
             }
             //this.playbutton_icon(this.audio.paused);
             console.log(this.audio);
