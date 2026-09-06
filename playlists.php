@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="utf-8">
     <meta lang="de_AT">
@@ -10,27 +11,24 @@
     <link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/inputs.css">
     <link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/toast.css">
     <link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/playlist.css">
-    <link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/aero.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Playlists</title>
 </head>
-
-<body>
-    <nav class="d-block">
-        <div class="d-flex flex-nowrap justify-content-between">
-            <div class="d-flex">
-                <button id="button-back" class="btn btn-outline big w-unset my-auto d-none cursor-pointer">
-                    ⤾ Back
-                </button>
-            </div>
+<body class="wallpaper">
+    <nav>
+        <div class="d-flex flex-nowrap justify-content-between align-items-center nav-container">
+            <button id="button-back" class="btn btn-outline big w-unset my-auto d-none cursor-pointer">
+                ⤾ Back
+            </button>
             <h2 id="main-title" class="overflow-hidden my-auto">Playlsits</h2>
             <div class="d-flex gap">
                 <div class="nav-flex-column">
                     <form method="POST" id="form-add" class="d-none">
                         <input type="hidden" name="mode" value="add">
                     </form>
-                    <button id="button-add"  type="submit" form="form-add" class="btn btn-outline big">
-                        <div class="masked-icon" style="mask-image: url('/fdi-icon-theme/actions/22/bookmark-new-list.svg')">
+                    <button id="button-add" type="submit" form="form-add" class="btn btn-outline big">
+                        <div class="masked-icon"
+                            style="mask-image: url('/fdi-icon-theme/actions/22/bookmark-new-list.svg')">
                         </div>
                     </button>
                 </div>
@@ -43,7 +41,35 @@
             </div>
         </div>
     </nav>
-    <article id="dashboard" class="dashboard wallpaper">
+    <!--<nav class="d-block">
+        <div class="d-flex flex-nowrap justify-content-between">
+            <div class="d-flex">
+                <button id="button-back" class="btn btn-outline big w-unset my-auto d-none cursor-pointer">
+                    ⤾ Back
+                </button>
+            </div>
+            <h2 id="main-title" class="overflow-hidden my-auto">Playlsits</h2>
+            <div class="d-flex gap">
+                <div class="nav-flex-column">
+                    <form method="POST" id="form-add" class="d-none">
+                        <input type="hidden" name="mode" value="add">
+                    </form>
+                    <button id="button-add" type="submit" form="form-add" class="btn btn-outline big">
+                        <div class="masked-icon"
+                            style="mask-image: url('/fdi-icon-theme/actions/22/bookmark-new-list.svg')">
+                        </div>
+                    </button>
+                </div>
+                <div class="nav-flex-column">
+                    <a href="/" class="btn btn-outline big">
+                        <div class="masked-icon" style="mask-image: url('/fdi-icon-theme/actions/22/go-home.svg')">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>-->
+    <article id="dashboard" class="dashboard">
         <input type="checkbox" id="next-up-space-show" class="d-none" autocomplete="off" checked>
         <div class="d-flex gap justify-content-around">
             <div id="playlist-player-content" class="flex-grow-1">
@@ -138,104 +164,96 @@
     </article>
     <div class="d-block">
         <div class="music-player d-none" id="music-player">
-            <div class="d-flex flex-nowrap gap">
-                <img class="albumcover" id="albumcover" alt="cover">
-                <div class="songinfoomini d-flex flex-column justify-content-center">
-                    <div id="songtitle">UNKNOWN</div>
-                    <!--<div id="songartist">UNKNOWN</div>-->
-                </div>
+            <input id="cover-container-big-checkbox" type="checkbox">
+            <div id="cover-container-big">
+                <label for="cover-container-big-checkbox"
+                    class="cursor-pointer d-block mx-auto current-album position-relative">
+                    <img src="/fancy-directory-index/assets/jewel_case.png" alt="Jewel Case" id="jewelCase">
+                    <img src="" id="albumCover" title="Toggle CD">
+                    <img src="/fancy-directory-index/assets/cd.png" id="spinningDisk" alt="Spinning disk">
+                </label>
             </div>
-            <div class="d-block">
-                <div class="musicbuttons d-flex flex-nowrap flex-grow-1 justify-content-center gap">
-                    <div class="d-flex flex-column justify-content-center">
-                        <input type="checkbox" id="shuffle">
-                        <label class="playlistcontrol sillouhette-button" for="shuffle">
-                            <!--<img id="img-shuffle" alt="&#x23EE;" src="/fancy-directory-index/assets/shuffle.svg.png" />-->
-                            <div class="masked-icon" id="img-shuffle"
-                                style="mask-image: url('/fdi-icon-theme/actions/22/media-playlist-shuffle.svg')">
-                            </div>
-                        </label>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                        <button class="playercontrol" id="skip-bck">
-                            <div class="masked-icon" id="img-skip-bck"
-                                style="mask-image: url('/fdi-icon-theme/actions/22/media-skip-backward.svg')">
-                            </div>
-                        </button>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                        <input type="checkbox" id="play">
-                        <label class="playercontrol" for="play">
-                            <div class="masked-icon" id="img-play"
-                                style="mask-image: url('/fdi-icon-theme/actions/22/media-playback-start.svg')">
-                            </div>
-                            <div class="masked-icon" id="img-pause"
-                                style="mask-image: url('/fdi-icon-theme/actions/22/media-playback-pause.svg')">
-                            </div>
-                        </label>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                        <button class="playercontrol" id="skip-fwd">
-                            <div class="masked-icon" id="img-skip-fwd"
-                                style="mask-image: url('/fdi-icon-theme/actions/22/media-skip-forward.svg')">
-                            </div>
-                        </button>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                        <input type="checkbox" id="repeat" autocomplete="off">
-                        <label class="playlistcontrol sillouhette-button" for="repeat">
-                            <div class="masked-icon" id="img-repeat"
-                                style="mask-image: url('/fdi-icon-theme/actions/22/media-playlist-repeat.svg')">
-                            </div>
-                        </label>
-                    </div>
-                </div>
-                <div class="timebar flex-grow-1 justify-content-center">
-                    <div id="display-current">0:00</div>
-                    <div class="fancy-range flex-grow-1">
-                        <span class="loader" id="music-load-indicator"></span>
-                        <input type="range" id="music-progress" min="0" max="100" />
-                    </div>
-                    <div id="display-duration">99:99</div>
-                </div>
-            </div>
-            <div class="options-flex d-flex gap">
-                <div class="d-flex justify-content-end gap">
-                    <button class="sillouhette-button" id="song-share" download="file.mp3">
-                        <div class="masked-icon" id="img-share"
-                            style="mask-image: url('/fdi-icon-theme/actions/22/document-share.svg')">
-                        </div>
-                    </button>
-                    <label class="sillouhette-button" for="next-up-space-show">
-                        <div class="masked-icon"
-                            style="mask-image: url('/fdi-icon-theme/actions/22/amarok_playlist.svg')">
+            <div class="row main text-center d-flex gap align-items-center justify-content-center mx-auto">
+                <div>
+                    <input type="checkbox" id="shuffle">
+                    <label class="playlistcontrol option" for="shuffle">
+                        <img id="img-shuffle" alt="" src="/fancy-directory-index/assets/media-playlist-shuffle.png" />
+                        <div class="d-desktop">
+                            Shuffle
                         </div>
                     </label>
-                    <button class="sillouhette-button" id="song-playlist-add">
-                        <div class="masked-icon" id="img-playlist-add"
-                            style="mask-image: url('/fdi-icon-theme/actions/22/bookmarks.svg')">
-                        </div>
-                    </button>
-                    <a class="sillouhette-button" id="song-download" download="file.mp3">
-                        <div class="masked-icon" id="img-download"
-                            style="mask-image: url('/fdi-icon-theme/actions/22/download.svg')">
-                        </div>
-                    </a>
                 </div>
-                <div class="d-flex justify-content-end">
-                    <div class="d-flex flex-column justify-content-center">
-                        <button class="playlistcontrol sillouhette-button" id="mute">
-                            <div class="masked-icon" id="img-unmute"
-                                style="mask-image: url('/fancy-directory-index/assets/speaker.svg')">
-                            </div>
-                            <div class="masked-icon d-none" id="img-mute"
-                                style="mask-image: url('/fancy-directory-index/assets/speaker_mute.svg')">
-                            </div>
-                        </button>
+                <div class="d-flex flex-column justify-content-center">
+                    <label class="playercontrol" id="skip-bck">
+                        <img class="hue-rotate-auto red" id="img-skip-bck"
+                            src="/fancy-directory-index/assets/media-skip-backward.png">
+                    </label>
+                </div>
+                <div>
+                    <input type="checkbox" id="play">
+                    <label class="playercontrol" for="play">
+                        <img class="hue-rotate-auto red" id="img-play"
+                            src="/fancy-directory-index/assets/media-playback-playing.png">
+                        <img class="hue-rotate-auto red" id="img-pause"
+                            src="/fancy-directory-index/assets/media-playback-paused.png">
+                    </label>
+                </div>
+                <div>
+                    <label class="playercontrol" id="skip-fwd">
+                        <img class="hue-rotate-auto red" id="img-skip-fwd"
+                            src="/fancy-directory-index/assets/media-skip-forward.png">
+                    </label>
+                </div>
+                <div>
+                    <input type="checkbox" id="repeat" autocomplete="off">
+                    <label class="playlistcontrol option" for="repeat">
+                        <img class="hue-rotate-auto blue" id="img-skip-fwd"
+                            src="/fancy-directory-index/assets/repeat.svg.png">
+                        <div class="d-desktop">
+                            Repeat
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="timebar flex-grow-1 justify-content-center">
+                    <div id="display-current" class="text-main">
+                        0:00
                     </div>
-                    <div class="d-flex flex-column justify-content-center">
-                        <input id="volume" type="range" min="0" max="1" step="0.1" value="1" />
+                    <div class="fancy-range flex-grow-1">
+                        <span class="loader" id="music-load-indicator"></span>
+                        <input class="w-100" type="range" id="music-progress" min="0" max="100" />
                     </div>
+                    <div id="display-duration" class="text-main">99:99</div>
+                </div>
+            </div>
+            <div class="row options-row gap">
+                <div class="wide">
+                    <span>Currently playing: </span>
+                    <span id="songtitle" class="text-main">UNKNOWN</span>
+                </div>
+                <div class="d-flex gap align-items-center">
+                    <button class="playlistcontrol " id="mute">
+                        <img id="img-unmute" src="/fancy-directory-index/assets/audio-volume.png" alt="">
+                        <img id="img-mute" class="d-none" src="/fancy-directory-index/assets/audio-volume-muted.png"
+                            alt="">
+                    </button>
+                    <input id="volume" type="range" min="0" max="1" step="0.1" value="1" />
+                    <div class="d-desktop">
+                        <span>Volume: </span>
+                        <span class="text-main">69</span>
+                    </div>
+                </div>
+                <div class="options-flex d-flex flex-grow-1 gap justify-content-end align-items-center">
+                    <button class="action-option" id="song-share" download="file.mp3">
+                        <img id="img-share" src="/fancy-directory-index/assets/emblem-shared.svg" alt="">
+                    </button>
+                    <button class="action-option" id="song-playlist-add">
+                        <img id="img-playlist-add" src="/fancy-directory-index/assets/playlist.png" alt="">
+                    </button>
+                    <a class="action-option" id="song-download" download="file.mp3">
+                        <img id="img-download" src="/fancy-directory-index/assets/download.png" alt="">
+                    </a>
                 </div>
             </div>
         </div>
@@ -253,5 +271,4 @@
     <script src="/fancy-directory-index/js/musicplayer.js"></script>
     <script src="/fancy-directory-index/js/playlist.js"></script>
 </body>
-
 </html>

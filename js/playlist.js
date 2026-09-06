@@ -1,20 +1,3 @@
-/*function set_theme() {
-    let root = document.documentElement;
-    root.style.setProperty("--color-main", localStorage.getItem(COOKIE_COLOR) ?? "teal");
-    let bg = localStorage.getItem(COOKIE_BACKGROUND) ?? "none";
-    if (bg.length < 1) {
-        bg = "none";
-    }
-    let backgroundAvailable = bg != "none";
-    root.style.setProperty("--background-image", backgroundAvailable ? `url("${bg}")` : bg);
-
-    let hsv = color_hex_to_hsv(localStorage.getItem(COOKIE_COLOR));
-    console.log(hsv);
-    root.style.setProperty("--color-main-hue", `${hsv[0]}`);
-    root.style.setProperty("--color-main-sat", `${hsv[1]}%`);
-    console.log(root.style.getPropertyValue("--color-main-hue"));
-}*/
-
 class PlaylistCard {
     constructor(parent, data, playlistMain) {
         this.data = data;
@@ -284,6 +267,7 @@ class Playlist {
 }
 
 //set_theme();
+console.log("Applying theme from cookeis...")
 set_theme_from_cookies();
 
 var PLAYLISTS = JSON.parse(document.getElementById('playlist-data').dataset.json);

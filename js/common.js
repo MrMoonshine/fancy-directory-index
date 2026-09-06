@@ -236,12 +236,12 @@ function set_theme_from_cookies() {
                 break;
         }
         let ci = localStorage.getItem(basic_cookie);
-        console.log(`${basic_cookie} -> ${css_var}`);
-        console.log(ci);
+        console.log(`${basic_cookie} -> ${css_var} = ${ci}`);
         if (ci == null) {
             return;
         }
         root.style.setProperty(css_var, ci);
+        console.log(css_var, ci);
         if (!css_var.includes("color")) {
             return;
         }
@@ -251,6 +251,7 @@ function set_theme_from_cookies() {
             }
             hsv = color_hex_to_hsv(ci);
             root.style.setProperty(`--hue-rotate-directory-${theme_mode}`, `${hsv[0] + ICON_DIR_HUE_OFFSET}deg`);
+            console.log(`--hue-rotate-directory-${theme_mode}`, `${hsv[0] + ICON_DIR_HUE_OFFSET}deg`);
         });
     });
 
@@ -282,7 +283,7 @@ function set_theme_from_cookies() {
         if (bg != null) {
             console.log(`${cookie} -> ${css_var}`);
             console.log(bg);
-            root.style.setProperty(css_var, `url("/theme/wallpapers/${bg}")`);
+            root.style.setProperty(css_var, `url("${bg}")`);
         }
     });
 
@@ -290,12 +291,13 @@ function set_theme_from_cookies() {
 
     ["default", "light", "dark"].forEach(tmode => {
     let hexcolor = root.style.getPropertyValue("--color-main-" + tmode);
-    //console.log("--color-main-" + tmode, hexcolor);
+    console.log("--color-main-" + tmode, hexcolor);
     if (hexcolor.length > 0) {
       let hsl = rgb_to_hsl(hexcolor);
-      /*console.log(hexcolor)
-      console.log(hsl)*/
+
+      console.log("--color-main-hue-" + tmode, hsl[0]);
       root.style.setProperty("--color-main-hue-" + tmode, hsl[0]);
+      root.style.setProperty(`--color-main-sat-${tmode}`, `${hsl[1]}%`);
     }
   });
 

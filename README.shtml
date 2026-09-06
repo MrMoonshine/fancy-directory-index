@@ -25,19 +25,19 @@
             </div>
             <div class="d-flex flex-column justify-content-center">
                 <label class="playercontrol" id="skip-bck">
-                    <img class="hue-rotate-auto blue" id="img-skip-bck" src="/fancy-directory-index/assets/media-skip-backward.png">
+                    <img class="hue-rotate-auto red" id="img-skip-bck" src="/fancy-directory-index/assets/media-skip-backward.png">
                 </label>
             </div>
             <div>
                 <input type="checkbox" id="play">
                 <label class="playercontrol" for="play">
-                    <img class="hue-rotate-auto blue" id="img-play" src="/fancy-directory-index/assets/media-playback-playing.png">
-                    <img class="hue-rotate-auto blue" id="img-pause" src="/fancy-directory-index/assets/media-playback-paused.png">
+                    <img class="hue-rotate-auto red" id="img-play" src="/fancy-directory-index/assets/media-playback-playing.png">
+                    <img class="hue-rotate-auto red" id="img-pause" src="/fancy-directory-index/assets/media-playback-paused.png">
                 </label>
             </div>
             <div>
                 <label class="playercontrol" id="skip-fwd">
-                    <img class="hue-rotate-auto blue" id="img-skip-fwd" src="/fancy-directory-index/assets/media-skip-forward.png">
+                    <img class="hue-rotate-auto red" id="img-skip-fwd" src="/fancy-directory-index/assets/media-skip-forward.png">
                 </label>
             </div>
             <div>
