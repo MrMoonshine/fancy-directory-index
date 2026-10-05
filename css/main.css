@@ -70,6 +70,11 @@
             hsl(var(--color-main-hue), var(--color-main-sat), 45%) 60%,
             hsl(var(--color-main-hue), var(--color-main-sat), 60%) 90%,
             hsl(var(--color-main-hue), var(--color-main-sat), 70%) 100%);
+
+    --gradient-main-coarse: linear-gradient(to bottom,
+            hsl(var(--color-main-hue), var(--color-main-sat), 75%) 0%,
+            hsl(var(--color-main-hue), var(--color-main-sat), 65%) 45%,
+            hsl(var(--color-main-hue), var(--color-main-sat), 53%) 100%);
 }
 
 @media (orientation: landscape) {

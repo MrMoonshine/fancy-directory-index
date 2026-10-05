@@ -120,7 +120,7 @@ class Pagination{
         let butt = document.createElement("button");
         butt.innerHTML = label;
         butt.value = value;
-        butt.setAttribute("class", "btn");
+        butt.setAttribute("class", "circular-button");
         butt.setAttribute("type", "button");
         return butt;
     }

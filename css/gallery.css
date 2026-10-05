@@ -151,7 +151,7 @@ button.file{
     justify-content: center;
 }
 
-#gallery .btn-group .btn{
+/*#gallery .btn-group .btn{
     flex-grow: 0;
     flex-shrink: 0;
     min-width: 32px;
@@ -167,7 +167,7 @@ button.file{
 #gallery .btn-group .btn.active{
     color: var(--color-text-button);
     background-color: var(--color-main);
-}
+}*/
 
 #gallery .icon-container img{
     object-fit: contain;
