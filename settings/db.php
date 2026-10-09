@@ -12,10 +12,15 @@ class DirectoryDB extends SQLite3
     public function __construct($filename)
     {
         try {
-            parent::__construct($filename);
+            if(!is_dir(DirectoryDB::WORKDIR)){
+                if(!mkdir(DirectoryDB::WORKDIR)){
+                    throw new Exception("Cannot create base-directory for sqlite3 database: ".DirectoryDB::WORKDIR, 1);
+                }
+            }
+            // SQLITE3_OPEN_CREATE: Create the database if it does not exist. 
+            parent::__construct($filename, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
         } catch (\Throwable $th) {
             echo ($th->getMessage());
-            //throw $th;
         }
     }
 
@@ -178,8 +183,37 @@ class DirectoryDB extends SQLite3
         return $retval;
     }
 
+    private function options_seed(){
+        $options = [
+            [
+                "name" => "pageicon",
+                "default" => "/favicon.ico"
+            ],[
+                "name" => "thumbnaildir",
+                "default" => "/fancy-directory-index/settings/data/"
+            ],[
+                "name" => "thumbnailgen",
+                "default" => 1
+            ]
+        ];
+
+        if(count($options) == $this->querySingle("SELECT count(1) FROM options;")){
+            return;
+        }
+        echo("Seeding options table...<br>");
+        
+        foreach ($options as $option) {
+            $results = $this->universalDML("INSERT INTO options (name,value) VALUES (:name, :default)", $option);
+            if (!$results) {
+                $this->errors_add();
+                return;
+            }
+        }
+    }
+
     public function options_modify()
     {
+        $this->options_seed();
         $options = ["pageicon", "thumbnailgen", "thumbnaildir"];
         $dir_forbidden = ["/", "/fancy-directory-index/", "/fancy-directory-index/settings/"];
 
@@ -472,6 +506,11 @@ class DirectoryDB extends SQLite3
             $filters
             ORDER BY name ASC
         SQL, $params);
+
+        if(!$results){
+            return $retval;
+        }
+
         while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
             if (!$id) {
                 array_push($retval, $row);

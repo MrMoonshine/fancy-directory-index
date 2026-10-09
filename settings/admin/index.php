@@ -11,7 +11,6 @@
     <link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/toast.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-
 <body>
 	<div id="content">
 		<nav class="d-flex flex-nowrap justify-content-between">
@@ -52,6 +51,7 @@
                 "POST" => $_POST
             ];
             try {
+                var_dump($_POST);
                 require("../db.php");
                 // Check if a File either exists or has been created successfully on demand
                 $fileFailureHandlingInfo = DirectoryDB::create_if_not_exists("../");
@@ -103,6 +103,11 @@
                 console.log(PHP_PAYLOAD);
                 </script>
 				<article>
+                    <div>
+                        <?php
+                            var_dump($ddb->errors);
+                        ?>
+                    </div>
                     <form id="customizationform" method="POST">
                         <input type="hidden" name="mode" value="options" readonly>
                         <table class="options">

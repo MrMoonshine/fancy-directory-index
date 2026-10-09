@@ -13,6 +13,7 @@ function api_get(callback, resource, id = null){
             console.error(`API ERROR ${req.status}: ${req.statusText}`);
         }
         try {
+            console.log(req.responseText);
             let jobs = JSON.parse(req.responseText);
             callback(jobs);
         } catch (err) {
