@@ -588,82 +588,88 @@ class MusicPlaylistManager extends Overlay {
     }
 
     build() {
-        this.content.classList.add("playlist-add-selection");
-        let counter = 0;
-        api_get((dataall) => {
-            let data = dataall.data ?? [];
-            //console.log(data);
-            data.forEach(playlist => {
-                let formid = "plaf" + counter;
+        try {
+            this.content.classList.add("playlist-add-selection");
+            let counter = 0;
+            api_get((dataall) => {
+                let data = dataall.data ?? [];
+                //console.log(data);
+                data.forEach(playlist => {
+                    let formid = "plaf" + counter;
 
-                let dom = document.createElement("div");
-                dom.className = "playlist-listitem gradient-dull-hover";
+                    let dom = document.createElement("div");
+                    dom.className = "playlist-listitem gradient-dull-hover";
 
-                let img = new Image();
-                img.alt = "[IMG]";
-                img.addEventListener("error", image_fallback_favicon);
-                let tnuri = dataall["thumbnailpath"] + playlist.icon;
-                if ((playlist.icon ?? "").startsWith("http") || (playlist.icon ?? "").startsWith("/")) {
-                    tnuri = playlist.icon;
-                }
-                img.src = tnuri;
+                    let img = new Image();
+                    img.alt = "[IMG]";
+                    img.addEventListener("error", image_fallback_favicon);
+                    let tnuri = dataall["thumbnailpath"] + playlist.icon;
+                    if ((playlist.icon ?? "").startsWith("http") || (playlist.icon ?? "").startsWith("/")) {
+                        tnuri = playlist.icon;
+                    }
+                    img.src = tnuri;
 
-                let textdiv = document.createElement("div");
-                textdiv.className = "text";
-                textdiv.innerText = playlist.name;
+                    let textdiv = document.createElement("div");
+                    textdiv.className = "text";
+                    textdiv.innerText = playlist.name;
 
-                let form = document.createElement("form");
-                form.id = formid;
-                let hiplaylist = document.createElement("input");
-                hiplaylist.setAttribute("type", "hidden");
-                hiplaylist.name = "playlist";
-                hiplaylist.value = playlist.id;
+                    let form = document.createElement("form");
+                    form.id = formid;
+                    let hiplaylist = document.createElement("input");
+                    hiplaylist.setAttribute("type", "hidden");
+                    hiplaylist.name = "playlist";
+                    hiplaylist.value = playlist.id;
 
-                form.appendChild(hiplaylist);
+                    form.appendChild(hiplaylist);
 
-                dom.appendChild(img);
-                dom.appendChild(textdiv);
-                dom.appendChild(form);
-                this.content.appendChild(dom);
-                counter++;
+                    dom.appendChild(img);
+                    dom.appendChild(textdiv);
+                    dom.appendChild(form);
+                    this.content.appendChild(dom);
+                    counter++;
 
-                dom.addEventListener("click", () => {
-                    this.close();
-                    let url = new URL(window.location);
-
-                    let fd = new FormData(form);
-                    fd.append("resource", "playlists");
-                    fd.append("mode", "modify");
-                    fd.append("add", "on");
-                    fd.append("path", url.pathname);
-                    fd.append("song", encodeURI(this.currentSong));
-                    console.log(fd);
-
-                    api_modify((data) => {
-                        console.log(data);
-                        // show(title, text, timeout = 0, buttonset = Toast.BUTTONS_ALERT, image = "")
+                    dom.addEventListener("click", () => {
                         this.close();
-                        if ((data.errors ?? []).length > 0 || data.status != 0) {
-                            this.toast.show(
-                                "Failed to add Song!",
-                                (data.errors ?? []).length > 0 ? data.errors.join("<br>") : JSON.stringify(data),
-                                5,
-                                Toast.BUTTONS_NONE,
-                                APACHE_ALIAS + "/assets/dialog-warning.png"
-                            );
-                        } else {
-                            this.toast.show(
-                                "Success!",
-                                `${decodeURI(this.currentSong)} was added successfully to playlist!`,
-                                5,
-                                Toast.BUTTONS_NONE,
-                                APACHE_ALIAS + "/assets/dialog-ok.png"
-                            );
-                        }
-                    }, "playlist_songs", fd);
+                        let url = new URL(window.location);
+
+                        let fd = new FormData(form);
+                        fd.append("resource", "playlists");
+                        fd.append("mode", "modify");
+                        fd.append("add", "on");
+                        fd.append("path", url.pathname);
+                        fd.append("song", encodeURI(this.currentSong));
+                        console.log(fd);
+
+                        api_modify((data) => {
+                            console.log(data);
+                            // show(title, text, timeout = 0, buttonset = Toast.BUTTONS_ALERT, image = "")
+                            this.close();
+                            if ((data.errors ?? []).length > 0 || data.status != 0) {
+                                this.toast.show(
+                                    "Failed to add Song!",
+                                    (data.errors ?? []).length > 0 ? data.errors.join("<br>") : JSON.stringify(data),
+                                    5,
+                                    Toast.BUTTONS_NONE,
+                                    APACHE_ALIAS + "/assets/dialog-warning.png"
+                                );
+                            } else {
+                                this.toast.show(
+                                    "Success!",
+                                    `${decodeURI(this.currentSong)} was added successfully to playlist!`,
+                                    5,
+                                    Toast.BUTTONS_NONE,
+                                    APACHE_ALIAS + "/assets/dialog-ok.png"
+                                );
+                            }
+                        }, "playlist_songs", fd);
+                    });
                 });
-            });
-        }, "playlists");
+            }, "playlists");
+        } catch (error) {
+            console.error("Failed to build MusicPlaylistManager");
+            console.error(error);
+        }
+
     }
 }
 

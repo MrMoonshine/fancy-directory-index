@@ -57,7 +57,7 @@ class DirectoryIndex {
         // Scan Directory
         let table = document.getElementsByTagName("table")[0];
         if (!table) {
-            console.error("No table found in document!");
+            console.error("FATAL: No table found in document!");
             return;
         }
         // Get widget | fallback to body
