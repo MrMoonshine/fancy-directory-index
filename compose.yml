@@ -5,12 +5,12 @@ services:
     # https://hub.docker.com/_/php
     image: mrmoonshine/fancy-directory-index
     build: ./
-    hostname: hub
+    hostname: fancy-directory-index
     ports:
       - 8080:80
       - 8443:443
     restart: unless-stopped
     volumes:
-       #- ./testing/data.d:/data
-       - ./testing/www.d:/var/www/html/
+       - ./testing/meta.d:/data/www/fancy-directory-index/settings/data/
+       - ./testing/data.d:/var/www/html/
       #- ./logs/:/var/logs/apache/ # Doesn't work

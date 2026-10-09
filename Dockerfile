@@ -2,8 +2,11 @@ FROM docker.io/php:8.3-rc-apache-bookworm
 COPY . /data/www/fancy-directory-index/
 WORKDIR /data/www/fancy-directory-index/
 
+COPY fancy-directory-index.conf /etc/apache2/sites-available/fancy-directory-index.conf
+RUN a2ensite fancy-directory-index.conf
+
 #RUN apt update
-#RUN apt install -y restic
+#RUN apt install -y oxygen-icon-theme
 #RUN apt install -y  zlib1g-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev libwebp-dev libavif-dev
 #RUN docker-php-ext-configure gd --with-webp --with-jpeg --with-avif
 #RUN docker-php-ext-install gd  
