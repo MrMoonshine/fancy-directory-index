@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  webserver:
+    # https://hub.docker.com/_/php
+    image: mrmoonshine/fancy-directory-index
+    build: ./
+    hostname: hub
+    ports:
+      - 8080:80
+      - 8443:443
+    restart: unless-stopped
+    volumes:
+       #- ./testing/data.d:/data
+       - ./testing/www.d:/var/www/html/
+      #- ./logs/:/var/logs/apache/ # Doesn't work
