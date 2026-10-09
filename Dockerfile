@@ -4,6 +4,10 @@ WORKDIR /data/www/fancy-directory-index/
 
 COPY fancy-directory-index.conf /etc/apache2/sites-available/fancy-directory-index.conf
 RUN a2ensite fancy-directory-index.conf
+RUN a2enmod userdir
+
+RUN chmod -R 777 /data/www/fancy-directory-index/
+RUN chmod -R 777 /var/www/html/
 
 #RUN apt update
 #RUN apt install -y oxygen-icon-theme
