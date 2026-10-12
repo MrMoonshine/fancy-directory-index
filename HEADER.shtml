@@ -33,12 +33,12 @@
 						<div class="masked-icon" id="masked-icon-details"></div>
 					</label>
 				</div>
-				<a href="/fancy-directory-index/playlists.php" class="btn btn-outline big">
+				<!--<a href="/fancy-directory-index/playlists.php" class="btn btn-outline big">
 					<div class="masked-icon" style="mask-image: url('/fdi-icon-theme/actions/22/view-media-playlist.svg')">
 					</div>
-				</a>
+				</a>-->
 				<a href="/fancy-directory-index/settings" class="btn big">
-					<div class="masked-icon" style="mask-image: url('/fdi-icon-theme/actions/22/configure.svg')">
+					<div class="masked-icon" style="mask-image: url('/fancy-directory-index/assets/configure.svg')">
 					</div>
 				</a>
 			</div>

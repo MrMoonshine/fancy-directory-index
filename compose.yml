@@ -11,6 +11,7 @@ services:
       - 8443:443
     restart: unless-stopped
     volumes:
+       - ./:/data/www/fancy-directory-index/
        - ./testing/meta.d:/data/www/fancy-directory-index/settings/data/
        - ./testing/data.d:/var/www/html/
       #- ./logs/:/var/logs/apache/ # Doesn't work
