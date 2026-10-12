@@ -13,5 +13,4 @@ services:
     volumes:
        - ./testing/meta.d:/data/www/fancy-directory-index/settings/data/
        - ./testing/data.d:/var/www/html/
-       - /run/media/david/4ad7a8f5-6c5a-4360-8c80-7b76f59220db/AI/sdnext/outputs:/var/www/html/ai
       #- ./logs/:/var/logs/apache/ # Doesn't work
