@@ -121,24 +121,22 @@
                 <h2>Information</h2>
             </header>
             <article>
-                <?php phpinfo(); ?>
                 <?php
-                $addr = array(
-                    "given" => "Chris",
-                    "family" => "Dumars",
-                    "address" => array(
-                        "lines" => "458 Walkman Dr.
-            Suite #292",
-                        "city" => "Royal Oak",
-                        "state" => "MI",
-                        "postal" => 48046,
-                    ),
-                );
-                $yaml = "";
-                $yaml = yaml_emit($addr);
+                    require("settings.php");
+                    $settings = new Settings();
                 ?>
+                <div class="d-block">
+                    <div class="d-grid-2 gap">
+                        <div class="text-rigt text-bold">Favicon:</div>
+                        <div><code><?php echo $settings->config["favicon"]; ?></code></div>
+                    </div>
+                    <div class="d-grid-2 gap">
+                        <div class="text-rigt text-bold">Max image size to load original:</div>
+                        <div><code><?php echo $settings->config["preview"]["imageMaxSize"]; ?></code></div>
+                    </div>
+                </div>
                 <pre>
-                    <?php echo($yaml); ?>
+                    <?php var_dump($settings->config["preview"]) ?>
                 </pre>
             </article>
         </div>

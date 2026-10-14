@@ -1,3 +1,4 @@
+favicon: /favicon.ico
 alias:
   # Each Array entry represents an alias, as configured Apache-Config
   - name: Example

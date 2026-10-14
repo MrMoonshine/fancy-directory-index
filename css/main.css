@@ -506,6 +506,11 @@ input[name="dashboard-pages"]:checked+.dashboard-page {
     display: none !important;
 }
 
+.d-grid-2{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
 .d-flex {
     display: flex;
 }
@@ -516,6 +521,14 @@ input[name="dashboard-pages"]:checked+.dashboard-page {
 
 .text-center {
     text-align: center;
+}
+
+.text-left{
+    text-align: left;
+}
+
+.text-rigt{
+    text-align: right;
 }
 
 .text-small {
