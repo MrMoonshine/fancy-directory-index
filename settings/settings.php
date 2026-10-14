@@ -1,5 +1,6 @@
 <?php
-class Settings{
+class Settings
+{
     const CONFIG_DEFAULT = [
         "favicon" => "/favicon.ico",
         "preview" => [
@@ -20,18 +21,22 @@ class Settings{
     public $source;
     public $config;
 
-    public function __construct() {
-        $this->source = Settings::CONFIG_FILE;
-        
+    public function __construct()
+    {
+        $this->config = Settings::CONFIG_DEFAULT;
+        $this->source = Settings::SOURCE_DEFAULT;
+
         try {
-            if(!is_file(Settings::CONFIG_FILE)){
+            if (!is_file(Settings::CONFIG_FILE)) {
                 yaml_emit_file(Settings::CONFIG_FILE, Settings::CONFIG_DEFAULT);
             }
 
-            $this->config = yaml_parse_file(Settings::CONFIG_FILE);
-            if($this->config == false){
+            $result = yaml_parse_file(Settings::CONFIG_FILE);
+            if ($result == false) {
                 throw new Exception("yaml_parse: false on failure", 1);
             }
+            // Replace missing config with default config
+            $this->config = array_replace_recursive(Settings::CONFIG_DEFAULT, $result);
         } catch (\Throwable $th) {
             $this->config = Settings::CONFIG_DEFAULT;
             $this->source = Settings::SOURCE_DEFAULT;

@@ -131,12 +131,22 @@
                         <div><code><?php echo $settings->config["favicon"]; ?></code></div>
                     </div>
                     <div class="d-grid-2 gap">
+                        <div class="text-rigt text-bold">Location of preview images:</div>
+                        <div><code><?php echo $settings->config["preview"]["directory"]; ?></code></div>
+                    </div>
+                    <div class="d-grid-2 gap">
                         <div class="text-rigt text-bold">Max image size to load original:</div>
                         <div><code><?php echo $settings->config["preview"]["imageMaxSize"]; ?></code></div>
                     </div>
                 </div>
                 <pre>
-                    <?php var_dump($settings->config["preview"]) ?>
+                    <?php 
+                        try {
+                            echo yaml_emit($settings->config);
+                        } catch (\Throwable $th) {
+                            var_dump($settings->config);
+                        }
+                    ?>
                 </pre>
             </article>
         </div>
