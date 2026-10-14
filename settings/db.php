@@ -167,7 +167,7 @@ class DirectoryDB extends SQLite3
         }
     }
 
-    public function options_get()
+    /*public function options_get()
     {
         $retval = [
             "pageicon" => "/favicon.ico",
@@ -263,7 +263,7 @@ class DirectoryDB extends SQLite3
             }
             //array_push($this->errors, $stmt->getSQL(true));
         }
-    }
+    }*/
 
     public function alias_get()
     {

@@ -17,19 +17,6 @@ $PAYLOAD = [
     "data" => []
 ];
 
-/*function thumbnail_dir2path($db, $dir)
-{
-    // Is it on default document root?
-    if (str_starts_with($dir, $_SERVER["DOCUMENT_ROOT"])) {
-        $dir = str_replace($_SERVER["DOCUMENT_ROOT"], "", $dir);
-        if (str_starts_with($dir, "/")) {
-            return $dir;
-        }
-        return "/" . $dir;
-    }
-    return $db->alias_resolve($dir, true);
-}*/
-
 function thumbnail_leftovers($newtns, $oldtns)
 {
     $retval = [];
@@ -42,7 +29,10 @@ function thumbnail_leftovers($newtns, $oldtns)
 }
 
 try {
+    require("settings.php");
     require("db.php");
+
+    $settings = new Settings();
     // Check if a File either exists or has been created successfully on demand
     $fileFailureHandlingInfo = DirectoryDB::create_if_not_exists();
     $PAYLOAD['status'] = $fileFailureHandlingInfo['status'];
@@ -133,6 +123,10 @@ try {
             ];
             array_push($PAYLOAD['files'], $fileinfo);
         }
+    }
+
+    if (isset($_GET["settings"])){
+        $PAYLOAD["settings"] = $settings->config;
     }
 
     if (isset($_POST["cleanup"]) || isset($_GET["cleanup"])) {

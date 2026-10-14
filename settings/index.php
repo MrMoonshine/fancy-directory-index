@@ -138,6 +138,10 @@
                         <div class="text-rigt text-bold">Max image size to load original:</div>
                         <div><code><?php echo $settings->config["preview"]["imageMaxSize"]; ?></code></div>
                     </div>
+                    <div class="d-grid-2 gap">
+                        <div class="text-rigt text-bold">Target size of preview icons [px]:</div>
+                        <div><code><?php echo $settings->config["preview"]["iconSize"]; ?></code></div>
+                    </div>
                 </div>
                 <pre>
                     <?php 
@@ -148,6 +152,10 @@
                         }
                     ?>
                 </pre>
+                <hr>
+                <?php
+                    echo $settings->alias_resolve("/fdi-icon-theme/base/128x128/mimetypes/application-vnd.ms-excel.png");
+                ?>
             </article>
         </div>
     </div>
