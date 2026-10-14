@@ -147,6 +147,9 @@ class CleanupForm extends Form {
     }
 }
 
+console.log("Applying theme from cookeis...")
+set_theme_from_cookies();
+
 let themeformdom = document.querySelector("#themeform");
 if (themeformdom) {
     new ThemeForm(themeformdom);

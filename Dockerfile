@@ -11,6 +11,12 @@ RUN chmod -R 777 /var/www/html/
 
 RUN apt update
 RUN apt install -y oxygen-icon-theme
+# Install PHP Yaml lib
+RUN apt install -y --no-install-recommends libyaml-dev libyaml-0-2 \
+    && pecl install yaml \
+    && docker-php-ext-enable yaml \
+    && apt purge -y --auto-remove libyaml-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 
 

@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="/fancy-directory-index/css/toast.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body class="wallpaper">
+<body class="wallpaper ">
 	<div id="content">
 		<nav class="d-flex flex-nowrap justify-content-between">
 			<!--<img alt="Icon" src=".directory" onerror='this.style.display = "none"'/>-->

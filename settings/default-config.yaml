@@ -1,0 +1,9 @@
+alias:
+  # Each Array entry represents an alias, as configured Apache-Config
+  - name: Example
+    path: /fdi-icon-theme/
+    dir: /usr/share/icons/oxygen/
+
+preview:
+  # This is the maximum size of an image to get loaded, otherwise, generate a small preview
+  imageMaxSize: 1MB

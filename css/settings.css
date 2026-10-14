@@ -11,32 +11,18 @@ body{
 }
 
 .widget{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 25rem;
-    width: 100%;
-    max-width: unset;
-    border: 1px solid grey;
-}
-
-.widget article{
-    display: block;
-    overflow-y: auto;
-    flex-grow: 10;
-    padding: 6px;
+    padding: 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 2px;
 }
 
 .widget header{
-    background-color: var(--color-background-1);
-    padding: 12px;
-    border-top: 5px solid var(--color-main);
-}
-
-.widget footer{
-    display: flex;
-    flex-direction: row-reverse;
-    padding: 8px;
+    display: block;
+    margin: 0px auto;
+    padding: 4px;
+    max-width: 40rem;
+    text-align: center;
+    border-radius: 2px;
 }
 
 .widget header h2{
@@ -89,6 +75,6 @@ table.table tfoot tr{
 
     .widget{
         margin-bottom: var(--gap-dashboard);
-        max-width: 50em;
+        max-width: 50rem;
     }
 }
