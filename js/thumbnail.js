@@ -26,7 +26,7 @@ class Thumbnail {
         let myurl = new URL(window.location);
 
         let fd = new FormData();
-        fd.set("video", filename);
+        fd.set("asset", filename);
         fd.set("path", myurl.pathname);
 
         this.video.addEventListener("loadeddata", () => {
@@ -83,7 +83,7 @@ class Thumbnail {
                 thumburl.pathname = THUMBNAIL_API;
                 let myurl = new URL(window.location);
                 let fd = new FormData();
-                fd.set("video", filename);
+                fd.set("asset", filename);
                 fd.set("path", myurl.pathname);
                 let thumbreq = new XMLHttpRequest();
                 if (picture) {
@@ -115,6 +115,10 @@ class Thumbnail {
         });
         });
         req.send();
+    }
+
+    createImageThumbnail(filename, callback){
+
     }
 
     toBase64() {

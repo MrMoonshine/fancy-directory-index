@@ -81,7 +81,7 @@ try {
                 $ddb->thumbnails_delete($leftover["id"]);
             }
         }
-    } else if (isset($_POST["video"]) && isset($_POST["path"]) && isset($_POST["thumbnail"])) {
+    } else if (isset($_POST["asset"]) && isset($_POST["path"]) && isset($_POST["thumbnail"])) {
         $pathid = $ddb->path_get_id($_POST["path"]);
         if ($_POST["thumbnail"] != "NONE") {
             // Create new Thumbnail
@@ -99,12 +99,12 @@ try {
 
             $PAYLOAD["thumbnail"] = $filename;
             $PAYLOAD["thumbnailpath"] = $filepath;
-            $dbret = $ddb->thumbnails_create($filename, $_POST["video"], $pathid);
+            $dbret = $ddb->thumbnails_create($filename, $_POST["asset"], $pathid);
             if ($dbret >= 0) {
                 file_put_contents($filepath, base64_decode($thumbnaildata));
             }
         } else {
-            $dbret = $ddb->thumbnails_create("NONE", $_POST["video"], $pathid);
+            $dbret = $ddb->thumbnails_create("NONE", $_POST["asset"], $pathid);
         }
 
     }
