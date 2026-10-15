@@ -154,7 +154,10 @@
                 </pre>
                 <hr>
                 <?php
-                    echo $settings->alias_resolve("/fdi-icon-theme/base/128x128/mimetypes/application-vnd.ms-excel.png");
+                    //echo $settings->alias_resolve("/fdi-icon-theme/base/128x128/mimetypes/application-vnd.ms-excel.png");
+                    echo $settings->alias_resolve($settings->config["preview"]["directory"]);
+                    echo("<br>");
+                    echo dirname(__FILE__);
                 ?>
             </article>
         </div>

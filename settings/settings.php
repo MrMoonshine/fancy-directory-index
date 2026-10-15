@@ -50,6 +50,11 @@ class Settings
         $aliases = $this->config["alias"];
         $docroot = Settings::remove_last_slash($_SERVER["DOCUMENT_ROOT"]);
         $directory = $docroot . $pathname;
+
+        if(!$reverse && str_starts_with($pathname, "/fancy-directory-index/settings/")){
+            return str_replace("/fancy-directory-index/settings", dirname(__FILE__), $pathname);
+        }
+
         foreach ($aliases as $alias) {
             $patheval = Settings::add_last_slash($pathname);
             if (!$reverse && str_contains($patheval, $alias["path"])) {

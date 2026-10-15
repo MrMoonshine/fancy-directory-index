@@ -40,13 +40,12 @@ try {
     // Create DB
     $ddb = new DirectoryDB(DirectoryDB::DB_FILE);
     $ddb->setup();
-    $OPTIONS = $ddb->options_get();
 
     //var_dump($_POST);
 
     if (isset($_POST['solicitation'])) {
-        //$PAYLOAD["path"] = thumbnail_dir2path($ddb, $OPTIONS['thumbnaildir']);
-        $PAYLOAD["path"] = $ddb->thumbnail_dir2path($OPTIONS['thumbnaildir']);
+        //$PAYLOAD["path"] = thumbnail_dir2path($ddb, $settings->config["preview"]["directory"]);
+        $PAYLOAD["path"] = $ddb->thumbnail_dir2path($settings->config["preview"]["directory"]);
         //file_put_contents("/tmp/test.txt", $_POST['solicitation']);
         $jstr = base64_decode($_POST['solicitation']);
 
@@ -88,10 +87,18 @@ try {
             // Create new Thumbnail
             $filename = hash("sha256", time() . $_POST["thumbnail"]) . ".webp";
             $thumbnaildata = preg_replace("/^data\:image\/[a-z]+\;base64\,/", "", $_POST["thumbnail"], 1);
+
+            // create dir if not present
+            $directory = $settings->alias_resolve($settings->config["preview"]["directory"]);
+            if(!is_dir($directory)){
+                mkdir($directory);
+            }
+
             // thumbnaildir
-            $filepath = $OPTIONS["thumbnaildir"] . $filename;
-            //$filepath = "/var/www/fancy-directory-index/settings/data/".$filename;
+            $filepath = $directory.$filename;
+
             $PAYLOAD["thumbnail"] = $filename;
+            $PAYLOAD["thumbnailpath"] = $filepath;
             $dbret = $ddb->thumbnails_create($filename, $_POST["video"], $pathid);
             if ($dbret >= 0) {
                 file_put_contents($filepath, base64_decode($thumbnaildata));
@@ -133,7 +140,7 @@ try {
         // Detect orphans and remove them
         $PAYLOAD["orphans"] = [];
         $thumbnals = $ddb->thumbnails_get(-1);
-        $files = scandir($OPTIONS['thumbnaildir']);
+        $files = scandir($settings->config["preview"]["directory"]);
         foreach ($files as $file) {
             if (!str_ends_with($file, ".webp")) {
                 continue;
@@ -147,7 +154,7 @@ try {
 
             if ($counter == 0) {
                 array_push($PAYLOAD["orphans"], $file);
-                unlink(DirectoryDB::add_last_slash($OPTIONS['thumbnaildir']) . $file);
+                unlink(DirectoryDB::add_last_slash($settings->config["preview"]["directory"]) . $file);
             }
         }
         $PAYLOAD["cleanupcount"] = count($PAYLOAD["orphans"]);
@@ -157,8 +164,7 @@ try {
         switch ($_GET["resource"]) {
             case "playlists":
                 $PAYLOAD["data"] = $ddb->playlist_get($_GET["id"] ?? null);
-                $options = $ddb->options_get();
-                $PAYLOAD["thumbnailpath"] = $ddb->thumbnail_dir2path($options['thumbnaildir'])."playlists/";
+                $PAYLOAD["thumbnailpath"] = $ddb->thumbnail_dir2path($settings->config['preview']["directory"])."playlists/";
                 break;
             default:
                 break;
