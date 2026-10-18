@@ -252,7 +252,7 @@ class Polaroid extends PaginationItem {
             errtestimg.remove();
             this.item.classList.add("frame");
 
-            if(this.file.type == File.Types.IMAGE){
+            if(this.file.filetype == File.Types.IMAGE){
                 this.iconContainer.innerHTML = "";
             }
         });
