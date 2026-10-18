@@ -30,6 +30,8 @@ class Preview{
         this.actionOpen = document.querySelector("#preview-a-open");
         this.actionDownload = document.querySelector("#preview-a-download");
         this.actionClose = document.querySelector("#preview-a-close");
+        // for mobile, to avoid download banner covering close option
+        this.actionClose.style.marginBottom = "3rem";
 
         /*this.actionOpen = Preview.action_create("Open in new tab", ICON_NEW_TAB);
         this.actionOpen.setAttribute("target", "_blank");*/
@@ -86,11 +88,11 @@ class Preview{
         this.captionDimensions = captions[1];
         this.captionSize = captions[2];
 
-        // Write Image DImensions
-        /*this.previewImage.addEventListener("load", () => {
-            this.captionDimensions.innerText = `${this.previewImage.naturalWidth}x${this.previewImage.naturalHeight}`;
-            this.captionDimensions.classList.remove(CLASS_HIDDEN);
-        });*/
+        this.captionFilename.classList.add("text-bold");
+        // Write Image Dimensions
+        this.previewImage.addEventListener("load", () => {
+            this.captionDimensions.innerText = `${this.previewImage.naturalWidth}x${this.previewImage.naturalHeight} px`;
+        });
 
         // Buttons for next & prev item
         this.prevbutton = document.querySelector("#preview-prev");
@@ -102,25 +104,6 @@ class Preview{
         this.nextbutton.addEventListener("click", () => {
             this.show_next();
         });
-        /*this.prevbutton = document.createElement("button");
-        this.prevbutton.setAttribute("type", "button");
-        this.prevbutton.classList.add("prev");
-        this.prevbutton.classList.add("d-desktop");
-        this.prevbutton.innerHTML = "&#8249;";
-        this.prevbutton.addEventListener("click", () => {
-            this.show_prev();
-        });
-        this.domPreview.appendChild(this.prevbutton);
-
-        this.nextbutton = document.createElement("button");
-        this.nextbutton.setAttribute("type", "button");
-        this.nextbutton.classList.add("next");
-        this.nextbutton.classList.add("d-desktop");
-        this.nextbutton.innerHTML = "&#8250;";
-        this.nextbutton.addEventListener("click", () => {
-            this.show_next();
-        });
-        this.domPreview.appendChild(this.nextbutton);*/
 
         // Image zoom
         this.previewImage.addEventListener("click", () => {
@@ -146,6 +129,8 @@ class Preview{
         this.figcaption.innerText = file.getFileName();
         //this.mimeFigcaption.innerText = file.getFileName();
         this.captionFilename.innerText = file.getFileName();
+        this.captionSize.innerText = file.getSizeH();
+        this.captionDimensions.innerText = "";
         this.mimeIcon.src = file.getMimeIcon();
 
         this.actionOpen.href = file.getFileName();

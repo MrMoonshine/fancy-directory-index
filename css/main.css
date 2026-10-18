@@ -160,9 +160,9 @@ body {
     gap: var(--gap-dashboard);
 
     color: var(--color-text);
-    /*background-color: var(--color-main);
+    background-color: var(--color-background-1);
 
-    margin: 0;
+    /*margin: 0;
     padding: var(--gap-dashboard);
     padding-top: 0px;*/
     height: 100vh;
@@ -326,9 +326,10 @@ nav .btn.big .masked-icon {
 
 .glass-background,
 nav,
-.icon-frame {
+.icon-frame,
+.preview {
     background-color: var(--color-background-translucent);
-    background-image: url("/assets/aero_glass.png");
+    background-image: url("/fancy-directory-index/assets/aero_glass.png");
 }
 
 nav .nav-container,
@@ -429,7 +430,8 @@ input[name="dashboard-pages"]:checked+.dashboard-page {
 
 .actions {
     display: block;
-    padding: 12px;
+    padding: var(--gap-dashboard);
+    width: 12rem;
 }
 
 .action:first-child {
@@ -440,27 +442,30 @@ input[name="dashboard-pages"]:checked+.dashboard-page {
 .action:last-child {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
-    border-bottom: 2px solid var(--color-text);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .action {
     display: flex;
     width: 100%;
-    padding: 12px 24px;
+    padding: 0.2rem 0.3rem;
     box-sizing: border-box;
 
     cursor: pointer;
 
+    background: var(--gradient-transparent);
+
     color: var(--color-text);
     background-color: var(--color-background-2);
-    border: 2px solid var(--color-text);
+    border: 1px solid var(--color-border);
     border-bottom: none;
 
     text-decoration: none;
 }
 
 .action:not([disabled]):hover {
-    background-color: var(--color-background-1);
+    background-color: var(--color-main);
+    color: var(--color-text-button);
 }
 
 .action:disabled {

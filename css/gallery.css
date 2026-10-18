@@ -327,6 +327,11 @@ dialog .modal-body{
     display: flex;
     justify-content: center;
     gap: var(--gap-dashboard);
+
+    margin: 4px;
+    padding: 4px;
+    border-radius: 3px;
+    border: 1px solid var(--color-border);
 }
 
 .preview .icon{
@@ -341,6 +346,7 @@ dialog .modal-body{
 }
 
 .preview figcaption{
+    /*display: none;*/
     text-align: center;
     overflow-x: hidden;
     text-wrap: wrap;
@@ -355,6 +361,8 @@ dialog .modal-body{
     display: block;
     margin: auto;
     object-fit: scale-down;
+
+    border-radius: 2px;
 }
 
 #preview-figure img{
