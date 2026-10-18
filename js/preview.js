@@ -170,13 +170,13 @@ class Preview{
             }
         }
 
+        this.previewVideo.remove();
         switch (file.filetype) {
             case File.Types.IMAGE:
                 dom_show(this.previewImage, true);
                 this.previewImage.src = file.getFileLink();
                 break;
             case File.Types.VIDEO:
-                this.previewVideo.remove();
                 this.previewVideo = document.createElement("video");
                 let src1 = document.createElement("source");
                 src1.src = file.getFileLink();
