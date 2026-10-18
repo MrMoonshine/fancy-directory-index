@@ -2,6 +2,7 @@ const THUMBNAIL_API = APACHE_ALIAS + "settings/api.php";
 const THUMBNAIL_CREATE_RATE_LIMIT = 2500; //ms => wait 5 seconds after each generation
 
 class Thumbnail {
+    static IMAGE_DIMENSION = 256;
     static TODO = [];
     static DIRECTORY = THUMBNAIL_DIR;
     static PROGRESS_BAR = document.createElement("progress");
@@ -128,14 +129,14 @@ class Thumbnail {
         //document.body.appendChild(this.image);
         img.addEventListener("load", () => {
             const canvas = document.createElement("canvas");
-            canvas.width = THUMBNAIL_IMAGE_DIMENSION;
-            canvas.height = THUMBNAIL_IMAGE_DIMENSION;
+            canvas.width = Thumbnail.IMAGE_DIMENSION;
+            canvas.height = Thumbnail.IMAGE_DIMENSION;
 
             const ctx = canvas.getContext("2d");
 
-            const scale = Math.min(
-                128 / img.naturalWidth,
-                128 / img.naturalHeight
+            const scale = Math.max(
+                Thumbnail.IMAGE_DIMENSION / img.naturalWidth,
+                Thumbnail.IMAGE_DIMENSION / img.naturalHeight
             );
 
             const width = img.naturalWidth * scale;
@@ -143,8 +144,8 @@ class Thumbnail {
 
             ctx.drawImage(
                 img,
-                (THUMBNAIL_IMAGE_DIMENSION - width) / 2,
-                (THUMBNAIL_IMAGE_DIMENSION - height) / 2,
+                (Thumbnail.IMAGE_DIMENSION - width) / 2,
+                (Thumbnail.IMAGE_DIMENSION - height) / 2,
                 width,
                 height
             );
@@ -229,6 +230,11 @@ class Thumbnail {
             //console.log(req.response);
             try {
                 let jobj = JSON.parse(req.response);
+                try {
+                    Thumbnail.IMAGE_DIMENSION = Number(jobj["settings"]["preview"]["iconSize"]);
+                } catch (error) {
+                    console.warn(error);
+                }
                 callback(jobj);
             } catch (e) {
                 console.error(e);

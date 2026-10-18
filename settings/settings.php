@@ -5,8 +5,8 @@ class Settings
         "favicon" => "/favicon.ico",
         "preview" => [
             "enabled" => true,
-            "imageMaxSize" => "1MB",
-            "iconSize" => 96,
+            //"imageMaxSize" => "1MB",
+            "iconSize" => 256,
             "directory" => "/fancy-directory-index/settings/data/previews/"
         ],
         "alias" => [

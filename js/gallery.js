@@ -145,6 +145,12 @@ class Polaroid extends PaginationItem {
                     this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.getFileLink())}")`;
                     this.item.classList.add("frame");
                     this.item.classList.add("border-color");
+                }else{
+                    let icon = new Image();
+                    icon.alt = this.file.img.alt ?? "";
+                    icon.src = this.file.img.src;
+                    icon.classList.add("icon");
+                    this.iconContainer.appendChild(icon);
                 }
                 break;
             case File.Types.VIDEO:
@@ -245,6 +251,8 @@ class Polaroid extends PaginationItem {
         errtestimg.addEventListener("load", () => {
             errtestimg.remove();
             this.item.classList.add("frame");
+
+            this.iconContainer.innerHTML = "";
         });
         this.item.appendChild(errtestimg);
         errtestimg.src = image;

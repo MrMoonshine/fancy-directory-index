@@ -44,6 +44,7 @@ try {
     //var_dump($_POST);
 
     if (isset($_POST['solicitation'])) {
+        $PAYLOAD["settings"] = $settings->config;
         //$PAYLOAD["path"] = thumbnail_dir2path($ddb, $settings->config["preview"]["directory"]);
         $PAYLOAD["path"] = $ddb->thumbnail_dir2path($settings->config["preview"]["directory"]);
         //file_put_contents("/tmp/test.txt", $_POST['solicitation']);
