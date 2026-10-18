@@ -1,6 +1,6 @@
 const THUMBNAIL_API = APACHE_ALIAS + "settings/api.php";
 const THUMBNAIL_CREATE_RATE_LIMIT = 2500; //ms => wait 5 seconds after each generation
- 
+
 class Thumbnail {
     static TODO = [];
     static DIRECTORY = THUMBNAIL_DIR;
@@ -11,13 +11,13 @@ class Thumbnail {
         let filename = encodeURIComponent(file.getFileName());
         console.log("[Thumbnail] Requesting new for " + filename);
 
-        if(file.filetype == File.Types.IMAGE) {
+        if (file.filetype == File.Types.IMAGE) {
             this.createImageThumbnail(filename, callback);
-        }else if(file.filetype == File.Types.VIDEO) {
+        } else if (file.filetype == File.Types.VIDEO) {
             this.createVideoThumbnail(filename, callback);
-        }else if (filename.toLowerCase().endsWith(".mp3")) {
+        } else if (filename.toLowerCase().endsWith(".mp3")) {
             this.createAudioThumbnail(filename, callback);
-        } 
+        }
     }
 
     createVideoThumbnail(filename, callback) {
@@ -80,50 +80,100 @@ class Thumbnail {
         req.addEventListener("load", () => {
             console.log(req.response);
             jsmediatags.read(req.response, {
-            onSuccess: (tag) => {
-                console.log("Tags from audio:", tag);
-                const picture = tag.tags.picture;
-                // Setup API URL
-                let thumburl = new URL(window.location);
-                thumburl.pathname = THUMBNAIL_API;
-                let myurl = new URL(window.location);
-                let fd = new FormData();
-                fd.set("asset", filename);
-                fd.set("path", myurl.pathname);
-                let thumbreq = new XMLHttpRequest();
-                if (picture) {
-                    const base64String = picture.data
-                        .map(byte => String.fromCharCode(byte))
-                        .join('');
-                    const imageUrl = `data:${picture.format};base64,${btoa(base64String)}`;
+                onSuccess: (tag) => {
+                    console.log("Tags from audio:", tag);
+                    const picture = tag.tags.picture;
+                    // Setup API URL
+                    let thumburl = new URL(window.location);
+                    thumburl.pathname = THUMBNAIL_API;
+                    let myurl = new URL(window.location);
+                    let fd = new FormData();
+                    fd.set("asset", filename);
+                    fd.set("path", myurl.pathname);
+                    let thumbreq = new XMLHttpRequest();
+                    if (picture) {
+                        const base64String = picture.data
+                            .map(byte => String.fromCharCode(byte))
+                            .join('');
+                        const imageUrl = `data:${picture.format};base64,${btoa(base64String)}`;
 
-                    fd.set("thumbnail", imageUrl);
-                    thumbreq.addEventListener("load", (event) => {
-                        Thumbnail.requestHandler(thumbreq, callback);
-                    });
-                    //thumbreq.setthumbrequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    console.log("Requesting thumbnail for "+filename);
-                    
-                }else{
-                    fd.set("thumbnail", "NONE");
-                    console.log(filename + " has no thumbnail!");
-                    callback(null);
-                    // Fire and forget
+                        fd.set("thumbnail", imageUrl);
+                        thumbreq.addEventListener("load", (event) => {
+                            Thumbnail.requestHandler(thumbreq, callback);
+                        });
+                        //thumbreq.setthumbrequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        console.log("Requesting thumbnail for " + filename);
+
+                    } else {
+                        fd.set("thumbnail", "NONE");
+                        console.log(filename + " has no thumbnail!");
+                        callback(null);
+                        // Fire and forget
+                    }
+
+                    thumbreq.open("POST", thumburl, true);
+                    thumbreq.send(fd);
+                },
+                onError: function (error) {
+                    console.error("Metadata read error:", error);
                 }
-
-                thumbreq.open("POST", thumburl, true);
-                thumbreq.send(fd);
-            },
-            onError: function(error) {
-                console.error("Metadata read error:", error);
-            }
-        });
+            });
         });
         req.send();
     }
 
-    createImageThumbnail(filename, callback){
+    createImageThumbnail(filename, callback) {
+        //console.log("here createImageThumbnail")
+        let img = new Image();
+        //document.body.appendChild(this.image);
+        img.addEventListener("load", () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = THUMBNAIL_IMAGE_DIMENSION;
+            canvas.height = THUMBNAIL_IMAGE_DIMENSION;
 
+            const ctx = canvas.getContext("2d");
+
+            const scale = Math.min(
+                128 / img.naturalWidth,
+                128 / img.naturalHeight
+            );
+
+            const width = img.naturalWidth * scale;
+            const height = img.naturalHeight * scale;
+
+            ctx.drawImage(
+                img,
+                (THUMBNAIL_IMAGE_DIMENSION - width) / 2,
+                (THUMBNAIL_IMAGE_DIMENSION - height) / 2,
+                width,
+                height
+            );
+
+            let imageData = canvas.toDataURL("image/webp", 0.85);
+            let base64 = imageData.replace(/^data:image\/(png|jpeg);base64,/, '');
+            //console.log(base64);
+
+            let myurl = new URL(window.location);
+            let fd = new FormData();
+            fd.set("asset", filename);
+            fd.set("path", myurl.pathname);
+
+            fd.set("thumbnail", base64);
+            // Submit finished thumbnail to server
+            let url = new URL(window.location);
+            url.pathname = THUMBNAIL_API;
+            let req = new XMLHttpRequest();
+            req.addEventListener("load", (event) => {
+                Thumbnail.requestHandler(req, callback);
+            });
+            req.open("POST", url, true);
+            //req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            req.send(fd);
+        });
+        img.addEventListener("Error", () => {
+            console.warn("Unable to load " + filename);
+        })
+        img.src = filename;
     }
 
     toBase64() {
@@ -156,7 +206,7 @@ class Thumbnail {
         }
     }
 
-    static setToastProgress(){
+    static setToastProgress() {
 
     }
 

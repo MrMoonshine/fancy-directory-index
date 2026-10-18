@@ -140,7 +140,7 @@ class Polaroid extends PaginationItem {
         //var image = "";
         switch (this.file.filetype) {
             case File.Types.IMAGE:
-                console.log(this.file.getFileName(), " size is ", this.file.getSizeH())
+                //console.log(this.file.getFileName(), " size is ", this.file.getSizeH())
                 if (this.file.getSize() < THUMBNAIL_IMAGE_MAX_SIZE) {
                     this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.getFileLink())}")`;
                     this.item.classList.add("frame");
