@@ -249,12 +249,10 @@ class Polaroid extends PaginationItem {
     }
 
     createThumbnail(tdir = THUMBNAIL_DIR, callback = null) {
-        let filename = encodeURIComponent(this.file.getFileName());
-        console.log("Requesting a new Thumbnail for " + filename);
         try{
-            let thumbnail = new Thumbnail(filename, (data) => {
+            let thumbnail = new Thumbnail(this.file, (data) => {
                 if(data){
-                    console.log(`Setting new Thumbnail for ${filename} to ${tdir + data["thumbnail"]}`);
+                    console.log(`Setting new Thumbnail for ${this.file.getFileName()} to ${tdir + data["thumbnail"]}`);
                     this.setThumbnail(tdir + data["thumbnail"]);
                 }
                 

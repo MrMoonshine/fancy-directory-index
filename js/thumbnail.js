@@ -7,12 +7,17 @@ class Thumbnail {
     static PROGRESS_BAR = document.createElement("progress");
     static TOAST = new Toast();
 
-    constructor(filename, callback) {
-        if (filename.toLowerCase().endsWith(".mp3")) {
-            this.createAudioThumbnail(filename, callback);
-        } else {
+    constructor(file, callback) {
+        let filename = encodeURIComponent(file.getFileName());
+        console.log("[Thumbnail] Requesting new for " + filename);
+
+        if(file.filetype == File.Types.IMAGE) {
+            this.createImageThumbnail(filename, callback);
+        }else if(file.filetype == File.Types.VIDEO) {
             this.createVideoThumbnail(filename, callback);
-        }
+        }else if (filename.toLowerCase().endsWith(".mp3")) {
+            this.createAudioThumbnail(filename, callback);
+        } 
     }
 
     createVideoThumbnail(filename, callback) {
