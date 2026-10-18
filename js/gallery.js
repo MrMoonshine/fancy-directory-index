@@ -95,7 +95,7 @@ class Polaroid extends PaginationItem {
             fbtop.appendChild(newtabbutton);
             fbtop.appendChild(copybutton);
 
-            if(this.file.filetype == File.Types.AUDIO){
+            if (this.file.filetype == File.Types.AUDIO) {
                 fbtop.appendChild(this.playlistButton);
             }
 
@@ -140,9 +140,12 @@ class Polaroid extends PaginationItem {
         //var image = "";
         switch (this.file.filetype) {
             case File.Types.IMAGE:
-                this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.getFileLink())}")`;
-                this.item.classList.add("frame");
-                this.item.classList.add("border-color");
+                console.log(this.file.getFileName(), " size is ", this.file.getSizeH())
+                if (this.file.getSize() < THUMBNAIL_IMAGE_MAX_SIZE) {
+                    this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.getFileLink())}")`;
+                    this.item.classList.add("frame");
+                    this.item.classList.add("border-color");
+                }
                 break;
             case File.Types.VIDEO:
                 //image = ".thumbnail." + this.filename + ".jpg";
@@ -169,7 +172,7 @@ class Polaroid extends PaginationItem {
                 // This css class allows the folders to be hue-rotated to the theme color
                 iconDir.classList.add("directory");
                 iconDir.classList.add("hue-rotate-auto");
-                
+
                 this.iconContainer.appendChild(iconDir);
                 break;
             case File.Types.WEB:
@@ -178,7 +181,7 @@ class Polaroid extends PaginationItem {
                 iconWeb.alt = this.file.img.alt ?? "";
                 iconWeb.src = this.file.img.src;
                 iconWeb.classList.add("icon");
-                
+
                 this.iconContainer.appendChild(iconDir);
                 break;
             default:
@@ -222,7 +225,7 @@ class Polaroid extends PaginationItem {
     }
 
     setThumbnail(image) {
-        console.log("[POLAROID] Try to set "+ this.file.getFileName() + " Thumbnail: " + image);
+        console.log("[POLAROID] Try to set " + this.file.getFileName() + " Thumbnail: " + image);
         if (image.length < 1) {
             this.item.style.backgroundImage = `url("${this.file.img.src}")`;
             return;
@@ -249,18 +252,18 @@ class Polaroid extends PaginationItem {
     }
 
     createThumbnail(tdir = THUMBNAIL_DIR, callback = null) {
-        try{
+        try {
             let thumbnail = new Thumbnail(this.file, (data) => {
-                if(data){
+                if (data) {
                     console.log(`Setting new Thumbnail for ${this.file.getFileName()} to ${tdir + data["thumbnail"]}`);
                     this.setThumbnail(tdir + data["thumbnail"]);
                 }
-                
-                if(callback){
+
+                if (callback) {
                     callback();
                 }
             });
-        }catch(e){
+        } catch (e) {
             console.warn(e);
         }
     }

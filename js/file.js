@@ -176,6 +176,8 @@ class File {
             exponent = 6;
         } else if (str.toUpperCase().includes("G")) {
             exponent = 9;
+        } else if (str.toUpperCase().includes("T")) {
+            exponent = 12;
         }
         return base * Math.pow(10, exponent);
     }

@@ -6,6 +6,7 @@ const API_ENDPOINT = APACHE_ALIAS + "settings/api.php";
 
 const THUMBNAIL_ENABLE = true;
 var THUMBNAIL_DIR = APACHE_ALIAS + "settings/data/";
+const THUMBNAIL_IMAGE_MAX_SIZE = 1 * Math.pow(10, 6); // 1MiB
 
 const CLASS_HIDDEN = "d-none";
 const CLASS_UNKNOWN = "unknown";

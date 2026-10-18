@@ -65,8 +65,8 @@ class DirectoryIndex {
 
         this.files = File.fetchFromHTML(table, null);
 
-        this.avfiles = this.files.filter(val => (val.filetype == File.Types.VIDEO || val.filetype == File.Types.AUDIO));
-        if (this.avfiles.length > 0) {
+        this.thumbnailables = this.files.filter(val => (val.filetype == File.Types.VIDEO || val.filetype == File.Types.AUDIO || (val.filetype == File.Types.IMAGE && val.getSize() < THUMBNAIL_IMAGE_MAX_SIZE)));
+        if (this.thumbnailables.length > 0) {
             this.getThumbnails();
         }
 
@@ -175,7 +175,7 @@ class DirectoryIndex {
             "path": "",
             "files": []
         };
-        this.avfiles.forEach(avfile => {
+        this.thumbnailables.forEach(avfile => {
             let url = new URL(avfile.href);
             let videofile = avfile.getFileName();
             const lastSlashIndex = url.pathname.lastIndexOf('/');
@@ -192,7 +192,7 @@ class DirectoryIndex {
             // set resolved dir path
             Thumbnail.DIRECTORY = data["path"];
             // Check for thumbnails
-            this.avfiles.forEach(video => {
+            this.thumbnailables.forEach(video => {
                 data["files"].forEach(trf => {
                     if (DirectoryIndex.matchFilename(video.getFileName(), trf["name"])) {
                         if (trf["thumbnail"].length > 0) {
