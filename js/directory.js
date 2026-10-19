@@ -65,7 +65,8 @@ class DirectoryIndex {
 
         this.files = File.fetchFromHTML(table, null);
 
-        this.thumbnailables = this.files.filter(val => (val.filetype == File.Types.VIDEO || val.filetype == File.Types.AUDIO || (val.filetype == File.Types.IMAGE && val.getSize() > THUMBNAIL_IMAGE_MAX_SIZE)));
+        //this.thumbnailables = this.files.filter(val => (val.filetype == File.Types.VIDEO || val.filetype == File.Types.AUDIO || (val.filetype == File.Types.IMAGE && val.getSize() > THUMBNAIL_IMAGE_MAX_SIZE)));
+        this.thumbnailables = this.files.filter(val => val.usesThumbnails());
         if (this.thumbnailables.length > 0) {
             this.getThumbnails();
         }

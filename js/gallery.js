@@ -129,7 +129,10 @@ class Polaroid extends PaginationItem {
         super.show();
 
         // Ignore for videos
-        if (this.loaded && this.filetype == File.Types.VIDEO) {
+        /*if (this.loaded && (this.filetype == File.Types.VIDEO || (this.filetype == File.Types.IMAGE && this.file.getSize() >= THUMBNAIL_IMAGE_MAX_SIZE))) {
+            this.setThumbnail(this.thumbnail);
+        }*/
+        if (this.loaded && this.file.usesThumbnails()) {
             this.setThumbnail(this.thumbnail);
         }
 
@@ -145,6 +148,8 @@ class Polaroid extends PaginationItem {
                     this.item.style.backgroundImage = `url("${Polaroid.hrefSanitize(this.file.getFileLink())}")`;
                     this.item.classList.add("frame");
                     this.item.classList.add("border-color");
+                }else if ((this.thumbnail ?? "").length > 0) {
+                    this.setThumbnail(this.thumbnail);
                 }else{
                     let icon = new Image();
                     icon.alt = this.file.img.alt ?? "";

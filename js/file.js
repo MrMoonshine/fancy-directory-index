@@ -202,6 +202,19 @@ class File {
         return this.filetype == File.Types.FOLDER;
     }
 
+    usesThumbnails(){
+        // this.thumbnailables = this.files.filter(val => (val.filetype == File.Types.VIDEO || val.filetype == File.Types.AUDIO || (val.filetype == File.Types.IMAGE && val.getSize() > THUMBNAIL_IMAGE_MAX_SIZE)));
+        if([File.Types.VIDEO, File.Types.AUDIO].includes(this.filetype)){
+            return true;
+        }
+
+        if(this.filetype == File.Types.IMAGE && this.getSize() > THUMBNAIL_IMAGE_MAX_SIZE){
+            return true;
+        }
+
+        return false;
+    }
+
     static matchMimetypes(filename, types){
         types.forEach(element => {
             if(filename.toUpperCase().endsWith("." + element.toUpperCase())){
