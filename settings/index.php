@@ -105,14 +105,14 @@
                     Remove orphan thumbnails manually. They may pile up in case files get moved around or deleted on
                     the system.
                 </p>
-                <form id="cleanupform" action="/fancy-directory-index/settings/thumbnail.php">
+                <form id="cleanupform" action="/fancy-directory-index/settings/api.php">
                     <input name="cleanup" value="1" class="d-none" />
                 </form>
                 <input form="cleanupform" type="submit" class="btn" value="Cleanup">
                 <div id="cleanupformstatus"></div>
                 <p>
                     To automate orphan cleanup you can add this line to your cronjobs:<br>
-                    <code>/usr/bin/curl -k https://[::1]/fancy-directory-index/settings/thumbnail.php?cleanup=1</code>
+                    <code>/usr/bin/curl -k https://[::1]/fancy-directory-index/settings/api.php?cleanup=1</code>
                 </p>
             </article>
         </div>

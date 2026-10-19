@@ -5,13 +5,15 @@ const DEFAULT_THUMBNAIL_DIR = "/fancy-directory-index/settings/data/";
 class DirectoryDB extends SQLite3
 {
     public $errors = [];
+    public $settings = false;
     const WORKDIR = "data/";
     const DB_FILE = DirectoryDB::WORKDIR . "fancydirindex.sqlite3";
     const DDL_FILE = "DDL.sql";
 
-    public function __construct($filename)
+    public function __construct($filename, $settings)
     {
         try {
+            $this->settings = $settings;
             if(!is_dir(DirectoryDB::WORKDIR)){
                 if(!mkdir(DirectoryDB::WORKDIR)){
                     throw new Exception("Cannot create base-directory for sqlite3 database: ".DirectoryDB::WORKDIR, 1);
@@ -166,210 +168,7 @@ class DirectoryDB extends SQLite3
             return;
         }
     }
-
-    /*public function options_get()
-    {
-        $retval = [
-            "pageicon" => "/favicon.ico",
-            "thumbnailgen" => "off",
-            "thumbnaildir" => DEFAULT_THUMBNAIL_DIR,
-        ];
-        $SQL = 'select "name", "value" from "options";';
-        $results = $this->query($SQL);
-        while ($row = $results->fetchArray()) {
-            $retval[$row["name"]] = $row["value"];
-        }
-        $retval["docroot"] = $_SERVER["DOCUMENT_ROOT"];
-        return $retval;
-    }
-
-    private function options_seed(){
-        $options = [
-            [
-                "name" => "pageicon",
-                "default" => "/favicon.ico"
-            ],[
-                "name" => "thumbnaildir",
-                "default" => "/fancy-directory-index/settings/data/"
-            ],[
-                "name" => "thumbnailgen",
-                "default" => 1
-            ]
-        ];
-
-        if(count($options) == $this->querySingle("SELECT count(1) FROM options;")){
-            return;
-        }
-        echo("Seeding options table...<br>");
-        
-        foreach ($options as $option) {
-            $results = $this->universalDML("INSERT INTO options (name,value) VALUES (:name, :default)", $option);
-            if (!$results) {
-                $this->errors_add();
-                return;
-            }
-        }
-    }
-
-    public function options_modify()
-    {
-        $this->options_seed();
-        $options = ["pageicon", "thumbnailgen", "thumbnaildir"];
-        $dir_forbidden = ["/", "/fancy-directory-index/", "/fancy-directory-index/settings/"];
-
-        foreach ($options as $option) {
-            $SQL = <<<SQL
-                UPDATE options
-                    SET value = :oval
-                WHERE name = :oname ;
-            SQL;
-
-            $stmt = $this->prepare($SQL);
-            if (!$stmt) {
-                $this->errors_add();
-                return;
-            }
-
-            $value = "";
-            switch ($option) {
-                case "thumbnailgen":
-                    if (isset($_POST["thumbnailgen"])) {
-                        $value = $_POST["thumbnailgen"];
-                    } else {
-                        $value = "off";
-                    }
-                    break;
-                case "thumbnaildir":
-                    if (in_array($_POST[$option], $dir_forbidden)) {
-                        $value = DEFAULT_THUMBNAIL_DIR;
-                        array_push($this->errors, "Directory " . $_POST[$option] . " must not be set! Fallback to default: " . DEFAULT_THUMBNAIL_DIR);
-                    } else {
-                        $value = DirectoryDB::dir_slash_sanitize($_POST[$option]);
-                    }
-                    break;
-                default:
-                    $value = $_POST[$option];
-                    break;
-            }
-            $stmt->bindValue(":oval", $value, SQLITE3_TEXT);
-            $stmt->bindValue(":oname", $option, SQLITE3_TEXT);
-
-            // Test
-            //array_push($this->errors, $stmt->getSQL(true));
-            $stmtresult = $stmt->execute();
-            if (!$stmtresult) {
-                $this->errors_add();
-                return;
-            }
-            //array_push($this->errors, $stmt->getSQL(true));
-        }
-    }*/
-
-    public function alias_get()
-    {
-        $retval = [];
-        $SQL = <<<SQL
-            SELECT "id","aliasname","directory" FROM aliases;
-        SQL;
-
-        $results = $this->query($SQL);
-        while ($row = $results->fetchArray()) {
-            array_push($retval, $row);
-        }
-        return $retval;
-    }
-
-    public function alias_table()
-    {
-        $SQL = <<<SQL
-            SELECT "id","aliasname","directory" FROM aliases;
-        SQL;
-
-        $results = $this->query($SQL);
-        while ($row = $results->fetchArray()) {
-            $id = $row["id"];
-            $name = $row["aliasname"];
-            $directory = $row["directory"];
-            $formid = "alias-delete-form-" . $id;
-            //var_dump($row);
-            echo <<<HTML
-            <tr>
-                <td>
-                    <input name="aliasname" type="text" form="$formid" value="$name" readonly/>
-                    <form method="POST" id="$formid" class="d-none"></form>
-                    <input name="id" form="$formid" value="$id" class="d-none" readonly/>
-                    <input name="mode" form="$formid" value="aliasdelete" class="d-none" readonly/>
-                </td>
-                <td>
-                    <input name="directory" type="text" form="$formid" value="$directory" readonly/>
-                </td>
-                <td>
-                    <input type="submit" form="$formid" value="-" class="btn btn-danger"/>
-                </td>
-            </tr>
-            HTML;
-        }
-    }
-
-    public function alias_create()
-    {
-        $SQL = <<<SQL
-            INSERT INTO aliases (aliasname, directory) VALUES (:aliasname, :dirname);
-        SQL;
-        $stmt = $this->prepare($SQL);
-        if (!$stmt) {
-            $this->errors_add();
-            return;
-        }
-        $stmt->bindValue(":aliasname", DirectoryDB::dir_slash_sanitize($_POST["aliasname"]), SQLITE3_TEXT);
-        $stmt->bindValue(":dirname", DirectoryDB::dir_slash_sanitize($_POST["directory"]), SQLITE3_TEXT);
-
-        $stmtresult = $stmt->execute();
-        if (!$stmtresult) {
-            $this->errors_add();
-            return;
-        }
-    }
-
-    public function alias_delete()
-    {
-        $SQL = <<<SQL
-            DELETE FROM aliases WHERE id = :id;
-        SQL;
-        $stmt = $this->prepare($SQL);
-        if (!$stmt) {
-            $this->errors_add();
-            return;
-        }
-        $stmt->bindValue(":id", $_POST["id"], SQLITE3_INTEGER);
-
-        $stmtresult = $stmt->execute();
-        if (!$stmtresult) {
-            $this->errors_add();
-            return;
-        }
-    }
-
-    public function alias_resolve($pathname, $reverse = false)
-    {
-        $aliases = $this->alias_get();
-        $docroot = DirectoryDB::remove_last_slash($_SERVER["DOCUMENT_ROOT"]);
-        $directory = $docroot . $pathname;
-        foreach ($aliases as $alias) {
-            $patheval = DirectoryDB::add_last_slash($pathname);
-            if (!$reverse && str_contains($patheval, $alias["aliasname"])) {
-                return str_replace($alias["aliasname"], $alias["directory"], $patheval);
-            } else if ($reverse) {
-                // Treat incoming $pathname as directory here
-                if (str_starts_with($pathname, $alias["directory"])) {
-                    $dir = str_replace($alias["directory"], $alias["aliasname"], $pathname);
-                    return $dir;
-                }
-            }
-        }
-        return $reverse ? $pathname : DirectoryDB::add_last_slash($directory);
-    }
-
+    
     public function directory_get_id($path)
     {
         $this->directory_create($path);
@@ -699,7 +498,7 @@ class DirectoryDB extends SQLite3
             }
             return "/" . $dir;
         }
-        return $this->alias_resolve($dir, true);
+        return $this->settings->alias_resolve($dir, true);
     }
 
     static function create_if_not_exists($base = "./")

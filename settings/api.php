@@ -38,7 +38,7 @@ try {
     $PAYLOAD['status'] = $fileFailureHandlingInfo['status'];
     $PAYLOAD['errors'] = array_merge($PAYLOAD['errors'], $fileFailureHandlingInfo['errors']);
     // Create DB
-    $ddb = new DirectoryDB(DirectoryDB::DB_FILE);
+    $ddb = new DirectoryDB(DirectoryDB::DB_FILE, $settings);
     $ddb->setup();
 
     //var_dump($_POST);
@@ -76,6 +76,7 @@ try {
         }
         // Cleanup DB
         if (!isset($_POST["nocleanup"])) {
+            $PAYLOAD["existingThumbnails"] = $existingThumbnails;
             $leftovers = thumbnail_leftovers($query["files"], $existingThumbnails);
             $PAYLOAD["leftovers"] = $leftovers;
             foreach ($leftovers as $leftover) {
@@ -140,8 +141,10 @@ try {
     if (isset($_POST["cleanup"]) || isset($_GET["cleanup"])) {
         // Detect orphans and remove them
         $PAYLOAD["orphans"] = [];
+        //$PAYLOAD["orphans_local"] = [];
         $thumbnals = $ddb->thumbnails_get(-1);
-        $files = scandir($settings->config["preview"]["directory"]);
+        $thumbnail_dir = $settings->alias_resolve($settings->config["preview"]["directory"]);
+        $files = scandir($thumbnail_dir);
         foreach ($files as $file) {
             if (!str_ends_with($file, ".webp")) {
                 continue;
@@ -155,7 +158,8 @@ try {
 
             if ($counter == 0) {
                 array_push($PAYLOAD["orphans"], $file);
-                unlink(DirectoryDB::add_last_slash($settings->config["preview"]["directory"]) . $file);
+                //array_push($PAYLOAD["orphans_local"], $thumbnail_dir . $file);
+                unlink($thumbnail_dir . $file);
             }
         }
         $PAYLOAD["cleanupcount"] = count($PAYLOAD["orphans"]);
