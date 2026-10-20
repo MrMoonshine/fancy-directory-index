@@ -2,6 +2,13 @@ FROM docker.io/php:8.3-rc-apache-bookworm
 COPY . /data/www/fancy-directory-index/
 WORKDIR /data/www/fancy-directory-index/
 
+# Change Apache listening ports
+RUN sed -i 's/Listen 80/Listen 8080/g; s/Listen 443/Listen 8443/g' /etc/apache2/ports.conf \
+    && sed -i 's/<VirtualHost \*:80>/<VirtualHost *:8080>/g' /etc/apache2/sites-available/*.conf \
+    && sed -i 's/<VirtualHost \*:443>/<VirtualHost *:8443>/g' /etc/apache2/sites-available/*.conf
+
+EXPOSE 8080 8443
+
 COPY fancy-directory-index.conf /etc/apache2/sites-available/fancy-directory-index.conf
 RUN a2ensite fancy-directory-index.conf
 RUN a2enmod userdir
