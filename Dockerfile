@@ -1,4 +1,4 @@
-FROM docker.io/php:8.3-rc-apache-bookworm
+FROM docker.io/php:8.5.12-apache-bookworm
 COPY . /data/www/fancy-directory-index/
 WORKDIR /data/www/fancy-directory-index/
 
