@@ -139,9 +139,11 @@ try {
     }
 
     if (isset($_POST["cleanup"]) || isset($_GET["cleanup"])) {
+        // Thumbnails marked as "NONE" will get deleted, in case a user with a capable browser surfs the page again, it can load the thumbnail
+        $results = $ddb->universalDML('DELETE FROM thumbnails WHERE thumbnail = "NONE";');
+
         // Detect orphans and remove them
         $PAYLOAD["orphans"] = [];
-        //$PAYLOAD["orphans_local"] = [];
         $thumbnals = $ddb->thumbnails_get(-1);
         $thumbnail_dir = $settings->alias_resolve($settings->config["preview"]["directory"]);
         $files = scandir($thumbnail_dir);

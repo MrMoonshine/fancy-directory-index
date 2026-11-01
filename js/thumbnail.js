@@ -192,7 +192,6 @@ class Thumbnail {
             Thumbnail.requestHandler(req, callback);
         });
         req.open("POST", url, true);
-        //req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         req.send(fd);
     }
 

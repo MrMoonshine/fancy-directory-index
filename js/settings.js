@@ -142,7 +142,7 @@ class CleanupForm extends Form {
             console.log(data);
             let statusdiv = document.getElementById("cleanupformstatus");
             statusdiv.innerHTML = "";
-            statusdiv.innerText = `Cleaned up ${data["orphans"].length} files in total`;
+            statusdiv.innerText = `Cleaned up ${(data["orphans"] ?? []).length} files in total`;
         });
     }
 }
