@@ -2,7 +2,7 @@
 /*ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);*/
-ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_STRICT);
+#ini_set('error_reporting', E_ALL & ~E_DEPRECATED & ~E_STRICT);
 ini_set('display_errors', "Off"); // disable error display
 ini_set('display_startup_errors', "Off");
 ini_set('html_errors', "Off");

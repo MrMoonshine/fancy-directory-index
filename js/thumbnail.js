@@ -128,6 +128,7 @@ class Thumbnail {
         let img = new Image();
         //document.body.appendChild(this.image);
         img.addEventListener("load", () => {
+            console.log("[Thumbnail] image load successful " + filename);
             const canvas = document.createElement("canvas");
             canvas.width = Thumbnail.IMAGE_DIMENSION;
             canvas.height = Thumbnail.IMAGE_DIMENSION;
@@ -171,7 +172,7 @@ class Thumbnail {
             //req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             req.send(fd);
         });
-        img.addEventListener("Error", () => {
+        img.addEventListener("error", () => {
             console.warn("Unable to load " + filename);
         })
         img.src = filename;

@@ -7,8 +7,8 @@ class Toast {
     static BUTTONS_NONE = 0;
     static BUTTONS_ALERT = 1;
     static BUTTONS_CONFIRM = 2;
-    static BUTTONS_YESNO_PREF_NO = 3;
-    static BUTTONS_YESNO_PREF_YES = 4;
+    static BUTTONS_YESNO_PREF_NO = 2;
+    static BUTTONS_YESNO_PREF_YES = 3;
 
     static BUTTON_SETS = [
         [{
