@@ -124,11 +124,14 @@ class Thumbnail {
     }
 
     createImageThumbnail(filename, callback) {
+        let myurl = new URL(window.location);
+        let fd = new FormData();
+        fd.set("asset", filename);
+        fd.set("path", myurl.pathname);
         //console.log("here createImageThumbnail")
         let img = new Image();
         //document.body.appendChild(this.image);
         img.addEventListener("load", () => {
-            console.log("[Thumbnail] image load successful " + filename);
             const canvas = document.createElement("canvas");
             canvas.width = Thumbnail.IMAGE_DIMENSION;
             canvas.height = Thumbnail.IMAGE_DIMENSION;
@@ -155,11 +158,6 @@ class Thumbnail {
             let base64 = imageData.replace(/^data:image\/(png|jpeg);base64,/, '');
             //console.log(base64);
 
-            let myurl = new URL(window.location);
-            let fd = new FormData();
-            fd.set("asset", filename);
-            fd.set("path", myurl.pathname);
-
             fd.set("thumbnail", base64);
             // Submit finished thumbnail to server
             let url = new URL(window.location);
@@ -174,8 +172,28 @@ class Thumbnail {
         });
         img.addEventListener("error", () => {
             console.warn("Unable to load " + filename);
+            this.createNoneThumbnail(filename, callback);
+
         })
         img.src = filename;
+    }
+    // Mark a failure in thumbnail creation, so js api no longer tries to get it
+    createNoneThumbnail(filename, callback = null) {
+        let url = new URL(window.location);
+        url.pathname = THUMBNAIL_API;
+
+        let fd = new FormData();
+        fd.set("asset", filename);
+        fd.set("path", url.pathname);
+        fd.set("thumbnail", "NONE");
+
+        let req = new XMLHttpRequest();
+        req.addEventListener("load", (event) => {
+            Thumbnail.requestHandler(req, callback);
+        });
+        req.open("POST", url, true);
+        //req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        req.send(fd);
     }
 
     toBase64() {

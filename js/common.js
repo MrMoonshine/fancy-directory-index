@@ -21,6 +21,8 @@ const ICON_ARROW_UP = APACHE_ALIAS + "assets/go-up.png";
 const ICON_ARROW_DOWN = APACHE_ALIAS + "assets/go-down.png";
 const ICON_ADD_TO_PLAYLIST = APACHE_ICON_ALIAS + "actions/22/bookmarks.svg";
 
+const ICON_DIALOG_ERROR = APACHE_ALIAS + "assets/edit-delete.png";
+
 const ICON_DIR_HUE_OFFSET = 160; // For blue folders from breeze theme
 
 const COOKIE_COLOR = "fdi_color";
