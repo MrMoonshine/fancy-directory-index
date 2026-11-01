@@ -267,5 +267,6 @@ class Thumbnail {
 Thumbnail.PROGRESS_BAR = document.createElement("progress");
 Thumbnail.PROGRESS_BAR.setAttribute("max", 1);
 Thumbnail.PROGRESS_BAR.setAttribute("value", 0);
+Thumbnail.PROGRESS_BAR.classList.add("my-1");
 Thumbnail.TOAST.additionalContent.appendChild(Thumbnail.PROGRESS_BAR);
 //Thumbnail.TOAST.show("Oida", "Bam Oida", 0, Toast.BUTTONS_NONE);

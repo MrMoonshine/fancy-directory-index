@@ -215,6 +215,46 @@ input:focus{
     transform: translateX(calc(var(--input-switch-size) - var(--input-switch-padding)));
 }
 
+/*--------------------------------------------------------*/
+/*          Progress Bars                                 */
+/*--------------------------------------------------------*/
+.progress-bar,
+progress[value],
+progress[value]::-webkit-progress-bar{
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    appearance: none;
+
+    /*border: 4px outset var(--color-border);*/
+    border: 0px solid transparent;
+    border-radius: 100rem;
+    box-sizing: content-box;
+    height: 1rem;
+    
+    background: var(--gradient-transparent);
+    background-color: var(--color-background-3);
+}
+
+.progress-bar .progress,
+progress[value]::-moz-progress-bar{
+    font-size: 0.8rem;
+
+    height: 1rem;
+    box-sizing: border-box;
+    border-radius: 100rem;
+    background-color: var(--color-main);
+    background: var(--gradient-main-coarse);
+    border: var(--border-main);
+}
+/* cannot be combined into selector above unfortunately*/
+progress[value]::-webkit-progress-value {
+    height: 1rem;
+    box-sizing: border-box;
+    border-radius: 100rem;
+    background-color: var(--color-main);
+    background: var(--gradient-main-coarse);
+    border: var(--border-main);
+}
 
 /*
     Range Sliders
