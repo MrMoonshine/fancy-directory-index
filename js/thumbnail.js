@@ -180,12 +180,12 @@ class Thumbnail {
     // Mark a failure in thumbnail creation, so js api no longer tries to get it
     createNoneThumbnail(filename, callback = null) {
         let url = new URL(window.location);
-        url.pathname = THUMBNAIL_API;
 
         let fd = new FormData();
         fd.set("asset", filename);
         fd.set("path", url.pathname);
         fd.set("thumbnail", "NONE");
+        url.pathname = THUMBNAIL_API;
 
         let req = new XMLHttpRequest();
         req.addEventListener("load", (event) => {
