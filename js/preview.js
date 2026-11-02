@@ -138,8 +138,9 @@ class Preview{
                 if((data["errors"] ?? []).length > 0){
                     Preview.operationToast.show("Failed to rename file!", data["errors"].join(";"), TOAST_DEFAULT_TIMER, Toast.BUTTONS_NONE, ICON_DIALOG_ERROR);
                 }else{
-                    this.close();
-                    Preview.operationToast.show("Success!", `Renamed file!`, TOAST_DEFAULT_TIMER, Toast.BUTTONS_NONE, ICON_DIALOG_INFO);
+                    //this.close();
+                    //Preview.operationToast.show("Success!", `Renamed file!`, TOAST_DEFAULT_TIMER, Toast.BUTTONS_NONE, ICON_DIALOG_INFO);
+                    location.reload();
                 }
             }, null, fd, true);
         })
