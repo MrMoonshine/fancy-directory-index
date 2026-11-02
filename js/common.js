@@ -22,6 +22,8 @@ const ICON_ARROW_DOWN = APACHE_ALIAS + "assets/go-down.png";
 const ICON_ADD_TO_PLAYLIST = APACHE_ICON_ALIAS + "actions/22/bookmarks.svg";
 
 const ICON_DIALOG_ERROR = APACHE_ALIAS + "assets/edit-delete.png";
+const ICON_DIALOG_WARNING = APACHE_ALIAS + "assets/dialog-warning.png";
+const ICON_DIALOG_INFO = APACHE_ALIAS + "assets/dialog-ok.png";
 
 const ICON_DIR_HUE_OFFSET = 160; // For blue folders from breeze theme
 
@@ -33,6 +35,8 @@ const COOKIE_VERTICAL = "fdi_tile_vertical";
 const COOKIE_GALLERY_MODE = "fdi_viewmode";
 
 const CSS_IMAGE_UNKNOWN = "UNKNOWN";
+
+const TOAST_DEFAULT_TIMER = 7;
 
 const THEME_TILES_X = localStorage.getItem(COOKIE_HORIZONTAL) ?? 5;
 const THEME_TILES_Y = localStorage.getItem(COOKIE_VERTICAL) ?? 4;

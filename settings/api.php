@@ -28,6 +28,15 @@ function thumbnail_leftovers($newtns, $oldtns)
     return $retval;
 }
 
+function isset_all($method, $required){
+    $missing = array_filter(
+        $required,
+        fn($key) => !isset($method[$key])
+    );
+
+    return empty($missing);
+}
+
 try {
     require("settings.php");
     require("db.php");
@@ -109,6 +118,36 @@ try {
             $dbret = $ddb->thumbnails_create("NONE", $_POST["asset"], $pathid);
         }
 
+    }else if(isset_all($_POST, ["directory", "oldname", "newname", "extname"])){
+        /* File Rename */
+        try {
+            $source = $settings->alias_resolve($_POST["pathname"]).$_POST["oldname"];
+            $PAYLOAD["source"] = $source;
+            $destination = $settings->alias_resolve($_POST["pathname"]).$_POST["directory"].$_POST["newname"].$_POST["extname"];
+            $PAYLOAD["destination"] = $destination;
+
+            $err_msg_base = "Failed to rename ".$_POST["newname"].$_POST["extname"]." !";
+
+            if(!is_file($source)){
+                $PAYLOAD["errors"][] = "Source file doesn't exist!";
+            }else if(is_file($destination) || is_dir($destination)){
+                $PAYLOAD["errors"][] = "Target file already exists!";
+            }else if(
+                str_starts_with($_POST["pathname"], "/fancy-directory-index/") ||
+                str_starts_with($_POST["pathname"], "/fdi-icon-theme/") ||
+                ($_POST["pathname"] == "/" && str_starts_with($_POST["directory"], ".."))
+            ){
+                $PAYLOAD["errors"][] = $err_msg_base." Forbidden path to do so: ".$_POST["pathname"];
+            }else if (!is_writable(dirname($destination)) || !is_writable(dirname($source))) {
+                $PAYLOAD["errors"][] = $err_msg_base." Source or Destination File is not writable! Permission issue.";
+            }else{
+                if(!rename($source, $destination)){
+                    $PAYLOAD["errors"][] = $err_msg_base." Reason: UNKNOWN";
+                }
+            }
+        } catch (\Throwable $th) {
+            $PAYLOAD["errors"][] = "Faile to rename ".$_POST["newname"].$_POST["extname"]." ! Reason: ". $th->getMessage();
+        }
     }
 
     if (isset($_GET["directory"])) {
@@ -140,7 +179,7 @@ try {
 
     if (isset($_POST["cleanup"]) || isset($_GET["cleanup"])) {
         // Thumbnails marked as "NONE" will get deleted, in case a user with a capable browser surfs the page again, it can load the thumbnail
-        $results = $ddb->universalDML('DELETE FROM thumbnails WHERE thumbnail = "NONE";');
+        $results = $ddb->universalDML('DELETE FROM thumbnails WHERE thumbnail = "NONE" AND video NOT LIKE "%.mp3";');
 
         // Detect orphans and remove them
         $PAYLOAD["orphans"] = [];

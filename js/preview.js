@@ -3,6 +3,8 @@ class Preview{
     static radioPreview = document.querySelector("#radio-page-preview");
     static radioGallery = document.querySelector("#radio-page-gallery");
 
+    static operationToast = new Toast();
+
     constructor() {
         this.file = null;
 
@@ -32,6 +34,13 @@ class Preview{
         this.actionClose = document.querySelector("#preview-a-close");
         // for mobile, to avoid download banner covering close option
         this.actionClose.style.marginBottom = "3rem";
+
+        // Operations - Rename
+        this.renameForm = document.querySelector("#preview-operation-form");
+        this.renameNewName = document.querySelector("#preview-operation-newname");
+        this.renameExtName = document.querySelector("#preview-operation-extname");
+        this.renameOldName = document.querySelector("#preview-operation-oldname");
+        this.renameDirectory = document.querySelector("#preview-operation-directory");
 
         /*this.actionOpen = Preview.action_create("Open in new tab", ICON_NEW_TAB);
         this.actionOpen.setAttribute("target", "_blank");*/
@@ -109,6 +118,31 @@ class Preview{
         this.previewImage.addEventListener("click", () => {
             this.image_toggle_height_limit();
         });
+
+        // Rename
+        this.renameForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            //console.log((this.renameNewName.value + this.renameExtName.value), "vs", this.renameOldName.value);
+            if(this.renameNewName.value.length < 1){
+                Preview.operationToast.show("Invalid Filename", "Empty filename is not ok!", TOAST_DEFAULT_TIMER, Toast.BUTTONS_NONE, ICON_DIALOG_ERROR);
+                return;
+            }else if((this.renameNewName.value + this.renameExtName.value) == this.renameOldName.value && this.renameDirectory.value == "./"){
+                Preview.operationToast.show("Nothing to do", "Same file in same directory", TOAST_DEFAULT_TIMER, Toast.BUTTONS_NONE, ICON_DIALOG_WARNING);
+                return;
+            }
+
+            let fd = new FormData(this.renameForm);
+            fd.append("pathname", new URL(window.location).pathname);
+            api_modify((data) => {
+                console.log(data);
+                if((data["errors"] ?? []).length > 0){
+                    Preview.operationToast.show("Failed to rename file!", data["errors"].join(";"), TOAST_DEFAULT_TIMER, Toast.BUTTONS_NONE, ICON_DIALOG_ERROR);
+                }else{
+                    this.close();
+                    Preview.operationToast.show("Success!", `Renamed file!`, TOAST_DEFAULT_TIMER, Toast.BUTTONS_NONE, ICON_DIALOG_INFO);
+                }
+            }, null, fd, true);
+        })
     }
 
     show(file) {
@@ -126,7 +160,7 @@ class Preview{
         dom_show(this.prevbutton, Boolean(this.file.prev));
         dom_show(this.nextbutton, Boolean(this.file.next));
 
-        this.figcaption.innerText = file.getFileName();
+        this.opRenameLoad(file.getFileName());
         //this.mimeFigcaption.innerText = file.getFileName();
         this.captionFilename.innerText = file.getFileName();
         this.captionSize.innerText = file.getSizeH();
@@ -235,6 +269,18 @@ class Preview{
         } else {
             this.previewImage.classList.add(CLASS_UNSET);
         }
+    }
+
+    opRenameLoad(filename){
+        this.renameExtName.value = "";
+        this.renameNewName.value = "";
+        this.renameOldName.value = filename;
+
+        let components = filename.split(".");
+        if(components.length > 1){
+            this.renameExtName.value = "." + components.pop();
+        }
+        this.renameNewName.value = components.join(".");
     }
 
     static action_create(text, icon = "", tagname = "a", callback = null) {
