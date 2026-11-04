@@ -288,6 +288,36 @@ class Preview{
         this.renameNewName.value = components.join(".");
     }
 
+    opRenameBuildDirOptions(directories){
+        let values = ["./"];
+        directories.forEach(directory => {
+            let url = new URL(directory.getFileLink());
+            let current = new URL(window.location);
+            if(url.pathname.split("/").length == current.pathname.split("/").length - 1){
+                //console.log(directory.getFileName(), "is a parent dir");
+                values.push("../");
+                return;
+            }
+
+            let value = directory.getFileName();
+            if(!value.endsWith("/")){
+                value += "/";
+            }
+            values.push(value);
+        });
+
+        let counter = 0;
+        values.forEach(value => {
+            console.log(value);
+            let option = document.createElement("option");
+            option.innerText = value;
+            option.value = value;
+            option.selected = (counter++ == 0);
+
+            this.renameDirectory.appendChild(option);
+        });
+    }
+
     static action_create(text, icon = "", tagname = "a", callback = null) {
         let action = document.createElement(tagname);
         action.classList.add("action");

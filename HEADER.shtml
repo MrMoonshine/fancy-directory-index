@@ -68,9 +68,6 @@
 				<figcaption id="preview-figcaption">
 					<form class="input-group" id="preview-operation-form" method="POST">
 						<select id="preview-operation-directory"  name="directory" autocomplete="off">
-							<option value="./" selected>./</option>
-							<option value="../">../</option>
-							<option value="oida/">oida</option>
 						</select>
 						<input id="preview-operation-oldname" name="oldname" type="hidden" readonly autocomplete="off"/>
 						<input id="preview-operation-newname" name="newname" type="text" class="form-control flex-grow-1 text-right" autocomplete="off" />
