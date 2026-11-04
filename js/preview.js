@@ -280,6 +280,10 @@ class Preview{
         let components = filename.split(".");
         if(components.length > 1){
             this.renameExtName.value = "." + components.pop();
+            let label = document.querySelector(`label[for=${this.renameExtName.id}]`);
+            if(label){
+                label.innerText = this.renameExtName.value;
+            }
         }
         this.renameNewName.value = components.join(".");
     }

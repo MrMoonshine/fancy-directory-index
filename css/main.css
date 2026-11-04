@@ -592,6 +592,10 @@ input[name="dashboard-pages"]:checked+.dashboard-page {
     flex-grow: 1;
 }
 
+.flex-shrink-0{
+    flex-shrink: 0;
+}
+
 .cursor-pointer {
     cursor: pointer;
 }

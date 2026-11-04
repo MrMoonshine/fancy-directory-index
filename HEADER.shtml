@@ -72,10 +72,11 @@
 							<option value="../">../</option>
 							<option value="oida/">oida</option>
 						</select>
-						<input id="preview-operation-oldname" name="oldname" type="text" readonly autocomplete="off"/>
-						<input id="preview-operation-newname" name="newname" type="text" class="form-control flex-grow-1" autocomplete="off" />
-						<input id="preview-operation-extname" name="extname" type="text" class="form-control" readonly autocomplete="off"/>
-						<button class="btn" type="submit">
+						<input id="preview-operation-oldname" name="oldname" type="hidden" readonly autocomplete="off"/>
+						<input id="preview-operation-newname" name="newname" type="text" class="form-control flex-grow-1 text-right" autocomplete="off" />
+						<label for="preview-operation-extname" class="input-group-text flex-shrink-0">EXTNAME</label>
+						<input id="preview-operation-extname" name="extname" type="hidden" class="form-control" readonly autocomplete="off"/>
+						<button class="btn btn-main d-flex flex-shrink-0" type="submit">
 							<img alt="" src="/fdi-icon-theme/base/16x16/actions/edit-rename.png"/>
 							<div>Rename</div>
 						</button>

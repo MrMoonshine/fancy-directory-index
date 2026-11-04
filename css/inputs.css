@@ -1,106 +1,46 @@
 :root {
-    --input-padding-x: 0.7rem;
-    --input-padding-y: 0.4rem;
-    --input-border-radius: 0.4rem;
+    --input-padding-x: 0.3rem;
+    --input-padding-y: 0.2rem;
 
-    --input-switch-size: 1.5rem;
+    --input-border-width: 2px;
+    --input-border-radius: 0.3rem;
+
+    --input-switch-size: 2rem;
     --input-switch-padding: 4px;
 }
 
-.btn-group,
-.input-group {
-    display: flex;
-    /*height: 2.4rem;*/
+fieldset {
+    margin: 0px;
+    border: var(--input-border-width) solid var(--color-main);
+    border-radius: var(--input-border-radius);
 }
 
-/*
-    Buttons
-*/
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    box-sizing: border-box;
+fieldset legend {
     background-color: var(--color-main);
     color: var(--color-text-button);
-    border: none;
-    border-radius: 6px;
-    padding: 6px;
-    cursor: pointer;
+    font-weight: bold;
 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
-
-    transition: 200ms ease;
-
-    font-size: 12pt;
+    padding: 4px;
+    border-radius: 4px;
 }
 
-a.btn:hover{
-    text-decoration: underline;
+/* Labels should be the full width */
+.form-label {
+    width: 100%;
+    display: block;
 }
 
-.btn:hover{
-    filter: brightness(0.9);
-}
-.btn>img {
-    max-height: 1em;
+input:focus{
+    outline: none;
 }
 
-.btn-outline {
-    color: var(--color-text-button);
-    background-color: transparent;
-    border: 1px solid var(--color-text-button);
-}
-
-.btn-dull {
-    background-color: var(--color-background-1) !important;
-}
-
-.btn-success {
-    background-color: green !important;
-}
-
-.btn-warning {
-    background-color: orange !important;
-}
-
-.btn-danger {
-    background-color: crimson !important;
-}
-
-.btn.append,
-.btn.center {
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border-right: none;
-}
-
-.btn.prepend,
-.btn.center {
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    border-left: none;
-}
-
-.btn-outline:hover,
-input:checked+.btn-outline {
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-/* Hide Number input arrows*/
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Hide Number input arrows */
-input[type=number] {
-  -moz-appearance: textfield;
+/*Highlight all except ranges*/
+input:not([type="range"]):not([readonly]):not([disabled]):focus,
+textarea:focus,
+.btn:focus {
+    outline: none;
+    /*box-shadow: 0px 0px 5px var(--color-main);*/
+    border-color: var(--color-main);
 }
 
 input[type=text],
@@ -116,42 +56,544 @@ input[type=date],
 input[type=datetime-local],
 input[type=time],
 textarea,
-select,
-.input-group .sidecar{
+select {
+    color: var(--color-text);
+    background: var(--gradient-transparent);
+    background-color: var(--color-background-2);
+    border-radius: var(--input-border-radius);
+    border: var(--input-border-width) outset var(--color-background-2);
+
+    padding: var(--input-padding-y) var(--input-padding-x);
+}
+
+.form-control {
+    width: calc(100% - 4px - 2*var(--input-padding-x));
+}
+
+.input-group-prepend,
+.input-group-append,
+.input-group-text {
+    background: var(--gradient-transparent);
+    background-color: var(--color-background-1);
+    color: var(--color-text);
+    border: var(--input-border-width) outset var(--color-background-1);
+    border-radius: var(--input-border-radius);
+    padding: var(--input-padding-y) var(--input-padding-x);
+
+    display: flex;
+    align-items: center;
+}
+
+.input-group-prepend,
+.input-group-text {
+    border-right: none;
+}
+
+.input-group-append,
+.input-group-text {
+    border-left: none;
+}
+
+
+input[type=email]:invalid,
+input[type=tel]:invalid {
+    border-color: var(--color-critical);
+}
+
+.jsautonumberinput {
+    display: flex;
+    background-color: var(--color-background-2);
+}
+
+.jsautonumberinput span {
+    display: block;
+    width: 5%;
+    padding: 0px;
+    margin: 0px;
+    background-clip: padding-box;
+    border-right: 4px double var(--color-main);
+}
+
+.jsautonumberinput span button {
+    width: 100%;
+    text-align: center;
+    font-family: monospace;
+    /*font-size: large;*/
+    margin: 0px;
+    background-color: transparent;
+    color: var(--color-main);
+    border: none;
+    height: 50%;
+}
+
+.jsautonumberinput span button:hover {
+    cursor: pointer;
+    background-color: var(--color-main);
+    color: var(--color-text);
+}
+
+.jsautonumberinput input[type=number] {
+    width: 95%;
+    text-align: center;
+    border-bottom: 4px double var(--color-main);
+    border-right: 4px double var(--color-main);
+}
+
+/*---Remove Arrows---*/
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/*--------------------------------------------------------*/
+/*                Buttons                                 */
+/* colors: refer to jinja2 template                       */
+/*--------------------------------------------------------*/
+input[type=button],
+input[type=submit],
+input[type=reset],
+input[type=color],
+.btn,
+/*label after an input*/
+.btn-group input+label {
+    border: var(--input-border-width) outset var(--color-background-2);
+    border-radius: var(--input-border-radius);
+
+    background: var(--gradient-transparent);
+    background-color: var(--color-background-2);
+
+
+    color: var(--color-text);
+    padding: var(--input-padding-y) var(--input-padding-x);
+    cursor: pointer;
+
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+
+    transition: 200ms ease;
+    text-decoration: none;
+}
+
+input[type=button]:hover,
+input[type=submit]:hover,
+input[type=reset]:hover,
+input[type=color]:hover,
+.btn:hover,
+.btn-group input:checked+label {
+    border-style: inset;
+    background-color: color-mix(in srgb, var(--color-background-2) 85%, black);
+}
+
+button.btn-main,
+input.btn-main {
+    background-color: var(--color-main);
+    border-color: var(--color-main);
+}
+
+button.btn-main:hover,
+input.btn-main:hover{
+    background-color: color-mix(in srgb, var(--color-main) 70%, black);
+}
+
+button.btn-secondary,
+input.btn-secondary {
+    background-color: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+button.btn-secondary:hover,
+input.btn-secondary:hover{
+    background-color: color-mix(in srgb, var(--color-secondary) 70%, black);
+}
+
+button.btn-ok,
+input.btn-ok {
+    background-color: var(--color-ok);
+    border-color: var(--color-ok);
+}
+
+button.btn-ok:hover,
+input.btn-ok:hover{
+    background-color: color-mix(in srgb, var(--color-ok) 70%, black);
+}
+
+button.btn-warning,
+input.btn-warning {
+    background-color: var(--color-warning);
+    border-color: var(--color-warning);
+}
+
+button.btn-warning:hover,
+input.btn-warning:hover{
+    background-color: color-mix(in srgb, var(--color-warning) 70%, black);
+}
+
+button.btn-critical,
+input.btn-critical {
+    background-color: var(--color-critical);
+    border-color: var(--color-critical);
+}
+
+button.btn-critical:hover,
+input.btn-critical:hover{
+    background-color: color-mix(in srgb, var(--color-critical) 70%, black);
+}
+
+button.btn-info,
+input.btn-info {
+    background-color: var(--color-info);
+    border-color: var(--color-info);
+}
+
+button.btn-info:hover,
+input.btn-info:hover{
+    background-color: color-mix(in srgb, var(--color-info) 70%, black);
+}
+
+
+/*Disable Round corners for Groups, and set constant height*/
+.btn-group,
+.input-group {
+    display: flex;
+    height: 2.4rem;
+    align-items: stretch;
+    text-align: center;
+}
+
+.btn-group .btn {
+    flex-grow: 1;
+}
+
+/*
+    Don't do borders if they are in a button group
+*/
+.btn-group .btn,
+.input-group input,
+.input-group * {
+    border-radius: 0;
+}
+
+/*First element only left round corners*/
+.btn-group *:first-child,
+.input-group *:first-child {
+    border-top-left-radius: var(--input-border-radius);
+    border-bottom-left-radius: var(--input-border-radius);
+}
+
+/*Last element only right round corners*/
+.btn-group .btn:last-child,
+.input-group *:last-child {
+    border-top-right-radius: var(--input-border-radius);
+    border-bottom-right-radius: var(--input-border-radius);
+}
+
+.form-button {
+    flex-shrink: 2;
+}
+
+/*Disabled label for radios*/
+.btn-group input:disabled+label {
+    cursor: unset;
+    color: var(--color-background-1);
+    background-color: var(--color-background-2);
+    ;
+}
+
+input[type=checkbox].real-checkbox {
+    display: none;
+    cursor: pointer;
+}
+
+/* Special colour input options */
+input[type="color"] {
+    border: var(--input-border-width) solid var(--color-background-1);
+    padding: 0px;
+}
+
+.input-group input[type="color"] {
+    /*height: 2.45rem;*/
+    height: 100%;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+    height: 100%;
+    width: 100%;
+}
+
+/*--------------------------------------------------------
+        Circular Buttons
+--------------------------------------------------------*/
+.circular-button {
+    display: block;
+    width: 32px;
+    height: 32px;
+    color: var(--color-text);
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: linear-gradient(180deg,
+            var(--color-background-1) 0%,
+            var(--color-background-2) 45%,
+            var(--color-background-3) 100%);
+    box-shadow:
+        0 4px 12px rgba(0, 40, 80, 0.15),
+        inset 0 2px 4px rgba(255, 255, 255, 0.9),
+        inset 0 -3px 6px rgba(0, 30, 60, 0.08);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* glossy top highlight */
+.circular-button::before {
+    content: "";
+    position: absolute;
+    top: 6%;
+    left: 12%;
+    width: 76%;
+    height: 38%;
+    border-radius: 50%;
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.75) 0%,
+            rgba(255, 255, 255, 0.2) 100%);
+    pointer-events: none;
+}
+
+.circular-button:hover,
+ .circular-button.active{
+    color: white;
+    background: var(--gradient-main-coarse);
+    border-color: var(--color-main);
+    box-shadow:
+        0 6px 16px rgba(30, 100, 200, 0.35),
+        inset 0 2px 4px rgba(255, 255, 255, 0.5),
+        inset 0 -3px 6px rgba(0, 40, 100, 0.2);
+}
+
+.circular-button:active {
+    transform: scale(0.96);
+    box-shadow:
+        0 2px 6px rgba(30, 100, 200, 0.3),
+        inset 0 2px 6px rgba(0, 40, 100, 0.25);
+}
+
+/*--------------------------------------------------------
+        File Input
+--------------------------------------------------------*/
+input[type=file]::-webkit-file-upload-button,
+input[type=file]::file-selector-button {
+    border: none;
+    border-radius: 0;
+    border-top-left-radius: var(--input-border-radius);
+    border-bottom-left-radius: var(--input-border-radius);
+    border-right: 2px solid var(--color-background-1);
+    background-color: var(--color-main);
+    color: var(--color-text-button);
+    padding: var(--input-padding-y) var(--input-padding-x);
+    cursor: pointer;
+
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+
+    -webkit-transition: .2s;
+    transition: 200ms ease;
+    text-decoration: none;
+}
+
+input[type=file]::file-selector-button:hover {
+    border-color: rgba(0, 0, 0, 0);
+    color: var(--color-main);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+
+input[type="file"] {
     color: var(--color-text);
     transition: 200ms ease;
 
-    padding: var(--input-padding-y) var(--input-padding-x);
-
-    background: linear-gradient(to bottom,
-            rgba(255, 255, 255, .25) 0,
-            rgba(117, 117, 117, .2) 20%,
-            rgba(92, 92, 92, .2) 50%, 
-            rgba(43, 43, 43, .3) 50%,
-            rgba(161, 161, 161, .3) 100%);
+    padding: 0;
+    padding-right: var(--input-padding-x);
+    border-radius: var(--input-border-radius);
+    border: var(--input-border-width) solid var(--color-background-1);
     background-color: var(--color-background-2);
-
-    border: 2px solid var(--color-border);
-    border-left: 2px solid var(--color-border-petite);
-    border-top: 2px solid var(--color-border-petite);
-
-    border-radius: 8px;
 }
 
-.input-group input{
-    margin: 0px;
+/*--------------------------------------------------------
+        Range Sliders
+--------------------------------------------------------*/
+.form-range {
+    -webkit-appearance: none;
+    height: 0.7rem;
+    border-radius: 0.35rem;
+    border: 1px solid var(--color-text);
+    background-color: var(--color-background-2);
+    /*Just to make it look fancy schmancy*/
+    -webkit-transition: .2s;
+    transition: opacity .2s;
 }
 
-.input-group{
-    display: flex;
-    justify-content: left;
+/*Same thing... need to be separated... idk*/
+.form-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+
+    width: 1.2rem;
+    height: 1.2rem;
+
+    background: var(--color-main);
+    border-radius: 100%;
+    cursor: pointer;
+    border: none;
 }
 
-input:focus{
-    outline: none;
-    border: 2px solid hsl(var(--color-main-hue), var(--color-main-sat), 45%);
-    border-left: 2px solid hsl(var(--color-main-hue), var(--color-main-sat), 75%);
-    border-top: 2px solid hsl(var(--color-main-hue), var(--color-main-sat), 75%);
+.form-range::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+
+    width: 1.2rem;
+    height: 1.2rem;
+
+    background: var(--color-main);
+    border-radius: 100%;
+    border: none;
+}
+
+input[type="range"]:disabled.form-range::-webkit-slider-thumb,
+input[type="range"]:disabled.form-range::-moz-range-thumb {
+    background: var(--color-background-1);
+    cursor: auto;
+}
+
+/*----------------*/
+/*      Checkbox  */
+/*----------------*/
+input[type=checkbox].real-checkbox {
+    display: none;
+}
+
+.check-container {
+    display: block;
+    position: relative;
+    padding-left: 1.5rem;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox and radio buttons */
+.check-container input,
+.btn-group input[type=radio],
+.image-button-group input[type=radio] {
+    position: absolute;
+    opacity: 0;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 1rem;
+    width: 1rem;
+    margin: 0;
+    border: var(--input-border-width) solid var(--color-main);
+    border-radius: 0.2rem;
+    background-color: var(--color-background-2);
+}
+
+.check-container.radio .checkmark {
+    border-radius: 100%;
+}
+
+.check-container input:disabled~.checkmark {
+    border: var(--input-border-width) solid grey;
+}
+
+/* On mouse-over, add a grey background color */
+.check-container:hover input:enabled~.checkmark {
+    background-color: var(--color-background-1);
+}
+
+/* When the checkbox is checked, add a blue background */
+.check-container input:checked~.checkmark,
+.check-container input:indeterminate~.checkmark,
+.check-container:hover input:checked~.checkmark,
+.check-container:hover input:indeterminate~.checkmark {
+    background-color: var(--color-main);
+}
+
+.check-container input:checked:disabled~.checkmark {
+    background-color: grey;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.check-container input:checked:not(:indeterminate)~.checkmark:after {
+    display: block;
+    left: 0.25rem;
+    top: 0.01rem;
+    width: 5px;
+    height: 10px;
+    border: solid var(--color-text-button);
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* Show the radio-dot when checked */
+.check-container.radio input:checked:not(:indeterminate)~.checkmark:after {
+    display: block;
+    left: calc((1rem - 8px) / 2);
+    top: calc((1rem - 8px) / 2);
+    width: 8px;
+    height: 8px;
+    border: none;
+    border-radius: 100%;
+    background-color: var(--color-text-button);
+    transform: unset;
+}
+
+/* Show the dash when indeterminate */
+.check-container input:indeterminate~.checkmark:after {
+    display: block;
+    left: 0.2rem;
+    top: -0.2rem;
+    width: 10px;
+    height: 10px;
+    border: solid var(--color-text-button);
+    border-width: 0 0px 3px 0;
 }
 
 /*------------------------------------------
@@ -256,126 +698,96 @@ progress[value]::-webkit-progress-value {
     border: var(--border-main);
 }
 
-/*
-    Range Sliders
-*/
-input[type="range"]{
-  /* removing default appearance */
-  -webkit-appearance: none;
-  appearance: none; 
-  /* creating a custom design */
-  background:linear-gradient(to bottom,#3b3b3b 10%,#242424 100%);
-  border:1px solid #000;
-  position:relative;
-  overflow:hidden;
-
-  height: 10px;
-  box-sizing: border-box;
-  /*width:200px;*/
-  border-radius:0
-}
-
-/* Thumb: webkit */
-input[type="range"]::-webkit-slider-thumb {
-  background:linear-gradient(
-    to left,
-    hsl(var(--color-main-hue), var(--color-main-sat), 90%) 20%,
-    var(--color-main) 100%
-    );
-  border:none;
-  border-right:1px solid #000;
-  height:8px;
-  width:15px;
-  border-radius:0!important;
-  box-shadow:-350px 0 0 350px var(--color-main);
-  box-sizing:border-box
-}
-
-/* Thumb: Firefox */
-input[type="range"]::-moz-range-thumb{
-  background:linear-gradient(
-    to left,
-    hsl(var(--color-main-hue), var(--color-main-sat), 90%) 20%,
-    var(--color-main) 100%
-    );
-  border:none;
-  border-right:1px solid #000;
-  height:8px;
-  width:15px;
-  border-radius:0!important;
-  box-shadow:-350px 0 0 350px var(--color-main);
-  box-sizing:border-box
-}
-
-input[type="range"]::-webkit-slider-thumb:hover,
-input[type="range"]:active::-webkit-slider-thumb,
-input[type="range"]:focus::-webkit-slider-thumb,
-input[type="range"]::-moz-range-thumb:hover,
-input[type="range"]:active::-moz-range-thumb,
-input[type="range"]:focus::-moz-range-thumb {
-   border: 2px solid var(--color-main);
-}
-
-/*--------------------------------------------------------
-        Circular Buttons
---------------------------------------------------------*/
-.circular-button {
-    display: block;
-    width: 32px;
-    height: 32px;
+/*--------------------------------------------------------*/
+/*          Fancy Schmancy Inputs                         */
+/*--------------------------------------------------------*/
+.image-button-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
     color: var(--color-text);
-    border-radius: 50%;
-    border: 1px solid var(--color-border);
-    background: linear-gradient(180deg,
-            var(--color-background-1) 0%,
-            var(--color-background-2) 45%,
-            var(--color-background-3) 100%);
-    box-shadow:
-        0 4px 12px rgba(0, 40, 80, 0.15),
-        inset 0 2px 4px rgba(255, 255, 255, 0.9),
-        inset 0 -3px 6px rgba(0, 30, 60, 0.08);
-    cursor: pointer;
-    transition: all 0.25s ease;
+    font-family: monospace;
+}
+
+label.image-radio-button {
+    width: 8rem;
+}
+
+label.image-radio-button .image {
+    height: 8rem;
+}
+
+label.image-radio-button .image .background-image {
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+label.image-radio-button .label {
+    text-align: center;
+    overflow-x: hidden;
+}
+
+.image-button-group input:checked+label {
+    font-weight: 700;
+    color: var(--color-main);
+}
+
+input:checked+label.image-radio-button .border {
+    border-color: var(--color-main);
+}
+
+/*-----------------------*/
+/*    Loading Wheel      */
+/*-----------------------*/
+.multi-spinner-container {
+    width: 150px;
+    height: 150px;
     position: relative;
+    margin: 30px auto;
     overflow: hidden;
 }
 
-/* glossy top highlight */
-.circular-button::before {
-    content: "";
+.multi-spinner {
     position: absolute;
-    top: 6%;
-    left: 12%;
-    width: 76%;
-    height: 38%;
+    width: calc(100% - 9.9px);
+    height: calc(100% - 9.9px);
+    border: 5px solid transparent;
+    border-top-color: var(--color-main);
     border-radius: 50%;
-    background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.75) 0%,
-            rgba(255, 255, 255, 0.2) 100%);
-    pointer-events: none;
+    -webkit-animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
+    animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
 }
 
-.circular-button:hover {
-    color: white;
-    background: var(--gradient-main-coarse);
-    border-color: var(--color-main);
-    box-shadow:
-        0 6px 16px rgba(30, 100, 200, 0.35),
-        inset 0 2px 4px rgba(255, 255, 255, 0.5),
-        inset 0 -3px 6px rgba(0, 40, 100, 0.2);
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 
-.circular-button:active {
-    transform: scale(0.96);
-    box-shadow:
-        0 2px 6px rgba(30, 100, 200, 0.3),
-        inset 0 2px 6px rgba(0, 40, 100, 0.25);
+
+@keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 
-/*=============
-Aesthetics 
-=========================*/
-
-progress[value] {
-  width: 100%;
+@media only screen and (max-width: 500px) {
+    label.image-radio-button {
+        width: 25vw;
+    }
 }
