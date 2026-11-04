@@ -124,11 +124,22 @@ try {
             $source = $settings->alias_resolve($_POST["pathname"]).$_POST["oldname"];
             $PAYLOAD["source"] = $source;
             $destination = $settings->alias_resolve($_POST["pathname"]).$_POST["directory"].$_POST["newname"].$_POST["extname"];
-            $PAYLOAD["destination"] = $destination;
+            $PAYLOAD["destination"] = $destination; 
 
             $err_msg_base = "Failed to rename ".$_POST["newname"].$_POST["extname"]." !";
 
-            if(!is_file($source)){
+            // For security reasons: Only allow doc_root or known alias
+            $dest_ok = str_starts_with($destination, $_SERVER["DOCUMENT_ROOT"]);
+            foreach ($settings->config["alias"] as $alias) {
+                if($dest_ok){
+                    continue;
+                }
+                $dest_ok = str_starts_with($destination, $alias["dir"]);
+            }
+            unset($alias);
+            if(!$dest_ok){
+                $PAYLOAD["errors"][] = "Destination ".$destination." is not on document root or known alias. Rfusing to move!";
+            }else if(!is_file($source)){
                 $PAYLOAD["errors"][] = "Source file doesn't exist!";
             }else if(is_file($destination) || is_dir($destination)){
                 $PAYLOAD["errors"][] = "Target file already exists!";
