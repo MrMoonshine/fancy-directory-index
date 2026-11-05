@@ -438,53 +438,65 @@ input[type="file"] {
     background-color: var(--color-background-2);
 }
 
-/*--------------------------------------------------------
-        Range Sliders
---------------------------------------------------------*/
-.form-range {
-    -webkit-appearance: none;
-    height: 0.7rem;
-    border-radius: 0.35rem;
-    border: 1px solid var(--color-text);
-    background-color: var(--color-background-2);
-    /*Just to make it look fancy schmancy*/
-    -webkit-transition: .2s;
-    transition: opacity .2s;
+/*
+    Range Sliders
+*/
+input[type="range"]{
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none; 
+  /* creating a custom design */
+  background:linear-gradient(to bottom,#3b3b3b 10%,#242424 100%);
+  border:1px solid #000;
+  position:relative;
+  overflow:hidden;
+
+  height: 10px;
+  box-sizing: border-box;
+  /*width:200px;*/
+  border-radius:0
 }
 
-/*Same thing... need to be separated... idk*/
-.form-range::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-
-    width: 1.2rem;
-    height: 1.2rem;
-
-    background: var(--color-main);
-    border-radius: 100%;
-    cursor: pointer;
-    border: none;
+/* Thumb: webkit */
+input[type="range"]::-webkit-slider-thumb {
+  background:linear-gradient(
+    to left,
+    hsl(var(--color-main-hue), var(--color-main-sat), 90%) 20%,
+    var(--color-main) 100%
+    );
+  border:none;
+  border-right:1px solid #000;
+  height:8px;
+  width:15px;
+  border-radius:0!important;
+  box-shadow:-350px 0 0 350px var(--color-main);
+  box-sizing:border-box
 }
 
-.form-range::-moz-range-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    cursor: pointer;
-
-    width: 1.2rem;
-    height: 1.2rem;
-
-    background: var(--color-main);
-    border-radius: 100%;
-    border: none;
+/* Thumb: Firefox */
+input[type="range"]::-moz-range-thumb{
+  background:linear-gradient(
+    to left,
+    hsl(var(--color-main-hue), var(--color-main-sat), 90%) 20%,
+    var(--color-main) 100%
+    );
+  border:none;
+  border-right:1px solid #000;
+  height:8px;
+  width:15px;
+  border-radius:0!important;
+  box-shadow:-350px 0 0 350px var(--color-main);
+  box-sizing:border-box
 }
 
-input[type="range"]:disabled.form-range::-webkit-slider-thumb,
-input[type="range"]:disabled.form-range::-moz-range-thumb {
-    background: var(--color-background-1);
-    cursor: auto;
+input[type="range"]::-webkit-slider-thumb:hover,
+input[type="range"]:active::-webkit-slider-thumb,
+input[type="range"]:focus::-webkit-slider-thumb,
+input[type="range"]::-moz-range-thumb:hover,
+input[type="range"]:active::-moz-range-thumb,
+input[type="range"]:focus::-moz-range-thumb {
+   border: 2px solid var(--color-main);
 }
-
 /*----------------*/
 /*      Checkbox  */
 /*----------------*/

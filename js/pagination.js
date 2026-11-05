@@ -53,7 +53,7 @@ class Pagination{
         this.currentPage = 0;
 
         this.pageButtonSpace = document.createElement("div");
-        this.pageButtonSpace.setAttribute("class","btn-group");
+        this.pageButtonSpace.className = "d-flex gap justify-content-center";
         this.pageButtonSpace.innerHTML = "";
         this.pageButtons = [];
 
